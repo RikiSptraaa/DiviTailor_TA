@@ -92,7 +92,7 @@ class SizeBajuController extends Controller
         return $content
             ->title($this->title())
             ->description($this->description['edit'] ?? trans('admin.edit'))
-            ->body($this->form()->edit($id));
+            ->body($this->form($edit = true)->edit($id));
     }
 
     /**
@@ -114,7 +114,7 @@ class SizeBajuController extends Controller
     protected function grid()
     {
         $grid = new Grid(new SizeBaju());
-        $grid->disableCreateButton();
+        // $grid->disableCreateButton();
         $grid->column('id', __('ID'))->sortable();
         $grid->column('user.name', __('Nama Pelanggan'));
         $grid->column('panjang_baju', __('Panjang baju'))->display(function () {
@@ -209,21 +209,25 @@ class SizeBajuController extends Controller
      *
      * @return Form
      */
-    protected function form()
+    protected function form($edit = false)
     {
         $form = new Form(new SizeBaju());
+        if ($edit) {
+            $form->display('user.name', __('Nama Pelanggan'));
+        } else {
 
-        $form->select('user_id', __('Nama Pelanggan'))->options(User::all()->pluck('name', 'id'));
-        $form->number('panjang_baju', __('Panjang baju'));
-        $form->number('lingkar_kerah', __('Lingkar kerah'));
-        $form->number('lingkar_dada', __('Lingkar dada'));
-        $form->number('lingkar_perut', __('Lingkar perut'));
-        $form->number('lingkar_pinggul', __('Lingkar pinggul'));
-        $form->number('lebar_bahu', __('Lebar bahu'));
-        $form->number('panjang_lengan_pendek', __('Panjang lengan pendek'));
-        $form->number('panjang_lengan_panjang', __('Panjang lengan panjang'));
-        $form->number('lingkar_lengan_bawah', __('Lingkar lengan bawah'));
-        $form->number('lingkar_lengan_atas', __('Lingkar lengan atas'));
+            $form->select('user_id', __('Nama Pelanggan'))->options(User::all()->pluck('name', 'id'))->rules('unique:size_bajus,user_id|required');
+        }
+        $form->number('panjang_baju', __('Panjang baju'))->rules('required|numeric');
+        $form->number('lingkar_kerah', __('Lingkar kerah'))->rules('required|numeric');
+        $form->number('lingkar_dada', __('Lingkar dada'))->rules('required|numeric');
+        $form->number('lingkar_perut', __('Lingkar perut'))->rules('required|numeric');
+        $form->number('lingkar_pinggul', __('Lingkar pinggul'))->rules('required|numeric');
+        $form->number('lebar_bahu', __('Lebar bahu'))->rules('required|numeric');
+        $form->number('panjang_lengan_pendek', __('Panjang lengan pendek'))->rules('required|numeric');
+        $form->number('panjang_lengan_panjang', __('Panjang lengan panjang'))->rules('required|numeric');
+        $form->number('lingkar_lengan_bawah', __('Lingkar lengan bawah'))->rules('required|numeric');
+        $form->number('lingkar_lengan_atas', __('Lingkar lengan atas'))->rules('required|numeric');
 
         return $form;
     }

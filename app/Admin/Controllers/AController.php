@@ -2,7 +2,7 @@
 
 namespace App\Admin\Controllers;
 
-use App\Models\SizeCelana;
+use App\Models\GroupOrder;
 use Encore\Admin\Controllers\AdminController;
 use Encore\Admin\Form;
 use Encore\Admin\Grid;
@@ -15,7 +15,7 @@ class AController extends AdminController
      *
      * @var string
      */
-    protected $title = 'SizeCelana';
+    protected $title = 'GroupOrder';
 
     /**
      * Make a grid builder.
@@ -24,17 +24,14 @@ class AController extends AdminController
      */
     protected function grid()
     {
-        $grid = new Grid(new SizeCelana());
+        $grid = new Grid(new GroupOrder());
 
         $grid->column('id', __('Id'));
-        $grid->column('user_id', __('User id'));
-        $grid->column('lingkar_pinggang', __('Lingkar pinggang'));
-        $grid->column('lingkar_pinggul', __('Lingkar pinggul'));
-        $grid->column('panjang_celana', __('Panjang celana'));
-        $grid->column('panjang_pesak', __('Panjang pesak'));
-        $grid->column('lingkar_bawah', __('Lingkar bawah'));
-        $grid->column('lingkar_paha', __('Lingkar paha'));
-        $grid->column('lingkar_lutut', __('Lingkar lutut'));
+        $grid->column('group_id', __('Group id'));
+        $grid->column('group_order_date', __('Group order date'));
+        $grid->column('order_kind', __('Order kind'));
+        $grid->column('price', __('Price'));
+        $grid->column('is_acc', __('Is acc'));
         $grid->column('created_at', __('Created at'));
         $grid->column('updated_at', __('Updated at'));
 
@@ -49,17 +46,14 @@ class AController extends AdminController
      */
     protected function detail($id)
     {
-        $show = new Show(SizeCelana::findOrFail($id));
+        $show = new Show(GroupOrder::findOrFail($id));
 
         $show->field('id', __('Id'));
-        $show->field('user_id', __('User id'));
-        $show->field('lingkar_pinggang', __('Lingkar pinggang'));
-        $show->field('lingkar_pinggul', __('Lingkar pinggul'));
-        $show->field('panjang_celana', __('Panjang celana'));
-        $show->field('panjang_pesak', __('Panjang pesak'));
-        $show->field('lingkar_bawah', __('Lingkar bawah'));
-        $show->field('lingkar_paha', __('Lingkar paha'));
-        $show->field('lingkar_lutut', __('Lingkar lutut'));
+        $show->field('group_id', __('Group id'));
+        $show->field('group_order_date', __('Group order date'));
+        $show->field('order_kind', __('Order kind'));
+        $show->field('price', __('Price'));
+        $show->field('is_acc', __('Is acc'));
         $show->field('created_at', __('Created at'));
         $show->field('updated_at', __('Updated at'));
 
@@ -73,16 +67,13 @@ class AController extends AdminController
      */
     protected function form()
     {
-        $form = new Form(new SizeCelana());
+        $form = new Form(new GroupOrder());
 
-        $form->number('user_id', __('User id'));
-        $form->number('lingkar_pinggang', __('Lingkar pinggang'));
-        $form->number('lingkar_pinggul', __('Lingkar pinggul'));
-        $form->number('panjang_celana', __('Panjang celana'));
-        $form->number('panjang_pesak', __('Panjang pesak'));
-        $form->number('lingkar_bawah', __('Lingkar bawah'));
-        $form->number('lingkar_paha', __('Lingkar paha'));
-        $form->number('lingkar_lutut', __('Lingkar lutut'));
+        $form->number('group_id', __('Group id'));
+        $form->date('group_order_date', __('Group order date'))->default(date('Y-m-d'));
+        $form->date('order_kind', __('Order kind'))->default(date('Y-m-d'));
+        $form->number('price', __('Price'));
+        $form->switch('is_acc', __('Is acc'));
 
         return $form;
     }

@@ -18,4 +18,6 @@ Route::group([
     $router->resource('users', UserController::class);
     $router->resource('uk/baju', SizeBajuController::class);
     $router->resource('uk/celana', SizeCelanaController::class);
+    $router->resource('group', GroupController::class);
+    $router->resource('borongan', GroupOrderController::class);
 });

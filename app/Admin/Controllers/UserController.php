@@ -10,8 +10,7 @@ use Encore\Admin\Layout\Content;
 use Illuminate\Routing\Controller;
 use Encore\Admin\Controllers\HasResourceActions;
 use Encore\Admin\Widgets\Box;
-
-use function PHPUnit\Framework\throwException;
+use Illuminate\Support\Facades\Hash;
 
 class UserController extends Controller
 {
@@ -104,17 +103,16 @@ class UserController extends Controller
      */
     public function create(Content $content)
     {
-        // return $content
-        //     ->title($this->title())
-        //     ->description($this->description['create'] ?? trans('admin.create'))
-        //     ->body($this->form());
-        return redirect('/admin/users');
+        return $content
+            ->title($this->title())
+            ->description($this->description['create'] ?? trans('admin.create'))
+            ->body($this->form());
+        // return redirect('/admin/users');
     }
 
     protected function grid()
     {
         $grid = new Grid(new User());
-        $grid->disableCreateButton();
 
         $grid->column('id', __('ID'))->sortable();
         $grid->column('name', __('Nama'));
@@ -124,8 +122,8 @@ class UserController extends Controller
         $grid->column('city', __('Kota'));
         $grid->column('institute', __('Instansi'));
         $grid->column('gender', __('Jenis Kelamin'))->using([0 => 'Perempuan', 1 => 'Laki-Laki']);
-        $grid->column('created_at', __('Created at'));
-        $grid->column('updated_at', __('Updated at'));
+        // $grid->column('created_at', __('Created at'));
+        // $grid->column('updated_at', __('Updated at'));
 
         return $grid;
     }
@@ -139,7 +137,7 @@ class UserController extends Controller
     protected function detail($id)
     {
         $show = new Show(User::findOrFail($id));
-
+        $show->panel()->style('danger');
         $show->field('id', __('ID'));
         $show->field('name', __('Nama'));
         $show->field('email', __('E-Mail'));
@@ -149,6 +147,42 @@ class UserController extends Controller
         $show->field('institute', __('Instansi'));
         $show->field('gender', __('Jenis Kelamin'))->using([0 => 'Perempuan', 1 => 'Laki-Laki']);
         $show->field('created_at', __('Daftar Pada'));
+
+        $show->baju('Baju', function ($baju) {
+
+            $baju->panel()->style('danger');
+
+            $baju->panjang_baju()->as(function () {
+                return "{$this->panjang_baju} cm";
+            });
+            $baju->lingkar_kerah()->as(function () {
+                return "{$this->lingkar_kerah} cm";
+            });
+            $baju->lingkar_dada()->as(function () {
+                return "{$this->lingkar_dada} cm";
+            });
+            $baju->lingkar_perut()->as(function () {
+                return "{$this->lingkar_perut} cm";
+            });
+            $baju->lingkar_pinggul()->as(function () {
+                return "{$this->lingkar_pinggul} cm";
+            });
+            $baju->lebar_bahu()->as(function () {
+                return "{$this->lebar_bahu} cm";
+            });
+            $baju->panjang_lengan_pendek()->as(function () {
+                return "{$this->panjang_lengan_pendek} cm";
+            });
+            $baju->panjang_lengan_panjang()->as(function () {
+                return "{$this->panjang_lengan_panjang} cm";
+            });
+            $baju->lingkar_lengan_bawah()->as(function () {
+                return "{$this->lingkar_lengan_bawah} cm";
+            });
+            $baju->lingkar_lengan_atas()->as(function () {
+                return "{$this->lingkar_lengan_atas} cm";
+            });
+        });
         // $show->field('updated_at', __('Updated at'));
 
         return $show;
@@ -159,18 +193,23 @@ class UserController extends Controller
      *
      * @return Form
      */
-    protected function form()
+    protected function form($edit = false)
     {
         $form = new Form(new User());
 
         // $form->display('id', __('ID'));
         $form->text('name', __('Nama'))->rules('required');
-        $form->email('email', __('E-Mail'))->rules('email|unique:users|required');
+        if ($edit) {
+            $form->email('email', __('E-Mail'))->rules('email|unique:users|required');
+        } else {
+            $form->email('email', __('E-Mail'))->rules('email|required');
+        }
         $form->text('phone_number', __('Nomor Telepon'))->icon('fa-mobile')->rules('required|max:14|alpha_num|unique:users');
         $form->text('address', __('Alamat'))->icon('fa-location-arrow')->rules('required|min:4');
         $form->text('city', __('Kota'))->icon('fa-building')->rules('required|min:4');
         $form->text('institute', __('Instansi'))->icon('fa-institution')->rules('required|min:3');
-        $form->select('gender', __('Jenis Kelamin'))->icon('fa-gender')->rules('required');
+        $form->select('gender', __('Jenis Kelamin'))->options([0 => 'Perempuan', 1 => 'Laki-Laki'])->rules('required');
+        $form->hidden('password')->default(Hash::make('password'));
         // $form->display('created_at', __('Created At'));
         // $form->display('updated_at', __('Updated At'));
 

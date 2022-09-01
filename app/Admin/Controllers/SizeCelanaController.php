@@ -11,7 +11,6 @@ use Encore\Admin\Widgets\Box;
 use Encore\Admin\Layout\Content;
 use Illuminate\Routing\Controller;
 use Encore\Admin\Controllers\HasResourceActions;
-use Encore\Admin\Widgets\Collapse;
 
 class SizeCelanaController extends Controller
 {
@@ -36,11 +35,6 @@ class SizeCelanaController extends Controller
     //     'create' => 'Create',
     // ];
 
-    /**
-     * Get content title.
-     *
-     * @return string
-     */
     /**
      * Get content title.
      *
@@ -108,7 +102,7 @@ class SizeCelanaController extends Controller
         return $content
             ->title($this->title())
             ->description($this->description['edit'] ?? trans('admin.edit'))
-            ->body($this->form()->edit($id));
+            ->body($this->form($edit = true)->edit($id));
     }
 
     /**
@@ -212,18 +206,21 @@ class SizeCelanaController extends Controller
      *
      * @return Form
      */
-    protected function form()
+    protected function form($edit = false)
     {
         $form = new Form(new SizeCelana());
-
-        $form->select('user_id', __('Nama Pelanggan'))->options(User::all()->pluck('name', 'id'));
-        $form->number('lingkar_pinggang', __('Lingkar pinggang'));
-        $form->number('lingkar_pinggul', __('Lingkar pinggul'));
-        $form->number('panjang_celana', __('Panjang celana'));
-        $form->number('panjang_pesak', __('Panjang pesak'));
-        $form->number('lingkar_bawah', __('Lingkar bawah'));
-        $form->number('lingkar_paha', __('Lingkar paha'));
-        $form->number('lingkar_lutut', __('Lingkar lutut'));
+        if ($edit) {
+            $form->display('user.name', __('Nama Pelanggan'));
+        } else {
+            $form->select('user_id', __('Nama Pelanggan'))->options(User::all()->pluck('name', 'id'))->rules('unique:size_celanas,user_id|required');
+        }
+        $form->number('lingkar_pinggang', __('Lingkar pinggang'))->rules('required|numeric');
+        $form->number('lingkar_pinggul', __('Lingkar pinggul'))->rules('required|numeric');
+        $form->number('panjang_celana', __('Panjang celana'))->rules('required|numeric');
+        $form->number('panjang_pesak', __('Panjang pesak'))->rules('required|numeric');
+        $form->number('lingkar_bawah', __('Lingkar bawah'))->rules('required|numeric');
+        $form->number('lingkar_paha', __('Lingkar paha'))->rules('required|numeric');
+        $form->number('lingkar_lutut', __('Lingkar lutut'))->rules('required|numeric');
 
         return $form;
     }

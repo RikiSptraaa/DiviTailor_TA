@@ -13,13 +13,13 @@ return new class extends Migration
      */
     public function up()
     {
-        Schema::create('orders', function (Blueprint $table) {
+        Schema::create('group_orders', function (Blueprint $table) {
             $table->id();
-            $table->foreignId('user_id')->constrained('users')->cascadeOnDelete();
+            $table->foreignId('group_id')->constrained('groups')->cascadeOnDelete();
+            $table->date('group_order_date');
+            $table->string('order_kind');
+            $table->bigInteger('price');
             $table->boolean('is_acc')->nullable();
-            $table->date('order_date');
-            $table->string('jenis_baju');
-            $table->bigInteger('total_harga');
             $table->timestamps();
         });
     }
@@ -31,6 +31,6 @@ return new class extends Migration
      */
     public function down()
     {
-        Schema::dropIfExists('orders');
+        Schema::dropIfExists('group_orders');
     }
 };

@@ -51,4 +51,8 @@ class User extends Authenticatable
     {
         return $this->hasOne(SizeCelana::class);
     }
+    public function groupOrder()
+    {
+        return $this->belongsToMany(GroupOrder::class, 'group_order_users');
+    }
 }
