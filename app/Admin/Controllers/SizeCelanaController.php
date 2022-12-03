@@ -57,7 +57,7 @@ class SizeCelanaController extends Controller
         $content->title($this->title())
             ->description($this->description['index'] ?? trans('admin.list'))
             ->body($this->grid());
-        $content->body($this->box('welcome'));
+        // $content->body($this->box('pdf.pesanan'));
 
         return $content;
     }
@@ -129,6 +129,9 @@ class SizeCelanaController extends Controller
     protected function grid()
     {
         $grid = new Grid(new SizeCelana());
+        $grid->filter(function ($filter) {
+            $filter->like('user.name', 'Nama Pelanggan');
+        });
 
         $grid->column('id', __('Id'));
         $grid->column('user.name', __('Nama Pelanggan'));
@@ -153,9 +156,7 @@ class SizeCelanaController extends Controller
         $grid->column('lingkar_lutut', __('Lingkar lutut'))->display(function () {
             return $this->lingkar_lutut . ' cm';
         });
-        $grid->footer(function () {
-            return "ABC";
-        });
+
         // $grid->column('created_at', __('Created at'));
         // $grid->column('updated_at', __('Updated at'));
 

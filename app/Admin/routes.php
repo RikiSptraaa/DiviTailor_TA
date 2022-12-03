@@ -1,9 +1,13 @@
 <?php
 
-use App\Admin\Controllers\SizeBajuController;
-use App\Admin\Controllers\SizeCelanaController;
-use App\Admin\Controllers\UserController;
+use App\Models\Payment;
 use Illuminate\Routing\Router;
+use App\Admin\Controllers\UserController;
+use App\Admin\Controllers\OrderController;
+use App\Admin\Controllers\PaymentController;
+use App\Admin\Controllers\SizeBajuController;
+use App\Admin\Controllers\GroupOrderController;
+use App\Admin\Controllers\SizeCelanaController;
 
 Admin::routes();
 
@@ -20,4 +24,10 @@ Route::group([
     $router->resource('uk/celana', SizeCelanaController::class);
     $router->resource('group', GroupController::class);
     $router->resource('borongan', GroupOrderController::class);
+    $router->resource('orders', OrderController::class);
+    $router->resource('employees', EmployeeController::class);
+    $router->resource('tasks', TaskController::class);
+    $router->resource('payments', PaymentController::class);
+    $router->get('/orders/cetak/{order}', [OrderController::class, 'print']);
+    $router->get('/borongan/cetak/{borongan}', [GroupOrderController::class, 'print']);
 });

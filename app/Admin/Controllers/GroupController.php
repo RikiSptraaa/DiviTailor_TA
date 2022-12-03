@@ -6,6 +6,7 @@ use App\Models\Group;
 use Encore\Admin\Form;
 use Encore\Admin\Grid;
 use Encore\Admin\Show;
+use Illuminate\Support\Str;
 use Encore\Admin\Widgets\Box;
 use Encore\Admin\Layout\Content;
 use Illuminate\Routing\Controller;
@@ -130,8 +131,12 @@ class GroupController extends Controller
         $grid = new Grid(new Group());
 
         $grid->column('id', __('Id'));
+        $grid->column('group_code', __('Kode Grup'));
         $grid->column('group_name', __('Nama Grup'));
+        $grid->column('group_phone_number', __('Nomor Telepon'));
         $grid->column('institute', __('Instansi'));
+        $grid->column('email', __('E-Mail'));
+        $grid->column('group_address', __('Alamat'));
         // $grid->column('created_at', __('Created at'));
         // $grid->column('updated_at', __('Updated at'));
 
@@ -149,8 +154,12 @@ class GroupController extends Controller
         $show = new Show(Group::findOrFail($id));
 
         $show->field('id', __('Id'));
+        $show->field('group_code', __('Kode Grup'));
         $show->field('group_name', __('Nama Grup'));
+        $show->field('group_phone_number', __('Nomor Telepon'));
         $show->field('institute', __('Instansi'));
+        $show->field('email', __('E-Mail'));
+        $show->field('group_address', __('Alamat'));
         $show->field('created_at', __('Created at'));
         $show->field('updated_at', __('Updated at'));
 
@@ -166,8 +175,13 @@ class GroupController extends Controller
     {
         $form = new Form(new Group());
 
-        $form->text('group_name', __('Nama Grup'));
-        $form->text('institute', __('Instansi'));
+        $form->hidden('group_code', __('Kode Grup'))->default('GRP-' . Str::random(5))->rules('required|unique:groups,group_code');
+        $form->text('group_name', __('Nama Grup'))->rules('required');
+        $form->text('group_phone_number', __('Nomor Telepon Grup'))->rules('required|numeric');
+
+        $form->text('institute', __('Instansi'))->rules('required');
+        $form->email('email', __('E-Mail Grup'))->required()->rules('email');
+        $form->textarea('group_address', __('Alamat'))->required();
 
         return $form;
     }

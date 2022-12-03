@@ -115,6 +115,9 @@ class SizeBajuController extends Controller
     {
         $grid = new Grid(new SizeBaju());
         // $grid->disableCreateButton();
+        $grid->filter(function ($filter) {
+            $filter->like('user.name', 'Nama Pelanggan');
+        });
         $grid->column('id', __('ID'))->sortable();
         $grid->column('user.name', __('Nama Pelanggan'));
         $grid->column('panjang_baju', __('Panjang baju'))->display(function () {

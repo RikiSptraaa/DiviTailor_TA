@@ -15,6 +15,7 @@ return new class extends Migration
     {
         Schema::create('group_orders', function (Blueprint $table) {
             $table->id();
+            $table->string('invoice_number', 10);
             $table->foreignId('group_id')->constrained('groups')->cascadeOnDelete();
             $table->date('group_order_date');
             $table->string('order_kind');

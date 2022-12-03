@@ -115,6 +115,7 @@ class UserController extends Controller
         $grid = new Grid(new User());
 
         $grid->column('id', __('ID'))->sortable();
+        $grid->column('username', __('Nama Pengguna'));
         $grid->column('name', __('Nama'));
         $grid->column('email', __('E-Mail'));
         $grid->column('phone_number', __('Nomor Telepon'));
@@ -139,6 +140,7 @@ class UserController extends Controller
         $show = new Show(User::findOrFail($id));
         $show->panel()->style('danger');
         $show->field('id', __('ID'));
+        $show->field('username', __('Nama Pengguna'));
         $show->field('name', __('Nama'));
         $show->field('email', __('E-Mail'));
         $show->field('phone_number', __('Nomor Telepon'));
@@ -198,7 +200,8 @@ class UserController extends Controller
         $form = new Form(new User());
 
         // $form->display('id', __('ID'));
-        $form->text('name', __('Nama'))->rules('required');
+        $form->text('username', __('Nama Pengguna'))->rules('required|unique:users,username');
+        $form->text('name', __('Nama Lengkap'))->rules('required');
         if ($edit) {
             $form->email('email', __('E-Mail'))->rules('email|unique:users|required');
         } else {

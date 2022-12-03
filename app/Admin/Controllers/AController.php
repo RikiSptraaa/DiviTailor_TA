@@ -2,7 +2,7 @@
 
 namespace App\Admin\Controllers;
 
-use App\Models\GroupOrder;
+use App\Models\Task;
 use Encore\Admin\Controllers\AdminController;
 use Encore\Admin\Form;
 use Encore\Admin\Grid;
@@ -15,7 +15,7 @@ class AController extends AdminController
      *
      * @var string
      */
-    protected $title = 'GroupOrder';
+    protected $title = 'Task';
 
     /**
      * Make a grid builder.
@@ -24,14 +24,13 @@ class AController extends AdminController
      */
     protected function grid()
     {
-        $grid = new Grid(new GroupOrder());
+        $grid = new Grid(new Task());
 
         $grid->column('id', __('Id'));
-        $grid->column('group_id', __('Group id'));
-        $grid->column('group_order_date', __('Group order date'));
-        $grid->column('order_kind', __('Order kind'));
-        $grid->column('price', __('Price'));
-        $grid->column('is_acc', __('Is acc'));
+        $grid->column('handler_id', __('Handler id'));
+        $grid->column('order_id', __('Order id'));
+        $grid->column('task_status', __('Task status'));
+        $grid->column('employee_fee', __('Employee fee'));
         $grid->column('created_at', __('Created at'));
         $grid->column('updated_at', __('Updated at'));
 
@@ -46,14 +45,13 @@ class AController extends AdminController
      */
     protected function detail($id)
     {
-        $show = new Show(GroupOrder::findOrFail($id));
+        $show = new Show(Task::findOrFail($id));
 
         $show->field('id', __('Id'));
-        $show->field('group_id', __('Group id'));
-        $show->field('group_order_date', __('Group order date'));
-        $show->field('order_kind', __('Order kind'));
-        $show->field('price', __('Price'));
-        $show->field('is_acc', __('Is acc'));
+        $show->field('handler_id', __('Handler id'));
+        $show->field('order_id', __('Order id'));
+        $show->field('task_status', __('Task status'));
+        $show->field('employee_fee', __('Employee fee'));
         $show->field('created_at', __('Created at'));
         $show->field('updated_at', __('Updated at'));
 
@@ -67,13 +65,12 @@ class AController extends AdminController
      */
     protected function form()
     {
-        $form = new Form(new GroupOrder());
+        $form = new Form(new Task());
 
-        $form->number('group_id', __('Group id'));
-        $form->date('group_order_date', __('Group order date'))->default(date('Y-m-d'));
-        $form->date('order_kind', __('Order kind'))->default(date('Y-m-d'));
-        $form->number('price', __('Price'));
-        $form->switch('is_acc', __('Is acc'));
+        $form->number('handler_id', __('Handler id'));
+        $form->number('order_id', __('Order id'));
+        $form->switch('task_status', __('Task status'));
+        $form->number('employee_fee', __('Employee fee'));
 
         return $form;
     }
