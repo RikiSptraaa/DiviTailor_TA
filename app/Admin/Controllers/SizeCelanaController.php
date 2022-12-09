@@ -135,27 +135,27 @@ class SizeCelanaController extends Controller
 
         $grid->column('id', __('Id'));
         $grid->column('user.name', __('Nama Pelanggan'));
-        $grid->column('lingkar_pinggang', __('Lingkar pinggang'))->display(function () {
-            return $this->lingkar_pinggang . ' cm';
-        });
-        $grid->column('lingkar_pinggul', __('Lingkar pinggul'))->display(function () {
-            return $this->lingkar_pinggul . ' cm';
-        });
-        $grid->column('panjang_celana', __('Panjang celana'))->display(function () {
-            return $this->panjang_celana . ' cm';
-        });
-        $grid->column('panjang_pesak', __('Panjang pesak'))->display(function () {
-            return $this->panjang_pesak . ' cm';
-        });
-        $grid->column('lingkar_bawah', __('Lingkar bawah'))->display(function () {
-            return $this->lingkar_bawah . ' cm';
-        });
-        $grid->column('lingkar_paha', __('Lingkar paha'))->display(function () {
-            return $this->lingkar_paha . ' cm';
-        });
-        $grid->column('lingkar_lutut', __('Lingkar lutut'))->display(function () {
-            return $this->lingkar_lutut . ' cm';
-        });
+        // $grid->column('lingkar_pinggang', __('Lingkar pinggang'))->display(function () {
+        //     return $this->lingkar_pinggang . ' cm';
+        // });
+        // $grid->column('lingkar_pinggul', __('Lingkar pinggul'))->display(function () {
+        //     return $this->lingkar_pinggul . ' cm';
+        // });
+        // $grid->column('panjang_celana', __('Panjang celana'))->display(function () {
+        //     return $this->panjang_celana . ' cm';
+        // });
+        // $grid->column('panjang_pesak', __('Panjang pesak'))->display(function () {
+        //     return $this->panjang_pesak . ' cm';
+        // });
+        // $grid->column('lingkar_bawah', __('Lingkar bawah'))->display(function () {
+        //     return $this->lingkar_bawah . ' cm';
+        // });
+        // $grid->column('lingkar_paha', __('Lingkar paha'))->display(function () {
+        //     return $this->lingkar_paha . ' cm';
+        // });
+        // $grid->column('lingkar_lutut', __('Lingkar lutut'))->display(function () {
+        //     return $this->lingkar_lutut . ' cm';
+        // });
 
         // $grid->column('created_at', __('Created at'));
         // $grid->column('updated_at', __('Updated at'));

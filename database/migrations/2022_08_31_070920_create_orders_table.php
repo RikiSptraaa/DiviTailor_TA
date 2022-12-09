@@ -18,7 +18,7 @@ return new class extends Migration
             $table->foreignId('user_id')->constrained('users')->cascadeOnDelete();
             $table->boolean('is_acc')->nullable();
             $table->date('order_date');
-            $table->string('jenis_baju');
+            $table->string('jenis_baju', 30);
             $table->bigInteger('total_harga');
             $table->timestamps();
         });

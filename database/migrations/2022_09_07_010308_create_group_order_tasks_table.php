@@ -19,6 +19,7 @@ return new class extends Migration
             $table->foreignId('handler_id')->constrained('employees')->cascadeOnDelete();
             $table->date('task_date');
             $table->tinyInteger('task_status');
+            $table->integer('total_unit_asigned');
             $table->integer('employee_fee');
             $table->integer('employee_fee_total');
             $table->timestamps();

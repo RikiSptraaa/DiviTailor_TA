@@ -114,15 +114,28 @@ class UserController extends Controller
     {
         $grid = new Grid(new User());
 
+        $grid->filter(function ($filter) {
+
+            // Remove the default id filter
+            $filter->disableIdFilter();
+
+            // Add a column filter
+            $filter->like('username', 'Nama Pengguna');
+            $filter->like('name', 'Nama Lengkap');
+            $filter->like('institute', 'Instansi');
+        });
+
         $grid->column('id', __('ID'))->sortable();
         $grid->column('username', __('Nama Pengguna'));
-        $grid->column('name', __('Nama'));
-        $grid->column('email', __('E-Mail'));
-        $grid->column('phone_number', __('Nomor Telepon'));
+        $grid->column('name', __('Nama Lengkap'));
+        // $grid->column('email', __('E-Mail'));
+        $grid->column('phone_number', __('Nomor Telepon'))->display(function () {
+            return  "<a href='https://wa.me/62" . $this->phone_number . "' >" . $this->phone_number . "</a>";
+        });
         $grid->column('address', __('Alamat'));
         $grid->column('city', __('Kota'));
         $grid->column('institute', __('Instansi'));
-        $grid->column('gender', __('Jenis Kelamin'))->using([0 => 'Perempuan', 1 => 'Laki-Laki']);
+        // $grid->column('gender', __('Jenis Kelamin'))->using([0 => 'Perempuan', 1 => 'Laki-Laki']);
         // $grid->column('created_at', __('Created at'));
         // $grid->column('updated_at', __('Updated at'));
 
@@ -148,11 +161,18 @@ class UserController extends Controller
         $show->field('city', __('Kota'));
         $show->field('institute', __('Instansi'));
         $show->field('gender', __('Jenis Kelamin'))->using([0 => 'Perempuan', 1 => 'Laki-Laki']);
-        $show->field('created_at', __('Daftar Pada'));
+        // $show->field('created_at', __('Daftar Pada'));
 
-        $show->baju('Baju', function ($baju) {
+        $show->baju('Ukuran Atasan / Baju', function ($baju) {
 
             $baju->panel()->style('danger');
+
+            $baju->panel()
+                ->tools(function ($tools) {
+                    $tools->disableEdit();
+                    $tools->disableList();
+                    $tools->disableDelete();
+                });
 
             $baju->panjang_baju()->as(function () {
                 return "{$this->panjang_baju} cm";
@@ -185,6 +205,37 @@ class UserController extends Controller
                 return "{$this->lingkar_lengan_atas} cm";
             });
         });
+
+        $show->celana('Ukuran Bawahan / Celana', function ($celana) {
+
+            $celana->panel()->style('danger');
+
+            $celana->panel()
+                ->tools(function ($tools) {
+                    $tools->disableEdit();
+                    $tools->disableList();
+                    $tools->disableDelete();
+                });
+
+            $celana->lingkar_pinggang()->as(function () {
+                return "{$this->lingkar_pinggang} cm";
+            });
+            $celana->lingkar_pinggul()->as(function () {
+                return "{$this->lingkar_pinggul} cm";
+            });
+            $celana->panjang_celana()->as(function () {
+                return "{$this->panjang_celana} cm";
+            });
+            $celana->panjang_pesak()->as(function () {
+                return "{$this->panjang_pesak} cm";
+            });
+            $celana->lingkar_paha()->as(function () {
+                return "{$this->lingkar_paha} cm";
+            });
+            $celana->lingkar_lutut()->as(function () {
+                return "{$this->lingkar_lutut} cm";
+            });
+        });
         // $show->field('updated_at', __('Updated at'));
 
         return $show;
@@ -200,17 +251,13 @@ class UserController extends Controller
         $form = new Form(new User());
 
         // $form->display('id', __('ID'));
-        $form->text('username', __('Nama Pengguna'))->rules('required|unique:users,username');
-        $form->text('name', __('Nama Lengkap'))->rules('required');
-        if ($edit) {
-            $form->email('email', __('E-Mail'))->rules('email|unique:users|required');
-        } else {
-            $form->email('email', __('E-Mail'))->rules('email|required');
-        }
-        $form->text('phone_number', __('Nomor Telepon'))->icon('fa-mobile')->rules('required|max:14|alpha_num|unique:users');
-        $form->text('address', __('Alamat'))->icon('fa-location-arrow')->rules('required|min:4');
-        $form->text('city', __('Kota'))->icon('fa-building')->rules('required|min:4');
-        $form->text('institute', __('Instansi'))->icon('fa-institution')->rules('required|min:3');
+        $form->text('username', __('Nama Pengguna'))->creationRules('required|unique:users,username|max:10')->updateRules('required|max:10|unique:users,username,{{id}}');
+        $form->text('name', __('Nama Lengkap'))->rules('required|max:50');
+        $form->email('email', __('E-Mail'))->creationRules('required|email|unique:users,email|max:50')->updateRules('required|max:50|email|unique:users,email,{{id}}');
+        $form->text('phone_number', __('Nomor Telepon'))->creationRules('required|max:20|alpha_num|unique:users,phone_number')->updateRules('required|max:20|alpha_num|unique:users,phone_number,{{id}}');
+        $form->textarea('address', __('Alamat'))->rules('required|min:4');
+        $form->text('city', __('Kota'))->icon('fa-building')->rules('required|min:4|max:30');
+        $form->text('institute', __('Instansi'))->icon('fa-institution')->rules('required|min:3|max:30');
         $form->select('gender', __('Jenis Kelamin'))->options([0 => 'Perempuan', 1 => 'Laki-Laki'])->rules('required');
         $form->hidden('password')->default(Hash::make('password'));
         // $form->display('created_at', __('Created At'));

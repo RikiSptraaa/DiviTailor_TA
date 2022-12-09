@@ -27,6 +27,7 @@ class EmployeeController extends AdminController
         $grid = new Grid(new Employee());
 
         $grid->filter(function ($filter) {
+            $filter->disableIdFilter();
             $filter->like('employee_name', 'Nama Karyawan');
         });
 
@@ -69,9 +70,9 @@ class EmployeeController extends AdminController
     {
         $form = new Form(new Employee());
 
-        $form->text('employee_name', __('Nama Karyawan'))->rules('required|min:4');
-        $form->text('phone_number', __('Nomor Telepon'))->rules('required|numeric|:max:14');
-        $form->text('address', __('Alamat'))->rules('required|min:5');
+        $form->text('employee_name', __('Nama Karyawan'))->rules('required|min:4|max:30');
+        $form->text('phone_number', __('Nomor Telepon'))->rules('required|numeric|:max:30');
+        $form->textarea('address', __('Alamat'))->rules('required|min:5');
 
         return $form;
     }

@@ -130,6 +130,17 @@ class GroupController extends Controller
     {
         $grid = new Grid(new Group());
 
+        $grid->filter(function ($filter) {
+
+            // Remove the default id filter
+            $filter->disableIdFilter();
+
+            // Add a column filter
+            $filter->like('group_code', 'Kode Grup');
+            $filter->like('group_name', 'Nama Grup');
+            $filter->like('institute', 'Instansi');
+        });
+
         $grid->column('id', __('Id'));
         $grid->column('group_code', __('Kode Grup'));
         $grid->column('group_name', __('Nama Grup'));
@@ -160,8 +171,8 @@ class GroupController extends Controller
         $show->field('institute', __('Instansi'));
         $show->field('email', __('E-Mail'));
         $show->field('group_address', __('Alamat'));
-        $show->field('created_at', __('Created at'));
-        $show->field('updated_at', __('Updated at'));
+        // $show->field('created_at', __('Created at'));
+        // $show->field('updated_at', __('Updated at'));
 
         return $show;
     }
@@ -175,12 +186,11 @@ class GroupController extends Controller
     {
         $form = new Form(new Group());
 
-        $form->hidden('group_code', __('Kode Grup'))->default('GRP-' . Str::random(5))->rules('required|unique:groups,group_code');
-        $form->text('group_name', __('Nama Grup'))->rules('required');
-        $form->text('group_phone_number', __('Nomor Telepon Grup'))->rules('required|numeric');
-
-        $form->text('institute', __('Instansi'))->rules('required');
-        $form->email('email', __('E-Mail Grup'))->required()->rules('email');
+        $form->hidden('group_code', __('Kode Grup'))->default('GRP-' . Str::random(5))->creationRules('required|unique:groups,group_code')->updateRules('required|unique:groups,group_code,{{id}}');
+        $form->text('group_name', __('Nama Grup'))->rules('required|max:30');
+        $form->text('group_phone_number', __('Nomor Telepon Grup'))->rules('required|max:30|string|numeric');
+        $form->text('institute', __('Instansi'))->rules('required|max:30');
+        $form->email('email', __('E-Mail Grup'))->required()->rules('email|max:50');
         $form->textarea('group_address', __('Alamat'))->required();
 
         return $form;

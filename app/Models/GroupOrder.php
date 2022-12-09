@@ -2,8 +2,8 @@
 
 namespace App\Models;
 
-use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\Factories\HasFactory;
 
 class GroupOrder extends Model
 {
@@ -19,6 +19,16 @@ class GroupOrder extends Model
     public function user()
     {
         return $this->belongsToMany(User::class, 'group_order_users');
+    }
+
+    public function payment()
+    {
+        return $this->hasOne(GroupOrderPayment::class);
+    }
+
+    public function task()
+    {
+        return $this->hasMany(GroupOrderTask::class);
     }
 
     protected $with = ["user", "group"];

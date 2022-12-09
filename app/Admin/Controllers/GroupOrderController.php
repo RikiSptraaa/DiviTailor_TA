@@ -17,6 +17,7 @@ use Encore\Admin\Layout\Content;
 use Illuminate\Routing\Controller;
 use App\Admin\Actions\GroupOrder\Cetak;
 use App\Admin\Actions\GroupOrder\Accept;
+use Illuminate\Support\Facades\Response;
 use App\Admin\Actions\GroupOrder\Decline;
 use App\Admin\Actions\GroupOrder\Show as Lihat;
 use Encore\Admin\Controllers\HasResourceActions;
@@ -123,11 +124,13 @@ class GroupOrderController extends Controller
         // return redirect('/admin/users');
     }
 
-    public function print(GroupOrder $borongan)
+    public function print($id)
     {
+        $borongan = GroupOrder::find($id);
         $carbon = new Carbon();
-        $pdf = Pdf::loadView('pdf.borongan', compact('borongan', 'carbon'));
-        return $pdf->stream('Borongan-' . $borongan->id);
+        $pdf = Pdf::loadView('pdf.borongan', compact('borongan', 'carbon'))->setWarnings(false);
+
+        return  $pdf->stream('Borongan-' . $borongan->invoice_number);
     }
 
 
@@ -174,19 +177,25 @@ class GroupOrderController extends Controller
 
         $grid->column('id', 'id');
         $grid->column('invoice_number', __('Nomor Nota'));
-        $grid->user('Daftar Pelanggan')->take(5)->pluck('name')->label();
+
+        // $grid->user('Daftar Pelanggan')->take(5)->pluck('name')->label();
         $grid->column('group.group_name', __('Nama Grup'));
         $grid->column('group.institute', __('Nama Intansi'));
-        $grid->column('group_order_date', __('Tanggal Borongan'));
+        $grid->column('group_order_date', __('Tanggal Borongan'))->display(function () {
+            return Carbon::parse($this->group_order_date)->dayName . ', ' . Carbon::parse($this->group_order_date)->format('d F Y');
+        });
         $grid->column('order_kind', __('Jenis Pakaian'));
-        $grid->column('users_total', __('Total Anggota Pelanggan'));
-        $grid->column('price_per_item', __('Harga Per Unit'))->display(function () {
-            if ($this->price_per_item === null) {
-                return Money::IDR(0, true);
-            } else {
-                return Money::IDR($this->price_per_item, true);
-            }
-        });;
+        $grid->column('users_total', __('Jumlah Pelanggan'));
+        // $grid->column('Print')->display(function () {
+        //     return "<a href='/borongan/cetak/{$this->id}'> Cetak </a>  ";
+        // });
+        // $grid->column('price_per_item', __('Harga Per Unit'))->display(function () {
+        //     if ($this->price_per_item === null) {
+        //         return Money::IDR(0, true);
+        //     } else {
+        //         return Money::IDR($this->price_per_item, true);
+        //     }
+        // });
         $grid->column('price', __('Total Harga'))->display(function () {
             if ($this->price === null) {
                 return Money::IDR(0, true);
@@ -194,7 +203,7 @@ class GroupOrderController extends Controller
                 return Money::IDR($this->price, true);
             }
         });
-        $grid->column('is_acc', __('Status Borongan'))->using([0 => 'Tidak Diterima', 1 => 'Diterima'])->default("Belum Ada Status");
+        // $grid->column('is_acc', __('Status Borongan'))->using([0 => 'Tidak Diterima', 1 => 'Diterima'])->default("Belum Ada Status");
 
         return $grid;
     }
@@ -213,7 +222,7 @@ class GroupOrderController extends Controller
         $show->field('group_id', __('Group id'));
         $show->field('group_order_date', __('Tanggal Borongan'));
         $show->field('order_kind', __('Jenis Pakaian'));
-        $show->field('users_total', __('Total Anggota Pelanggan'));
+        $show->field('users_total', __('Jumlah Pelanggan'));
         $show->field('price_per_item', __('Harga Per Unit'))->as(function () {
             return Money::IDR($this->price_per_item, true);
         });;
@@ -256,13 +265,22 @@ class GroupOrderController extends Controller
     protected function form()
     {
         $form = new Form(new GroupOrder());
+        $group = Group::all();
+        $option = [];
+
+        foreach ($group as $key => $value) {
+            $option[$value->id] = $value->group_code . "(" . $value->group_name . "-" . $value->institute . ")";
+        }
+
+        // dd($option);
+
 
         $form->hidden('invoice_number', __('Nomor Nota Borongan'))->default('BRG-' . Str::random(5));
-        $form->select('group_id', __('Nama Grup'))->options(Group::all()->pluck('group_name', 'id'))->rules(['required']);
+        $form->select('group_id', __('Nama Grup'))->options($option)->rules(['required']);
         $form->date('group_order_date', __('Tanggal Borongan'))->default(date('Y-m-d'))->rules(['required', 'date']);
         $form->multipleSelect('user', 'Pelanggan')->options(User::all()->pluck('name', 'id'))->rules(['required']);
         $form->text('order_kind', __('Jenis Baju'))->rules(['required']);
-        $form->number('users_total', __('Total Anggota Pelanggan'))->rules(['required']);
+        $form->number('users_total', __('Jumlah Pelanggan'))->rules(['required', 'numeric']);
         $form->currency('price', __('Total Harga'))->symbol('Rp.')->rules('numeric|required');
         $form->currency('price_per_item', __('Harga Per Unit'))->symbol('Rp.')->rules('numeric|required');
         $form->switch('is_acc', __('Is acc'))->disable()->value(true);

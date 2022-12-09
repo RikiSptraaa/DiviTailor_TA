@@ -13,4 +13,8 @@ class Employee extends Model
     {
         return $this->hasMany(Task::class);
     }
+    public function groupTask()
+    {
+        return $this->hasMany(GroupOrderTask::class);
+    }
 }

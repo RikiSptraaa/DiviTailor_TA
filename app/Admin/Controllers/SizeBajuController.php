@@ -120,36 +120,36 @@ class SizeBajuController extends Controller
         });
         $grid->column('id', __('ID'))->sortable();
         $grid->column('user.name', __('Nama Pelanggan'));
-        $grid->column('panjang_baju', __('Panjang baju'))->display(function () {
-            return $this->panjang_baju . ' cm';
-        });
-        $grid->column('lingkar_kerah', __('Lingkar kerah'))->display(function () {
-            return $this->lingkar_kerah . ' cm';
-        });
-        $grid->column('lingkar_dada', __('Lingkar dada'))->display(function () {
-            return $this->lingkar_dada . ' cm';
-        });
-        $grid->column('lingkar_perut', __('Lingkar perut'))->display(function () {
-            return $this->lingkar_perut . ' cm';
-        });
-        $grid->column('lingkar_pinggul', __('Lingkar pinggul'))->display(function () {
-            return $this->lingkar_pinggul . ' cm';
-        });
-        $grid->column('lebar_bahu', __('Lebar bahu'))->display(function () {
-            return $this->lebar_bahu . ' cm';
-        });
-        $grid->column('panjang_lengan_pendek', __('Panjang lengan pendek'))->display(function () {
-            return $this->panjang_lengan_pendek . ' cm';
-        });
-        $grid->column('panjang_lengan_panjang', __('Panjang lengan panjang'))->display(function () {
-            return $this->panjang_lengan_panjang . ' cm';
-        });
-        $grid->column('lingkar_lengan_bawah', __('Lingkar lengan bawah'))->display(function () {
-            return $this->lingkar_lengan_bawah . ' cm';
-        });
-        $grid->column('lingkar_lengan_atas', __('Lingkar lengan atas'))->display(function () {
-            return $this->lingkar_lengan_atas . ' cm';
-        });
+        // $grid->column('panjang_baju', __('Panjang baju'))->display(function () {
+        //     return $this->panjang_baju . ' cm';
+        // });
+        // $grid->column('lingkar_kerah', __('Lingkar kerah'))->display(function () {
+        //     return $this->lingkar_kerah . ' cm';
+        // });
+        // $grid->column('lingkar_dada', __('Lingkar dada'))->display(function () {
+        //     return $this->lingkar_dada . ' cm';
+        // });
+        // $grid->column('lingkar_perut', __('Lingkar perut'))->display(function () {
+        //     return $this->lingkar_perut . ' cm';
+        // });
+        // $grid->column('lingkar_pinggul', __('Lingkar pinggul'))->display(function () {
+        //     return $this->lingkar_pinggul . ' cm';
+        // });
+        // $grid->column('lebar_bahu', __('Lebar bahu'))->display(function () {
+        //     return $this->lebar_bahu . ' cm';
+        // });
+        // $grid->column('panjang_lengan_pendek', __('Panjang lengan pendek'))->display(function () {
+        //     return $this->panjang_lengan_pendek . ' cm';
+        // });
+        // $grid->column('panjang_lengan_panjang', __('Panjang lengan panjang'))->display(function () {
+        //     return $this->panjang_lengan_panjang . ' cm';
+        // });
+        // $grid->column('lingkar_lengan_bawah', __('Lingkar lengan bawah'))->display(function () {
+        //     return $this->lingkar_lengan_bawah . ' cm';
+        // });
+        // $grid->column('lingkar_lengan_atas', __('Lingkar lengan atas'))->display(function () {
+        //     return $this->lingkar_lengan_atas . ' cm';
+        // });
         // $grid->column('created_at', __('Created at'));
         // $grid->column('updated_at', __('Updated at'));
 
@@ -201,8 +201,8 @@ class SizeBajuController extends Controller
         $show->field('lingkar_lengan_atas', __('Lingkar lengan atas'))->as(function () {
             return "{$this->lingkar_lengan_atas} cm";
         });
-        $show->field('created_at', __('Created at'));
-        $show->field('updated_at', __('Updated at'));
+        // $show->field('created_at', __('Created at'));
+        // $show->field('updated_at', __('Updated at'));
 
         return $show;
     }

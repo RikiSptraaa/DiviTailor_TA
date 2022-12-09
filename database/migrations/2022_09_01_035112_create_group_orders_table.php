@@ -18,7 +18,7 @@ return new class extends Migration
             $table->string('invoice_number', 10);
             $table->foreignId('group_id')->constrained('groups')->cascadeOnDelete();
             $table->date('group_order_date');
-            $table->string('order_kind');
+            $table->string('order_kind', 30);
             $table->bigInteger('price');
             $table->boolean('is_acc')->nullable();
             $table->timestamps();

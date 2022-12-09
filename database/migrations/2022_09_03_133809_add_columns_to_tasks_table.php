@@ -14,7 +14,7 @@ return new class extends Migration
     public function up()
     {
         Schema::table('tasks', function (Blueprint $table) {
-            $table->date('task_started')->default(date('Y-m-d'))->after('order_id');
+            $table->date('task_started')->after('order_id');
         });
     }
 

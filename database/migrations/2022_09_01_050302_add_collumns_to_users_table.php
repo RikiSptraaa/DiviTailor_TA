@@ -14,10 +14,10 @@ return new class extends Migration
     public function up()
     {
         Schema::table('users', function (Blueprint $table) {
-            $table->string('phone_number')->after('email');
-            $table->string('address')->after('phone_number');
-            $table->string('city')->after('address');
-            $table->string('institute')->after('city');
+            $table->string('phone_number', 20)->after('email');
+            $table->text('address')->after('phone_number');
+            $table->string('city', 30)->after('address');
+            $table->string('institute', 30)->after('city');
             $table->boolean('gender')->after('institute');
         });
     }

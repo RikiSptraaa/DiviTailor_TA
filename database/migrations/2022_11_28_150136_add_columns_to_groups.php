@@ -15,7 +15,7 @@ return new class extends Migration
     {
         Schema::table('groups', function (Blueprint $table) {
             $table->string('group_code', 12)->after('id');
-            $table->string('group_phone_number')->after('group_name');
+            $table->string('group_phone_number', 30)->after('group_name');
             $table->text('group_address')->after('email');
         });
     }

@@ -8,6 +8,8 @@ use App\Admin\Controllers\PaymentController;
 use App\Admin\Controllers\SizeBajuController;
 use App\Admin\Controllers\GroupOrderController;
 use App\Admin\Controllers\SizeCelanaController;
+use App\Admin\Controllers\GroupOrderTaskController;
+use App\Admin\Controllers\GroupOrderPaymentController;
 
 Admin::routes();
 
@@ -23,11 +25,14 @@ Route::group([
     $router->resource('uk/baju', SizeBajuController::class);
     $router->resource('uk/celana', SizeCelanaController::class);
     $router->resource('group', GroupController::class);
+    $router->resource('/borongan/payments', GroupOrderPaymentController::class);
+    $router->resource('/borongan/tasks', GroupOrderTaskController::class);
     $router->resource('borongan', GroupOrderController::class);
     $router->resource('orders', OrderController::class);
     $router->resource('employees', EmployeeController::class);
     $router->resource('tasks', TaskController::class);
     $router->resource('payments', PaymentController::class);
-    $router->get('/orders/cetak/{order}', [OrderController::class, 'print']);
-    $router->get('/borongan/cetak/{borongan}', [GroupOrderController::class, 'print']);
 });
+
+Route::get('/orders/cetak/{order}', [OrderController::class, 'print']);
+Route::get('/borongan/cetak/{borongan}', [GroupOrderController::class, 'print']);

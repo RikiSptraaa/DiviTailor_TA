@@ -2,21 +2,22 @@
 
 namespace App\Admin\Controllers;
 
-use App\Models\Task;
 use App\Models\Order;
 use Encore\Admin\Form;
 use Encore\Admin\Grid;
 use Encore\Admin\Show;
 use App\Models\Employee;
 use Akaunting\Money\Money;
+use App\Models\GroupOrder;
 use Encore\Admin\Widgets\Box;
+use App\Models\GroupOrderTask;
 use Illuminate\Support\Carbon;
 use Encore\Admin\Layout\Content;
 use Illuminate\Routing\Controller;
 use Encore\Admin\Controllers\HasResourceActions;
 
 
-class TaskController extends Controller
+class GroupOrderTaskController extends Controller
 {
     use HasResourceActions;
 
@@ -25,7 +26,7 @@ class TaskController extends Controller
      *
      * @var string
      */
-    protected $title = 'Penugasan';
+    protected $title = 'Penugasan Borongan';
 
     /**
      * Set description for following 4 action pages.
@@ -115,26 +116,30 @@ class TaskController extends Controller
 
     protected function grid()
     {
-        $grid = new Grid(new Task());
+        $grid = new Grid(new GroupOrderTask());
 
         $grid->filter(function ($filter) {
             $filter->disableIdFilter();
-            $filter->like('order.invoice_number', 'Nomor Nota');
+            // $filter->date('task_date', 'Tanggal');
+            $filter->like('groupOrder.invoice_number', 'Nomor Nota');
             $filter->like('employee.employee_name', 'Nama Karyawan');
-            $filter->month('task_started', 'Bulan');
-            // $filter->date('created_at', 'Tanggal');
+            $filter->month('task_date', 'Bulan');
         });
 
         $grid->column('id', __('Id'));
         $grid->column('employee.employee_name', __('Karyawan'));
-        $grid->column('order_id', __('Nomor Nota'))->display(function () {
-            return "<a href='/admin/orders/" . $this->order_id . "'>" .  $this->order->invoice_number . "</a>";
+        $grid->column('group_order_id', __('Nomor Nota'))->display(function () {
+            return "<a href='/admin/borongan/" . $this->group_order_id . "'>" .  $this->groupOrder->invoice_number . "</a>";
         });
-        $grid->column('task_started', __('Tanggal Pengerjaan'))->display(function () {
+        $grid->column('task_date', __('Tanggal Pengerjaan'))->display(function () {
             return Carbon::parse($this->task_started)->dayName . ', ' . Carbon::parse($this->task_started)->format('d F Y');
         });
         $grid->column('task_status', __('Status Penugasan'))->using([0 => 'Dalam Pengerjaan', 1 => 'Sudah Siap']);
-        $grid->column('employee_fee', __('Ongkos Karyawan'))->display(function () {
+        $grid->column('total_unit_asigned', __('Jumlah Unit Yang Dikerjakan'));
+        $grid->column('employee_fee', __('Ongkos Karyawan Per Unit'))->display(function () {
+            return Money::IDR($this->employee_fee, true);
+        });
+        $grid->column('employee_fee_total', __('Total Ongkos Karyawan'))->display(function () {
             return Money::IDR($this->employee_fee, true);
         });
         // $grid->column('created_at', __('Tanggal Pengerjaan'));
@@ -151,18 +156,22 @@ class TaskController extends Controller
      */
     protected function detail($id)
     {
-        $show = new Show(Task::findOrFail($id));
+        $show = new Show(GroupOrderTask::findOrFail($id));
 
         $show->field('id', __('Id'));
         $show->field('employee.employee_name', __('Karyawan'));
-        $show->field('order_id', __('Nomor Nota'))->as(function () {
-            return "<a href='/admin/orders/" . $this->order_id . "'>" .  $this->order->invoice_number . "</a>";
-        });
-        $show->field('task_started', __('Tanggal Pengerjaan'))->as(function () {
+        $show->field('group_order_id', __('Nomor Nota'))->as(function () {
+            return "<a href='/admin/orders/" . $this->group_order_id . "'>" .  $this->groupOrder->invoice_number . "</a>";
+        })->unescape();
+        $show->field('task_date', __('Tanggal Pengerjaan'))->as(function () {
             return Carbon::parse($this->task_started)->dayName . ', ' . Carbon::parse($this->task_started)->format('d F Y');
         });
         $show->field('task_status', __('Status Penugasan'))->using([0 => 'Dalam Pengerjaan', 1 => 'Sudah Siap']);
-        $show->field('employee_fee', __('Ongkos Karyawan'))->as(function () {
+        $show->field('total_unit_asigned', __('Jumlah Unit Yang Dikerjakan'));
+        $show->field('employee_fee', __('Ongkos Karyawan Per Unit'))->as(function () {
+            return Money::IDR($this->employee_fee, true);
+        });
+        $show->field('employee_fee_total', __('Ttoal Ongkos Karyawan'))->as(function () {
             return Money::IDR($this->employee_fee, true);
         });
         $show->field('note', __('keterangan'));
@@ -179,7 +188,7 @@ class TaskController extends Controller
      */
     protected function form()
     {
-        $form = new Form(new Task());
+        $form = new Form(new GroupOrderTask());
         // $order = Order::with('user')->where('is_acc', 1)->get();
         // $option = [];
         // foreach ($order as $orders) {
@@ -192,10 +201,12 @@ class TaskController extends Controller
         ];
 
         $form->select('handler_id', __('Karyawan'))->options(Employee::all()->pluck('employee_name', 'id'))->rules('required');
-        $form->select('order_id', __('Orderan'))->options(Order::all()->pluck('invoice_number', 'id'))->rules('required');
+        $form->select('group_order_id', __('Nomor Nota Borongan'))->options(GroupOrder::all()->pluck('invoice_number', 'id'))->rules('required');
+        $form->date('task_date', __('Tanggal Pengerjaan'))->rules('required|date');
         $form->switch('task_status', __('Status Penugasan'))->states($states)->rules('required');
-        $form->date('task_started', __('Tanggal Pengerjaan'))->rules('required|date');
-        $form->currency('employee_fee', __('Ongkos Karyawan'))->symbol('Rp.')->rules('required|numeric');
+        $form->number('total_unit_asigned', __('Jumlah Unit Yang Dikerjakan'));
+        $form->currency('employee_fee', __('Ongkos Karyawan Per Unit'))->symbol('Rp.')->rules('required|numeric');
+        $form->currency('employee_fee_total', __('Total Ongkos Karyawan'))->symbol('Rp.')->rules('required|numeric');
         $form->textarea('note', __('Keterangan'));
 
         return $form;

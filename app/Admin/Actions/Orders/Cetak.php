@@ -20,4 +20,8 @@ class Cetak extends RowAction
     {
         return admin_url('/orders/cetak/' . $this->row->getKey());
     }
+    public function render()
+    {
+        return "<a href='/orders/cetak/{$this->getKey()}'  target='_blank' >{$this->name()}</a>";
+    }
 }

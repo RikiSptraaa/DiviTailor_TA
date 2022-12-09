@@ -127,8 +127,10 @@ class OrderController extends Controller
     }
 
     //print invoice methot dengan dompdf
-    public function print(Order $order)
+    public function print($id)
     {
+        $order = Order::with('user', 'payment')->find($id);
+
         $carbon = new Carbon();
         $pdf = Pdf::loadView('pdf.pesanan', compact('order', 'carbon'));
         return $pdf->stream('Pesanan-' . $order->id);
@@ -243,8 +245,8 @@ class OrderController extends Controller
             return Money::IDR($this->total_harga, true);
         });
         $show->field('payment.payment_status', 'Status Pembayaran');
-        $show->field('created_at', __('Created at'));
-        $show->field('updated_at', __('Updated at'));
+        // $show->field('created_at', __('Created at'));
+        // $show->field('updated_at', __('Updated at'));
 
         return $show;
     }
@@ -264,10 +266,7 @@ class OrderController extends Controller
         ];
         //opsi dari payment status
         $payment_option = [
-            'Uang Muka 25%' => 'Uang Muka 25%',
-            'Uang Muka 50%' => 'Uang Muka 50%',
-            'Lunas' => 'Lunas',
-            'Menunggu Pembayaran' => 'Menunggu Pembayaran'
+            0 => 'Uang Muka 25%', 1 => 'Uang Muka 50%', 2 => 'Lunas', 3 => 'Menunggu Pembayaran'
         ];
         $task_option = [
             0 => 'Dalam Pengerjaan',
@@ -275,12 +274,12 @@ class OrderController extends Controller
 
         ];
         //form tambah dan edit pesanan
-        $form->hidden('invoice_number', __('Nomor Nota'))->default('ORD-' . Str::random(5))->rules('required|unique:orders,invoice_number');
+        $form->hidden('invoice_number', __('Nomor Nota'))->default('ORD-' . Str::random(5))->creationRules('required|unique:orders,invoice_number')->updateRules('required|unique:orders,invoice_number,{{id}}');
         $form->select('user_id', __('Nama Pelanggan'))->options(User::all()->pluck('name', 'id'))->rules('required');
         $form->switch('is_acc', __('Status Pesanan'))->states($states)->rules('required')->default(1)->disable();
         $form->date('order_date', __('Tanggal'))->default(date('Y-m-d'))->rules('required|date');
-        $form->date('payment.paid_date', __('Tanggal Bayar'))->default(date('Y-m-d'));
-        $form->text('jenis_baju', __('Jenis baju'))->rules('required');
+        $form->date('payment.paid_date', __('Tanggal Bayar'))->default(null);
+        $form->text('jenis_baju', __('Jenis baju'))->rules('required|max:30');
         $form->select('payment.payment_status', 'Status Pembayaran')->options($payment_option)->rules('required');
         $form->currency('total_harga', __('Total harga'))->symbol('Rp.')->rules('required|numeric');
 

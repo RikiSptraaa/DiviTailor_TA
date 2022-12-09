@@ -1,7 +1,14 @@
 <?php
 
+use Carbon\Carbon;
+// use Barryvdh\DomPDF\PDF;
+use Dompdf\Options;
+use App\Models\GroupOrder;
+use Barryvdh\DomPDF\Facade\Pdf;
 use Illuminate\Support\Facades\Route;
 use App\Admin\Controllers\OrderController;
+use App\Admin\Controllers\GroupOrderController;
+// use Mpdf\Mpdf as Mpdf;
 
 /*
 |--------------------------------------------------------------------------
@@ -19,3 +26,15 @@ Route::get('/', function () {
 });
 
 Route::view('/sidebar', 'admin.index');
+
+
+// Route::get('/orders/cetak/{order}', [OrderController::class, 'print']);
+// Route::get('/borongan/cetak/{borongan}', function ($id) {
+//     $borongan = GroupOrder::find($id);
+//     $carbon = new Carbon;
+//     $pdf = pdf::loadView('pdf.borongan', compact('carbon', 'borongan'));
+//     ob_clean();
+//     // response()->header('Content-type', 'application/pdf');
+//     return $pdf->download('Borongan- ' . $borongan->invoice_number);
+//     // exit();
+// });

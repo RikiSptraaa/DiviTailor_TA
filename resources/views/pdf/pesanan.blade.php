@@ -51,7 +51,13 @@
         } */
     </style>
     <body class="font-sans antialiased">
-        <p class="text-lg">Divi Tailor Invoice</p>
+        <div class="profile" style="color: rgb(162, 161, 161)">
+            <img src="{{ asset('uploads/images/logo_divi.png') }}" alt="" srcset="" width="140" height="100">
+            <p style="margin:0; font-size: 0.75rem; ">Divi Tailor </p>
+            <p style="margin:0; font-size: 0.75rem; ">+62 819 990 664 49</p>
+            <p style="margin:0; font-size: 0.75rem; ">Jl. Gunung Agung Gg.Carik Denpasar, Bali</p>
+    </div>
+        <p class="text-lg">Divi Tailor Invoice Pesanan</p>
         <!-- Page Content -->
         <div class='main'>
             <label>Nama Pemesan</label>
@@ -69,8 +75,8 @@
             <p class="text-base">{{ $order->user->email }}</p>
         </div>
         <div class='main'>
-            <label>Id Pesanan</label>
-            <p class="text-lg">{{ $order->id }}</p>
+            <label>Nomor Nota</label>
+            <p class="text-lg">{{ $order->invoice_number }}</p>
             <div class="line"></div>
             <label>Tanggal</label>
             <p class="text-base">{{$carbon->createFromFormat('Y-m-d',$order->order_date )->translatedFormat('l')}}, {{ $order->order_date}}</p>

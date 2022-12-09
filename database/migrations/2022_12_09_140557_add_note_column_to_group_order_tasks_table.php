@@ -13,8 +13,8 @@ return new class extends Migration
      */
     public function up()
     {
-        Schema::table('payments', function (Blueprint $table) {
-            $table->string('paid_image', '50')->after('paid_date')->nullable();
+        Schema::table('group_order_tasks', function (Blueprint $table) {
+            $table->text('note')->after('employee_fee_total');
         });
     }
 
@@ -25,8 +25,9 @@ return new class extends Migration
      */
     public function down()
     {
-        Schema::table('payments', function (Blueprint $table) {
-            $table->dropColumn('paid_image');
+        Schema::table('group_order_tasks', function (Blueprint $table) {
+            //
+            $table->dropColumn('note');
         });
     }
 };
