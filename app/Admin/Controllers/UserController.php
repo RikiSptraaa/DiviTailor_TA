@@ -2,6 +2,7 @@
 
 namespace App\Admin\Controllers;
 
+use App\Admin\AdminExtensions\UserExporter;
 use App\Models\User;
 use Encore\Admin\Form;
 use Encore\Admin\Grid;
@@ -113,6 +114,8 @@ class UserController extends Controller
     protected function grid()
     {
         $grid = new Grid(new User());
+
+        $grid->exporter(new UserExporter());
 
         $grid->filter(function ($filter) {
 

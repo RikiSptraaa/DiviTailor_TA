@@ -13,6 +13,7 @@ use Encore\Admin\Widgets\Box;
 use Illuminate\Support\Carbon;
 use Encore\Admin\Layout\Content;
 use Illuminate\Routing\Controller;
+use App\Admin\AdminExtensions\TaskExporter;
 use Encore\Admin\Controllers\HasResourceActions;
 
 
@@ -116,6 +117,8 @@ class TaskController extends Controller
     protected function grid()
     {
         $grid = new Grid(new Task());
+        $grid->exporter(new TaskExporter());
+
 
         $grid->filter(function ($filter) {
             $filter->disableIdFilter();

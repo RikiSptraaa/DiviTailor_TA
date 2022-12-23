@@ -58,8 +58,6 @@ class SizeBajuController extends Controller
         $content->title($this->title())
             ->description($this->description['index'] ?? trans('admin.list'))
             ->body($this->grid());
-        $content->body(new Box('Hello'));
-
         return $content;
     }
 
@@ -114,6 +112,8 @@ class SizeBajuController extends Controller
     protected function grid()
     {
         $grid = new Grid(new SizeBaju());
+        $grid->disableExport();
+
         // $grid->disableCreateButton();
         $grid->filter(function ($filter) {
             $filter->like('user.name', 'Nama Pelanggan');

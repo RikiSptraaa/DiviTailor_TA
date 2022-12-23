@@ -9,6 +9,7 @@ use Encore\Admin\Grid;
 use Encore\Admin\Show;
 use App\Models\Payment;
 use Encore\Admin\Controllers\AdminController;
+use App\Admin\AdminExtensions\PaymentExporter;
 
 
 class PaymentController extends AdminController
@@ -29,6 +30,8 @@ class PaymentController extends AdminController
     {
 
         $grid = new Grid(new Payment());
+        $grid->exporter(new PaymentExporter());
+
         $grid->filter(function ($filter) {
 
             // Remove the default id filter

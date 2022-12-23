@@ -18,6 +18,8 @@ use App\Admin\Actions\Orders\Accept;
 
 use App\Admin\Actions\Orders\Decline;
 use function PHPUnit\Framework\isNull;
+use App\Admin\AdminExtensions\UserExporter;
+use App\Admin\AdminExtensions\OrderExporter;
 use Encore\Admin\Controllers\HasResourceActions;
 
 class OrderController extends Controller
@@ -138,7 +140,10 @@ class OrderController extends Controller
 
     protected function grid($is_acc = false)
     {
+
         $grid = new Grid(new Order());
+        $grid->exporter(new OrderExporter());
+
 
         if ($is_acc) {
             //table pesanan diterima

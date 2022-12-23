@@ -135,6 +135,7 @@ class SizeCelanaController extends Controller
 
         $grid->column('id', __('Id'));
         $grid->column('user.name', __('Nama Pelanggan'));
+        $grid->disableExport();
         // $grid->column('lingkar_pinggang', __('Lingkar pinggang'))->display(function () {
         //     return $this->lingkar_pinggang . ' cm';
         // });
