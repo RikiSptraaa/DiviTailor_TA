@@ -50,10 +50,18 @@
               
                        @endguest
                         @auth
+                        <li  class="text-sm p-2">Hi, {{ auth()->user()->name }}</li>
+                        <hr>
 
                         <li><a class="hover:bg-black hover:text-white">Profile</a></li>
+                        <li><a class="hover:bg-black hover:text-white">Pesanan</a></li>
+                        <li><a class="hover:bg-black hover:text-white">Borongan</a></li>
                         <li><a class="hover:bg-black hover:text-white">Settings</a></li>
-                        <li><a class="hover:bg-black hover:text-white">Logout</a></li>
+                        <hr>
+                        <form action="{{ route('logout') }}" method="POST">
+                            @csrf
+                            <li><button type="submit" class="hover:bg-black hover:text-white">Logout</button></li>
+                        </form>
                         @endauth
                     </ul>
                 </div>

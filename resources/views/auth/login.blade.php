@@ -9,7 +9,7 @@
         <div>
             <x-input-label for="email" :value="__('Email')" />
             {{-- <x-text-input id="email" class="block mt-1 w-full" type="email" name="email" :value="old('email')" required autofocus /> --}}
-            <input type="text" placeholder="E-Mail"
+            <input type="text" placeholder="E-Mail" name="email"
                 class="input h-[35px] input-bordered w-full focus:ring-black focus:border-none" />
             <x-input-error :messages="$errors->get('email')" class="mt-2" />
         </div>
