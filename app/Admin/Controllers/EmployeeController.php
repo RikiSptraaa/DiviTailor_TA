@@ -25,6 +25,8 @@ class EmployeeController extends AdminController
     protected function grid()
     {
         $grid = new Grid(new Employee());
+        $grid->disableExport();
+
 
         $grid->filter(function ($filter) {
             $filter->disableIdFilter();

@@ -9,6 +9,7 @@ use Encore\Admin\Show;
 use App\Models\GroupOrder;
 use App\Models\GroupOrderPayment;
 use Encore\Admin\Controllers\AdminController;
+use App\Admin\AdminExtensions\GroupOrderPaymentExporter;
 
 
 class GroupOrderPaymentController extends AdminController
@@ -28,6 +29,8 @@ class GroupOrderPaymentController extends AdminController
     protected function grid()
     {
         $grid = new Grid(new GroupOrderPayment());
+        $grid->exporter(new GroupOrderPaymentExporter());
+
         $grid->filter(function ($filter) {
 
             // Remove the default id filter

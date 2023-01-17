@@ -21,6 +21,7 @@ use Illuminate\Support\Facades\Response;
 use App\Admin\Actions\GroupOrder\Decline;
 use App\Admin\Actions\GroupOrder\Show as Lihat;
 use Encore\Admin\Controllers\HasResourceActions;
+use App\Admin\AdminExtensions\GroupOrderExporter;
 
 class GroupOrderController extends Controller
 {
@@ -137,6 +138,8 @@ class GroupOrderController extends Controller
     protected function grid($is_acc = false)
     {
         $grid = new Grid(new GroupOrder());
+        $grid->exporter(new GroupOrderExporter());
+
 
         if ($is_acc) {
             $grid->setTitle('Borongan Diterima');
@@ -156,7 +159,6 @@ class GroupOrderController extends Controller
                 $actions->disableView();
             });
             $grid->disableCreateButton();
-            $grid->disableExport();
             $grid->disableFilter();
             $grid->disableTools();
             $grid->disableBatchActions();
@@ -170,8 +172,8 @@ class GroupOrderController extends Controller
             $filter->disableIdFilter();
 
             // Add a column filter
+            $filter->like('invoice_number', 'Nomor Nota');
             $filter->like('group.group_name', 'Nama Grup');
-            $filter->like('order_kind', 'Jenis Pakaian');
             $filter->date('group_order_date', 'tanggal');
         });
 
@@ -219,19 +221,26 @@ class GroupOrderController extends Controller
         $show = new Show(GroupOrder::findOrFail($id));
 
         $show->field('id', __('Id'));
-        $show->field('group_id', __('Group id'));
-        $show->field('group_order_date', __('Tanggal Borongan'));
+        $show->field('group.group_code', __('Group id'))->as(function () {
+            return $this->group->group_code . '(' . $this->group->group_name . ')';
+        });
+        $show->field('invoice_number', __('No Nota'));
+        $show->field('group_order_date', __('Tanggal Borongan'))->as(function () {
+            return Carbon::parse($this->group_order_date)->dayName . ', ' . Carbon::parse($this->group_order_date)->format('d F Y');
+        });
         $show->field('order_kind', __('Jenis Pakaian'));
-        $show->field('users_total', __('Jumlah Pelanggan'));
+        $show->field('users_total', __('Jumlah Pelanggan'))->as(function () {
+            return $this->users_total . " Orang";
+        });
         $show->field('price_per_item', __('Harga Per Unit'))->as(function () {
             return Money::IDR($this->price_per_item, true);
         });;
         $show->field('price', __('Total Harga'))->as(function () {
             return Money::IDR($this->price, true);
         });
-        $show->field('is_acc', __('Is acc'))->using([0 => 'Ditolak', 1 => 'Diterima']);
-        $show->field('created_at', __('Created at'));
-        $show->field('updated_at', __('Updated at'));
+        $show->field('is_acc', __('Status'))->using([0 => 'Ditolak', 1 => 'Diterima']);
+        // $show->field('created_at', __('Created at'));
+        // $show->field('updated_at', __('Updated at'));
         $show->user('Pelanggan', function ($users) {
             // $comments->resource('/admin/comments');
             $users->id();
@@ -281,8 +290,8 @@ class GroupOrderController extends Controller
         $form->multipleSelect('user', 'Pelanggan')->options(User::all()->pluck('name', 'id'))->rules(['required']);
         $form->text('order_kind', __('Jenis Baju'))->rules(['required']);
         $form->number('users_total', __('Jumlah Pelanggan'))->rules(['required', 'numeric']);
-        $form->currency('price', __('Total Harga'))->symbol('Rp.')->rules('numeric|required');
-        $form->currency('price_per_item', __('Harga Per Unit'))->symbol('Rp.')->rules('numeric|required');
+        $form->currency('price', __('Total Harga'))->symbol('Rp.')->rules('required|numeric');
+        $form->currency('price_per_item', __('Harga Per Unit'))->symbol('Rp.')->rules('required|numeric|');
         $form->switch('is_acc', __('Is acc'))->disable()->value(true);
 
         return $form;

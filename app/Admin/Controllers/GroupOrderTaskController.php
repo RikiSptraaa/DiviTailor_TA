@@ -15,6 +15,7 @@ use Illuminate\Support\Carbon;
 use Encore\Admin\Layout\Content;
 use Illuminate\Routing\Controller;
 use Encore\Admin\Controllers\HasResourceActions;
+use App\Admin\AdminExtensions\GroupOrderTaskExporter;
 
 
 class GroupOrderTaskController extends Controller
@@ -117,6 +118,8 @@ class GroupOrderTaskController extends Controller
     protected function grid()
     {
         $grid = new Grid(new GroupOrderTask());
+        $grid->exporter(new GroupOrderTaskExporter());
+
 
         $grid->filter(function ($filter) {
             $filter->disableIdFilter();

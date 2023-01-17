@@ -1,22 +1,174 @@
-<style>
-    .layout{
-        display: flex;
-        justify-content: start;
-        padding: 10px;
-    }
-</style>
+<x-app-layout>
+    {{-- <x-slot name="header">
+        <h2 class="font-semibold text-xl text-gray-800 leading-tight">
+            {{ __('Dashboard') }}
+    </h2>
+    </x-slot> --}}
+    {{-- <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+        <div class="carousel w-full my-4">
+            <div id="slide1" class="carousel-item relative w-full">
+                <img src="https://placeimg.com/800/200/tech" class="w-full" />
+                <div class="absolute flex justify-between transform -translate-y-1/2 left-5 right-5 top-1/2">
+                    <a href="#slide4" class="btn btn-circle">❮</a>
+                    <a href="#slide2" class="btn btn-circle">❯</a>
+                </div>
+            </div>
+            <div id="slide2" class="carousel-item relative w-full">
+                <img src="https://placeimg.com/800/200/arch" class="w-full" />
+                <div class="absolute flex justify-between transform -translate-y-1/2 left-5 right-5 top-1/2">
+                    <a href="#slide1" class="btn btn-circle">❮</a>
+                    <a href="#slide3" class="btn btn-circle">❯</a>
+                </div>
+            </div>
+            <div id="slide3" class="carousel-item relative w-full">
+                <img src="https://placeimg.com/800/200/arch" class="w-full" />
+                <div class="absolute flex justify-between transform -translate-y-1/2 left-5 right-5 top-1/2">
+                    <a href="#slide2" class="btn btn-circle">❮</a>
+                    <a href="#slide4" class="btn btn-circle">❯</a>
+                </div>
+            </div>
+            <div id="slide4" class="carousel-item relative w-full">
+                <img src="https://placeimg.com/800/200/arch" class="w-full" />
+                <div class="absolute flex justify-between transform -translate-y-1/2 left-5 right-5 top-1/2">
+                    <a href="#slide3" class="btn btn-circle">❮</a>
+                    <a href="#slide1" class="btn btn-circle">❯</a>
+                </div>
+            </div>
+        </div>
+    </div> --}}
 
-<div class="layout">
-    <svg xmlns="http://www.w3.org/2000/svg" version="1.0" width="100" height="100" viewBox="0 0 299.000000 156.000000" preserveAspectRatio="xMidYMid meet">
-        <g fill="#dd4b39" transform="translate(0.000000,156.000000) scale(0.100000,-0.100000)"  stroke="none">
-            <path d="M1149 1533 c-120 -74 -25 -234 117 -199 15 4 41 22 58 41 31 33 34 34 241 69 116 20 220 39 233 41 21 5 22 3 22 -61 l0 -67 68 6 c37 4 170 14 297 23 191 14 230 14 234 3 16 -50 99 -89 158 -75 44 12 93 68 93 109 0 48 -39 93 -92 108 -54 14 -123 -10 -147 -52 -10 -19 -27 -31 -46 -34 -36 -6 -500 -55 -521 -55 -11 0 -14 15 -14 65 0 36 -1 65 -2 65 -2 0 -109 -14 -238 -30 -129 -16 -241 -30 -247 -30 -7 0 -19 13 -28 30 -8 16 -29 36 -45 45 -38 20 -108 19 -141 -2z"/>
-            <path d="M157 1224 c-16 -16 -5 -32 33 -47 22 -8 40 -21 40 -29 0 -21 -119 -610 -130 -644 -10 -29 -44 -54 -74 -54 -12 0 -26 -20 -26 -38 0 -4 78 -6 173 -6 213 2 260 15 348 104 193 193 225 610 53 696 -33 16 -65 19 -224 22 -102 2 -189 0 -193 -4z m335 -80 c44 -40 62 -101 61 -214 -1 -284 -128 -483 -290 -457 -19 4 -37 8 -39 10 -7 6 128 662 139 676 16 19 101 9 129 -15z"/>
-            <path d="M1007 1211 c-4 -16 3 -22 37 -33 49 -16 49 2 -1 -253 -48 -248 -91 -436 -103 -451 -6 -6 -26 -15 -45 -18 -27 -5 -35 -12 -35 -29 0 -22 2 -22 147 -20 139 1 148 3 151 21 2 16 -5 22 -35 29 -27 6 -39 15 -41 29 -3 23 100 543 123 622 14 46 21 56 53 69 35 14 52 29 52 46 0 4 -67 7 -149 7 -139 0 -149 -1 -154 -19z"/>
-            <path d="M1540 1210 c0 -14 12 -25 40 -36 l40 -16 0 -88 c0 -49 -7 -222 -16 -385 -8 -164 -13 -299 -10 -302 15 -15 40 18 104 139 91 173 339 608 360 631 9 10 27 23 41 30 14 7 27 20 29 30 3 15 -7 17 -102 17 -96 0 -106 -2 -106 -18 0 -11 11 -24 25 -30 14 -6 25 -17 25 -24 -1 -7 -57 -121 -125 -253 -103 -198 -125 -234 -125 -205 1 66 29 425 35 441 3 9 24 24 46 34 25 12 39 25 39 37 0 17 -11 18 -150 18 -144 0 -150 -1 -150 -20z"/>
-            <path d="M2347 1210 c-4 -16 2 -22 34 -30 34 -9 39 -15 39 -40 0 -28 -98 -520 -123 -615 -12 -46 -17 -51 -55 -65 -31 -10 -42 -20 -42 -35 0 -19 5 -20 147 -18 137 1 148 3 151 20 2 15 -6 21 -35 29 -28 6 -39 15 -41 31 -4 26 102 558 124 626 13 40 23 52 53 64 34 15 51 29 51 46 0 4 -67 7 -149 7 -140 0 -149 -1 -154 -20z"/>
-            <path d="M1810 303 c-32 -4 -60 -25 -60 -46 0 -5 25 -5 57 -1 52 6 56 5 49 -12 -13 -34 -29 -190 -22 -218 9 -36 36 -34 36 2 0 16 9 64 20 108 12 43 19 92 15 108 -5 28 -4 28 30 23 29 -5 35 -3 35 12 0 27 -59 35 -160 24z"/>
-            <path d="M2488 273 c-35 -39 -64 -90 -79 -141 -21 -72 -99 -111 -107 -54 -6 42 -35 45 -88 7 -58 -42 -74 -44 -74 -10 0 33 -19 32 -78 -2 -65 -38 -44 -13 28 33 64 42 73 54 37 54 -33 0 -180 -88 -174 -104 3 -8 1 -18 -5 -24 -6 -6 -7 -15 -4 -21 12 -18 47 -12 94 15 40 24 46 25 54 10 13 -23 64 -20 105 5 l34 21 28 -26 c34 -32 46 -32 105 -1 35 19 46 21 46 10 0 -40 86 -43 139 -6 36 26 41 26 41 1 0 -34 42 -46 91 -27 22 9 46 14 53 11 7 -3 40 13 73 36 33 22 65 40 71 40 20 0 23 -19 7 -56 -8 -20 -13 -39 -10 -42 7 -7 77 15 100 32 26 19 11 34 -16 17 -27 -16 -34 -9 -19 19 14 27 8 44 -24 66 -29 18 -76 12 -76 -10 0 -7 -18 -25 -39 -39 l-40 -26 6 33 c6 36 6 36 -60 50 -23 6 -44 -3 -107 -44 -82 -52 -127 -63 -150 -35 -10 13 -6 22 28 59 48 52 82 115 82 151 0 35 -38 34 -72 -2z m22 -60 c0 -11 -52 -84 -57 -79 -6 6 38 86 48 86 5 0 9 -3 9 -7z m213 -119 c11 -11 -13 -45 -40 -55 -47 -18 -56 25 -10 47 27 14 42 16 50 8z"/>
-            <path d="M2269 211 c-20 -16 -22 -22 -11 -33 10 -10 18 -10 40 2 33 19 42 50 14 50 -11 0 -30 -9 -43 -19z"/>
-        </g>
-    </svg>
-</div>
+
+    <div data-aos="fade-up" data-aos-duration="1000"  data-aos-once="true" class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 mt-6">
+        <div class="hero min-h-screen" style="background-image: url(https://placeimg.com/1000/800/suite);">
+            <div class="hero-overlay bg-opacity-60"></div>
+            <div class="hero-content text-center text-neutral-content">
+                <div class="max-w-md">
+                    <h1 class="mb-5 text-5xl font-bold" data-aos="fade-left" data-aos-duration="1000">Divi Tailor</h1>
+                    <p class="mb-5 text-justify" data-aos="fade-left" data-aos-duration="1000">
+                        Divi Tailor merupakan toko jasa jahit pakaian seragam di wilayah Denpasar yang sudah menerima
+                        jasa jahit mulai dari individu sampai kelompok. Divi Tailor sudah berdiri sejak 1997.
+                    </p>
+                    <button class="btn btn-primary" data-aos="fade-left">Buat Pesanan</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="py-4" data-aos="fade-up" data-aos-duration="1000" data-aos-once="true">
+        <div class="max-w-7xl mx-auto sm:px-6 lg:px-8 mt-6 mb-10">
+            <div class="bg-white overflow-hidden shadow-sm rounded-none">
+                <div class="p-4 text-gray-900 text-center">
+                    <section class="overflow-hidden text-gray-700">
+                        <div class="container px-5 py-2 mx-auto lg:pt-18 lg:px-28">
+                            <h1 class="text-2xl font-bold">Jasa Menjahit Kami</h1>
+                            <div class="flex justify-center pt-2 mb-5">
+                                <hr class=" bg-gray-700 text-center w-[20%]">
+                            </div>
+                            <div class="flex flex-wrap -m-1 md:-m-2">
+                                <div class="flex flex-wrap w-1/2">
+                                    <div class="w-1/2 p-1 md:p-2">
+                                        <img alt="gallery"
+                                            class="block object-cover object-center w-full h-full rounded-lg"
+                                            src="https://mdbcdn.b-cdn.net/img/Photos/Horizontal/Nature/4-col/img%20(70).webp">
+                                    </div>
+                                    <div class="w-1/2 p-1 md:p-2">
+                                        <img alt="gallery"
+                                            class="block object-cover object-center w-full h-full rounded-lg"
+                                            src="https://mdbcdn.b-cdn.net/img/Photos/Horizontal/Nature/4-col/img%20(72).webp">
+                                    </div>
+                                    <div class="w-full p-1 md:p-2">
+                                        <img alt="gallery"
+                                            class="block object-cover object-center w-full h-full rounded-lg"
+                                            src="https://mdbcdn.b-cdn.net/img/Photos/Horizontal/Nature/4-col/img%20(73).webp">
+                                    </div>
+                                </div>
+                                <div class="flex flex-wrap w-1/2">
+                                    <div class="w-full p-1 md:p-2">
+                                        <img alt="gallery"
+                                            class="block object-cover object-center w-full h-full rounded-lg"
+                                            src="https://mdbcdn.b-cdn.net/img/Photos/Horizontal/Nature/4-col/img%20(74).webp">
+                                    </div>
+                                    <div class="w-1/2 p-1 md:p-2">
+                                        <img alt="gallery"
+                                            class="block object-cover object-center w-full h-full rounded-lg"
+                                            src="https://mdbcdn.b-cdn.net/img/Photos/Horizontal/Nature/4-col/img%20(75).webp">
+                                    </div>
+                                    <div class="w-1/2 p-1 md:p-2">
+                                        <img alt="gallery"
+                                            class="block object-cover object-center w-full h-full rounded-lg"
+                                            src="https://mdbcdn.b-cdn.net/img/Photos/Horizontal/Nature/4-col/img%20(77).webp">
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </section>
+                    {{-- <div class="border-b-[1px] border-solid border-b-gray-900 w-10"> --}}
+                    <div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8" data-aos="fade-up" data-aos-duration="1000" data-aos-once="true">
+        <h1 class="text-2xl font-bold text-center">Proses Menjahit</h1>
+        <div class="flex justify-center pt-2 mb-4">
+            <hr class=" bg-gray-700 text-center w-[20%]">
+        </div>
+        <div class="md:grid md:grid-cols-4 sm:grid-cols-1 justify-center gap-40">
+            <div class="text-center sm:mb-6">
+                <i class="fas fa-user-friends fa-5x mb-3"></i>
+                <h1 class="text-xl font-bold">Diskusi</h1>
+            </div>
+            <div class="text-center sm:mb-6">
+                <i class="fas fa-ruler-horizontal fa-5x mb-3"></i><br>
+                <h1 class="text-xl font-bold">Pengukuran</h1>
+            </div>
+            <div class="text-center sm:mb-6">
+                <i class="fas fa-tasks fa-5x mb-3"></i>
+                <h1 class="text-xl font-bold">Pengerjaan</h1>
+            </div>
+            <div class="text-center sm:mb-6">
+                <i class="fas fa-user-tie fa-5x mb-3"></i><br>
+                <h1 class="judul text-xl font-bold">Pesanan Siap</h1>
+            </div>
+        </div>
+    </div>
+
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 my-20" data-aos="fade-up" data-aos-duration="1000" data-aos-once="true">
+        <div class="grid md:grid-cols-2 gap-8 sm:grid-cols-1">
+            <div>
+                <div class="mapouter w-full">
+                    <div class="gmap_canvas"><iframe width="100%" height="300" id="gmap_canvas"
+                            src="https://maps.google.com/maps?q=divi%20tailor&t=&z=13&ie=UTF8&iwloc=&output=embed"
+                            frameborder="0" scrolling="no" marginheight="0" marginwidth="0"></iframe><a
+                            href="https://123movies-to.org"></a><br>
+                        <style>
+                            .mapouter {
+                                position: relative;
+                                text-align: right;
+                            }
+
+                        </style><a href="https://www.embedgooglemap.net"></a>
+                        <style>
+                            .gmap_canvas {
+                                overflow: hidden;
+                                background: none !important;
+                            }
+
+                        </style>
+                    </div>
+                </div>
+
+            </div>
+            <div>
+                <h1 class="text-5xl font-bold">Temukan Divi Tailor!</h1>
+                <p class="py-6">Divi Tailor berlokasi pada Jl. Gunung Agung Gg.Carik, Padangsambian, Kec. Denpasar
+                    Barat, Bali</p>
+                <button class="btn btn-primary">Temukan Kami</button>
+            </div>
+        </div>
+
+    </div>
+
+</x-app-layout>

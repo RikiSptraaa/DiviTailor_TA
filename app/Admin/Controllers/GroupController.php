@@ -141,6 +141,9 @@ class GroupController extends Controller
             $filter->like('institute', 'Instansi');
         });
 
+        $grid->disableExport();
+
+
         $grid->column('id', __('Id'));
         $grid->column('group_code', __('Kode Grup'));
         $grid->column('group_name', __('Nama Grup'));
