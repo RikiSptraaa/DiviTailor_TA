@@ -52,7 +52,7 @@ class PaymentExporter extends BasePdfExporter
         $model = $model->get()->toArray();
         $no = 0;
         $payment_status = [
-            0 => 'Uang Muka 25%', 1 => 'Uang Muka 50%', 2 => 'Lunas', 3 => 'Menunggu Pembayaran'
+            0 => 'Uang Muka 25%', 1 => 'Uang Muka 50%', 2 => 'Lunas', 3 => 'Menunggu Pembayaran', 4 => 'Menunggu Konfirmasi Pembayaran'
         ];
 
         foreach ($model as $key => $value) {

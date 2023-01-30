@@ -1,8 +1,25 @@
 <nav x-data="{ open: false }">
     <!-- Primary Navigation Menu -->
-
     <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+         {{-- navbar --}}
         <div class="navbar">
+            <div class="flex-none lg:hidden">
+                <div class="dropdown">
+                    <label tabindex="0" class="btn btn-square btn-ghost">
+                        <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24"
+                            class="inline-block w-6 h-6 stroke-current">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                d="M4 6h16M4 12h16M4 18h16"></path>
+                        </svg>
+                    </label>
+                    <ul tabindex="0" class="dropdown-content menu p-2 shadow bg-base-100 w-52">
+                      <li><a>Home</a></li>
+                      <li><a>Galery</a></li>
+                      <li><a>About</a></li>
+                    </ul>
+                </div>
+               
+            </div>
             <div class="flex-1">
                 <svg xmlns="http://www.w3.org/2000/svg" version="1.0" width="60" height="60"
                     viewBox="0 0 299.000000 156.000000" preserveAspectRatio="xMidYMid meet">
@@ -27,11 +44,12 @@
                 </svg>
             </div>
             <div class="flex-none">
-                <ul class="menu menu-horizontal px-1 sm:hidden">
+                <ul class="menu menu-horizontal px-1  lg:flex md:flex  sm:hidden hidden">
                     <li><a>Home</a></li>
                     <li><a>About</a></li>
                     <li><a>Galery</a></li>
                 </ul>
+
                 <div class="dropdown dropdown-end">
                     <label tabindex="0" class="btn btn-ghost btn-circle">
                         <div class="indicator">
@@ -48,37 +66,42 @@
                 <div class="dropdown dropdown-end">
                     <label tabindex="0" class="btn btn-ghost btn-circle avatar">
                         <div class="w-10 rounded-full">
-                            <img src="https://placeimg.com/80/80/user" />
+                            <img src="{{ asset('img/blank-pfp.webp') }}" />
                         </div>
                     </label>
                     <ul tabindex="0"
-                        class="menu menu-compact dropdown-content mt-3 p-2 shadow bg-white text-black rounded-box w-52">
+                        class="menu menu-compact dropdown-content mt-3 p-2 shadow bg-white text-black rounded-none w-52">
                         @guest
                         <li><a href="/login"
-                                class="hover:bg-black hover:text-white active:bg-black active:text-white">Login</a></li>
+                                class="hover:bg-black hover:text-white active:bg-black active:text-white">Login</a>
+                        </li>
                         <li><a href="/register"
                                 class="hover:bg-black hover:text-white active:bg-black active:text-white">Daftar</a>
                         </li>
 
                         @endguest
                         @auth
-                        <li class="text-sm p-2">Hi, {{ auth()->user()->name }}</li>
+                        <li id="profile-name" class="text-sm p-2">Hi, {{ auth()->user()->name }}</li>
                         <hr>
 
-                        <li><label class="hover:bg-black hover:text-white" for="modal-profile">Profile</label></li>
-                        <li><a class="hover:bg-black hover:text-white">Pesanan</a></li>
+                        <li><label class="hover:bg-black hover:text-white" for="modal-profile">Profile</label>
+                        </li>
+                        <li><a class="hover:bg-black hover:text-white" href="{{ route('orders.index') }}">Pesanan</a></li>
                         <li><a class="hover:bg-black hover:text-white">Borongan</a></li>
                         <li><a class="hover:bg-black hover:text-white">Settings</a></li>
                         <hr>
                         <form action="{{ route('logout') }}" method="POST">
                             @csrf
-                            <li><button type="submit" class="hover:bg-black hover:text-white">Logout</button></li>
+                            <li><button type="submit" class="hover:bg-black hover:text-white">Logout</button>
+                            </li>
                         </form>
                         @endauth
                     </ul>
                 </div>
             </div>
         </div>
-    </div>
+        {{-- end navbar --}}
 
+
+    </div>
 </nav>
