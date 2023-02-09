@@ -9,6 +9,13 @@ use Illuminate\Support\Facades\Validator;
 
 class PaymentController extends Controller
 {
+    public function index(){
+        $payment = Payment::with('order')->whereHas('order', function($q){
+            $q->where('user_id', '>=', auth()->user()->id);
+        })->get()->toArray();
+
+        return view('payment.index', compact('payment'));
+    }
     public function update(Request $request, $order_id){
         $old_file = Payment::where('order_id', $order_id)->first()->toArray();
         $validator = Validator::make($request->all(), [

@@ -73,7 +73,7 @@ $task_status = [
             <div class="collapse-content ">
                 @if(!isset($order[1]))
                 Tidak Ada Pesanan
-                @endif
+                @else
                 @foreach($order[1] as $key => $value)
                 <div class="card w-full mt-2">
                     <div class="card-body border ">
@@ -130,6 +130,7 @@ $task_status = [
                     </div>
                 </div>
                 @endforeach
+                @endif
             </div>
         </div>
         
