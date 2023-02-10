@@ -50,9 +50,9 @@ $task_status = [
                             <form id="form-delete">
                                 @method('delete')
                                 @csrf
-                                <a class="btn btn-sm" target="_blank" href="{{ route('orders.print', $value['order']['id']) }}">Cetak  </a>
-                                <button class="btn btn-sm btn-warning btn-delete" type="submit">Batalkan
-                                    Pesanan</button>
+                                <a class="btn btn-sm" target="_blank" download href="{{ asset('uploads/'.$value['paid_file']) }}">Download File Bukti Bayar</a>
+                                <a class="btn btn-sm" target="_blank" href="{{ route('orders.print', $value['id']) }}">Cetak
+                                    Nota</a>
                             </form>
                         </div>
                     </div>

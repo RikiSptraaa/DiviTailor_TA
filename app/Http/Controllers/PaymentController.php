@@ -10,7 +10,7 @@ use Illuminate\Support\Facades\Validator;
 class PaymentController extends Controller
 {
     public function index(){
-        $payment = Payment::with('order')->whereHas('order', function($q){
+        $payment = Payment::with('order')->whereIn('payment_status', [0,1,2])->whereHas('order', function($q){
             $q->where('user_id', '>=', auth()->user()->id);
         })->get()->toArray();
 

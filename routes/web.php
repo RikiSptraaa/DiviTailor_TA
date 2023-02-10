@@ -1,6 +1,7 @@
 <?php
 
 use Illuminate\Support\Facades\Route;
+use App\Http\Controllers\GroupController;
 use App\Http\Controllers\PaymentController;
 use App\Http\Controllers\ProfileController;
 use App\Http\Controllers\OrderController as OrderController_1;
@@ -39,6 +40,8 @@ Route::middleware('auth')->group(function () {
 
     Route::get('payment',[PaymentController::class, 'index'])->name('payments.index');
     Route::put('payment/{order_id}', [PaymentController::class, 'update'])->name('payments.update');
+
+    Route::get('/group', [GroupController::class, 'index'])->name('group.index');
 
 });
 
