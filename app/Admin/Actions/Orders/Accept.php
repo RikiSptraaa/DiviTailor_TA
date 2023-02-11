@@ -24,7 +24,7 @@ class Accept extends RowAction
     {
         Payment::create([
             'order_id' => $order->id,
-            'payment_status' => 'Menunggu Pembayaran'
+            'payment_status' => 3
         ]);
         $price = (int)$request->get('total_harga');
         $order->update(['is_acc' => 1, 'total_harga' => $price]);
@@ -36,7 +36,7 @@ class Accept extends RowAction
             'pdf' => $pdf->output(),
             'subject' => 'Penerimaan Pesanan',
             'title' => 'Pesanan Anda Kami Terima',
-            'body' => 'Halo, pelanggan pesanan anda telah kami terima, silahkan klik link ini untuk melakukan pembayaran. Setelah melakukan pembayaran silahkan balas email ini dengan mengirim bukti bayar atau silahkan chat kami di aplikasi WhatsApp untuk mengirim bukti bayar',
+            'body' => 'Halo, '. $order->user->name .' pesanan anda telah kami terima, Setelah melakukan pembayaran silahkan unggah/upload bukti bayar pada menu pesanan. Jika butuh bantuan silahkan chat kami di aplikasi WhatsApp dengan klik link dibawah',
             'link' => 'https://wa.me/+6281999066449'
         ];
 

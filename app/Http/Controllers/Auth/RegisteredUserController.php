@@ -42,7 +42,7 @@ class RegisteredUserController extends Controller
             'instansi' => ['required', 'max:30'],
             'jenis_kelamin' => ['required', 'numeric'],
             'kota' => ['required', 'max:30'],
-            'email' => ['required', 'string', 'email', 'max:255', 'unique:'.User::class],
+            'email' => ['required', 'string', 'email', 'max:255', Rule::unique(User::class)->ignore($this->user()->email)],
             'password' => ['required', 'confirmed', Rules\Password::defaults()],
         ],[
             'nama_pengguna.regex' => 'nama pengguna tidak diperbolehkan berisi spasi' 

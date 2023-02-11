@@ -38,7 +38,7 @@
     </div> --}}
 
 
-    <div data-aos="fade-up" data-aos-duration="1000"  data-aos-once="true" class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 mt-6">
+    <div data-aos="fade-up" data-aos-duration="1000" data-aos-once="true" class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 mt-6">
         <div class="hero min-h-screen" style="background-image: url(https://placeimg.com/1000/800/suite);">
             <div class="hero-overlay bg-opacity-60"></div>
             <div class="hero-content text-center text-neutral-content">
@@ -111,24 +111,24 @@
     </div>
 
     <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8" data-aos="fade-up" data-aos-duration="1000" data-aos-once="true">
-        <h1 class="text-2xl font-bold text-center">Proses Menjahit</h1>
+        <h1 class="text-2xl font-bold text-center" data-aos="fade-up" data-aos-duration="1000" data-aos-once="true">Proses Menjahit</h1>
         <div class="flex justify-center pt-2 mb-4">
             <hr class=" bg-gray-700 text-center w-[20%]">
         </div>
         <div class="md:grid md:grid-cols-4 sm:grid-cols-1 justify-center gap-40">
-            <div class="text-center sm:mb-6">
+            <div class="text-center sm:mb-6" data-aos="fade-up" data-aos-duration="1000" data-aos-once="true">
                 <i class="fas fa-user-friends fa-5x mb-3"></i>
                 <h1 class="text-xl font-bold">Diskusi</h1>
             </div>
-            <div class="text-center sm:mb-6">
+            <div class="text-center sm:mb-6" data-aos="fade-up" data-aos-duration="1000" data-aos-once="true">
                 <i class="fas fa-ruler-horizontal fa-5x mb-3"></i><br>
                 <h1 class="text-xl font-bold">Pengukuran</h1>
             </div>
-            <div class="text-center sm:mb-6">
+            <div class="text-center sm:mb-6" data-aos="fade-up" data-aos-duration="1000" data-aos-once="true">
                 <i class="fas fa-tasks fa-5x mb-3"></i>
                 <h1 class="text-xl font-bold">Pengerjaan</h1>
             </div>
-            <div class="text-center sm:mb-6">
+            <div class="text-center sm:mb-6" data-aos="fade-up" data-aos-duration="1000" data-aos-once="true">
                 <i class="fas fa-user-tie fa-5x mb-3"></i><br>
                 <h1 class="judul text-xl font-bold">Pesanan Siap</h1>
             </div>

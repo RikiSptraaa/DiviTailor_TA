@@ -46,7 +46,7 @@ class PaymentController extends AdminController
         $grid->column('order_id', __('Nomor Nota'))->display(function () {
             return "<a href='/admin/orders/" . $this->order_id . "'>" .  $this->order->invoice_number . "</a>";
         });
-        $grid->column('payment_status', __('Status Pembayaran'))->using([0 => 'Uang Muka 25%', 1 => 'Uang Muka 50%', 2 => 'Lunas', 3 => 'Menunggu Pembayaran']);
+        $grid->column('payment_status', __('Status Pembayaran'))->using([0 => 'Uang Muka 25%', 1 => 'Uang Muka 50%', 2 => 'Lunas', 3 => 'Menunggu Pembayaran', 4 => 'Menunggu Konfirmasi Pembayaran']);
         $grid->column('paid_date', __('Tanggal Pembayaran'))->default('Belum Melakukan Pembayaran')->display(function () {
             // if($this->paid_date == null){}
             return $this->paid_date == null ? "Belum Melakukan Pembayaran" : Carbon::parse($this->paid_date)->dayName . ', ' . Carbon::parse($this->paid_date)->format('d F Y');
@@ -72,7 +72,7 @@ class PaymentController extends AdminController
         $show->field('order_id', __('Nomor Nota'))->as(function () {
             return "<a href='/admin/orders/'" . $this->order_id . ">" .  $this->order->invoice_number . "</a>";
         })->unescape();
-        $show->field('payment_status', __('Status Pembayaran'))->using([0 => 'Uang Muka 25%', 1 => 'Uang Muka 50%', 2 => 'Lunas', 3 => 'Menunggu Pembayaran']);
+        $show->field('payment_status', __('Status Pembayaran'))->using([0 => 'Uang Muka 25%', 1 => 'Uang Muka 50%', 2 => 'Lunas', 3 => 'Menunggu Pembayaran', 4 => 'Menunggu Konfirmasi Pembayaran']);
         $show->field('paid_date', __('Tanggal Pembayaran'))->as(function () {
             return Carbon::parse($this->paid_date)->dayName . ', ' . Carbon::parse($this->paid_date)->format('d F Y');
         });
@@ -98,12 +98,12 @@ class PaymentController extends AdminController
         //     $option[$orders->id] = $orders->jenis_baju . '-' . $orders->user->name . '-' . $orders->id;
         // }
         $payment_option = [
-            0 => 'Uang Muka 25%', 1 => 'Uang Muka 50%', 2 => 'Lunas', 3 => 'Menunggu Pembayaran'
+            0 => 'Uang Muka 25%', 1 => 'Uang Muka 50%', 2 => 'Lunas', 3 => 'Menunggu Pembayaran', 4 => 'Menunggu Konfirmasi Pembayaran'
         ];
         $form->select('order_id', __('Nomor Nota'))->options($order->pluck('invoice_number', 'id'))->rules('required');
         $form->select('payment_status', __('Status Pembayaran'))->options($payment_option)->rules('required');
         $form->date('paid_date', __('Tanggal Pembayaran'));
-        $form->file('paid_file', __('Bukti Pembayaran'))->move('payments')->uniqueName()->rules('mimes:pdf,png,jpeg,jpg');
+        $form->file('paid_file', __('Bukti Pembayaran'))->move('Payments')->uniqueName()->rules('mimes:pdf,png,jpeg,jpg');
         // dd();
 
         return $form;

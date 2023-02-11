@@ -9,6 +9,8 @@ class Group extends Model
 {
     use HasFactory;
 
+    protected $guarded = ['id'];
+
     public function order()
     {
         return $this->hasMany(GroupOrder::class);
