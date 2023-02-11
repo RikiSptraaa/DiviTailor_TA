@@ -33,6 +33,13 @@ class OrderController extends Controller
             ], 422);
         }
 
+        if(!auth()->user()->baju()->exists() && !auth()->user()->celana()->exists()) {
+            return response()->json([
+                'status' => false,
+                'message' => " Pesanan Tidak Dapat Dibuat Dikarenakan Anda Belum Memiliki Data Ukuran!",
+            ], 422);
+        }
+
         Order::create([
             'invoice_number' => 'ORD-' . Str::random(5),
             'user_id' => auth()->user()->id,

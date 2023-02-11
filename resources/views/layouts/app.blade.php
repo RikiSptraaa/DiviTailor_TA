@@ -85,7 +85,8 @@
                                 pihak Divi Tailor terlebih dahulu.</p>
                         </div>
                         <div class="modal-action">
-                            <button for="modal-create-order" class="btn btn-sm" id="btn-save">Buat Pesanan</button>
+                            <button for="modal-create-order" class="btn btn-sm" {{  !auth()->user()->baju()->exists() && !auth()->user()->celana()->exists() ? 'disabled' : '' }} 
+                                id="btn-save">Buat Pesanan</button>
                         </div>
                     </form>
                 </div>
@@ -474,16 +475,16 @@
                                 Swal.fire({
                                     confirmButtonColor: 'black',
                                     title: 'Kesalahan!',
-                                    text: 'Pesanan Gagal Dibuat!',
+                                    text: error.responseJSON.message,
                                     icon: 'error',
                                 })
                                 console.log(error);
                                 $('#error-date').html('<li>' + error
-                                        .responseJSON.tanggal_pesanan + '</li>')
+                                        .responseJSON.tanggal_pesanan ?? '' + '</li>')
                                     .css(
                                         'display', '');
                                 $('#error-order-kind').html('<li>' + error
-                                    .responseJSON.jenis_pakaian + '</li>').css(
+                                    .responseJSON.jenis_pakaian ?? '' + '</li>').css(
                                     'display', '');
                             },
                         });

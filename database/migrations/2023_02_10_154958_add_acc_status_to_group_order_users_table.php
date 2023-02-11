@@ -14,7 +14,7 @@ return new class extends Migration
     public function up()
     {
         Schema::table('group_order_users', function (Blueprint $table) {
-            $table->boolean('acc_status')->after('group_order_id');
+            $table->boolean('acc_status')->after('group_order_id')->nullable();
         });
     }
 

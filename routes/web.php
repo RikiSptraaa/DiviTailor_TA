@@ -42,6 +42,7 @@ Route::middleware('auth')->group(function () {
     Route::put('payment/{order_id}', [PaymentController::class, 'update'])->name('payments.update');
 
     Route::get('/group', [GroupController::class, 'index'])->name('group.index');
+    Route::post('/group', [GroupController::class, 'store'])->name('group.store');
 
 });
 
