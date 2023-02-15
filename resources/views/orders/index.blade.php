@@ -71,65 +71,65 @@ $task_status = [
                 Pesanan Diterima
             </label>
             <div class="collapse-content ">
-                @if(!isset($order[1]))
+                @if(!isset($order[1]) && is_null($order[1]))
                 Tidak Ada Pesanan
                 @else
-                @foreach($order[1] as $key => $value)
-                <div class="card w-full mt-2">
-                    <div class="card-body border ">
-                        <h2 class="card-title"><i class="fas fa-receipt fa-2x"></i>
-                            {{ $value['invoice_number'] }}
-                        </h2>
-                        <p>{{ Carbon::parse($value['order_date'])->dayName . ', ' . Carbon::parse($value['order_date'])->format('d F Y'); }}
-                        </p>
-                        <p>{{ $value['jenis_baju'] }}</p>
+                    @foreach($order[1] as $key => $value)
+                    <div class="card w-full mt-2">
+                        <div class="card-body border ">
+                            <h2 class="card-title"><i class="fas fa-receipt fa-2x"></i>
+                                {{ $value['invoice_number'] }}
+                            </h2>
+                            <p>{{ Carbon::parse($value['order_date'])->dayName . ', ' . Carbon::parse($value['order_date'])->format('d F Y'); }}
+                            </p>
+                            <p>{{ $value['jenis_baju'] }}</p>
 
-                        <div class="badge 
-                        {{ $value['payment']['payment_status'] == 0 ? 'badge-info' : ''  }}
-                        {{ $value['payment']['payment_status'] == 1 ? 'badge-info' : ''  }}
-                        {{ $value['payment']['payment_status'] == 2 ? 'badge-success' : ''  }}
-                        {{ $value['payment']['payment_status'] == 3 ? 'badge-warning' : ''  }}
-                        ">
-                            <p>Status Pembayaran : {{ $payment_status[$value['payment']['payment_status']] }} </p>
-                        </div>
+                            <div class="badge 
+                            {{ $value['payment']['payment_status'] == 0 ? 'badge-info' : ''  }}
+                            {{ $value['payment']['payment_status'] == 1 ? 'badge-info' : ''  }}
+                            {{ $value['payment']['payment_status'] == 2 ? 'badge-success' : ''  }}
+                            {{ $value['payment']['payment_status'] == 3 ? 'badge-warning' : ''  }}
+                            ">
+                                <p>Status Pembayaran : {{ $payment_status[$value['payment']['payment_status']] }} </p>
+                            </div>
 
-                        @if(isset($value['task']) && !is_null($value['task']) )
-                        <div class="badge {{ $value['task']['task_status'] == 0 ? 'badge-warning' : 'badge-success' }}">
-                            Status Pesanan : {{ $task_status[$value['task']['task_status']] }}
-                        </div>
-                        @endif
+                            @if(isset($value['task']) && !is_null($value['task']) )
+                            <div class="badge {{ $value['task']['task_status'] == 0 ? 'badge-warning' : 'badge-success' }}">
+                                Status Pesanan : {{ $task_status[$value['task']['task_status']] }}
+                            </div>
+                            @endif
 
-                        @php
-                        if ($value['payment']['payment_status'] == 0) {
-                        $sisa_harga = $value['total_harga'] - ($value['total_harga'] * 0.25);
-                        }
-                        elseif ($value['payment']['payment_status'] == 1) {
-                        $sisa_harga = $value['total_harga'] - ($value['total_harga'] * 0.5);
-                        }
-                        @endphp
-                        @if(isset($sisa_harga) && $value['payment']['payment_status'] == 0 ||
-                        $value['payment']['payment_status'] == 1 )
-                        <div class="badge badge-info">Sisa Pembayaran:
-                            <x-money amount="{{ $sisa_harga}}" currency="IDR" convert />
-                        </div>
-                        @endif
-                        <p>
-                            <x-money amount="{{ $value['total_harga'] }}" currency="IDR" convert />
-                        </p>
+                            @php
+                            if ($value['payment']['payment_status'] == 0) {
+                            $sisa_harga = $value['total_harga'] - ($value['total_harga'] * 0.25);
+                            }
+                            elseif ($value['payment']['payment_status'] == 1) {
+                            $sisa_harga = $value['total_harga'] - ($value['total_harga'] * 0.5);
+                            }
+                            @endphp
+                            @if(isset($sisa_harga) && $value['payment']['payment_status'] == 0 ||
+                            $value['payment']['payment_status'] == 1 )
+                            <div class="badge badge-info">Sisa Pembayaran:
+                                <x-money amount="{{ $sisa_harga}}" currency="IDR" convert />
+                            </div>
+                            @endif
+                            <p>
+                                <x-money amount="{{ $value['total_harga'] }}" currency="IDR" convert />
+                            </p>
 
-                        <div class="card-actions justify-end">
-                            <a class="btn btn-sm" target="_blank" href="{{ route('orders.print', $value['id']) }}">Cetak
-                                Nota</a>
-                            <label for="modal-pembayaran" data-id="{{ $value['id'] }}" 
-                            data-url="{{ '/order'.'/'.$value['id'] }}"
-                                class="btn btn-sm show-payment {{ $value['payment']['payment_status'] == 2 ? 'hidden' : ''  }} {{ $value['payment']['payment_status'] == 4 ? 'hidden' : ''  }}">
-                                Bayar / Bayar Sisa
-                            </label>
+                            <div class="card-actions justify-end">
+                                <a class="btn btn-sm" target="_blank" href="{{ route('orders.print', $value['id']) }}">Cetak
+                                    Nota</a>
+                                <label for="modal-pembayaran" data-id="{{ $value['id'] }}" 
+                                data-url="{{ '/order'.'/'.$value['id'] }}"
+                                    class="btn btn-sm show-payment {{ $value['payment']['payment_status'] == 2 ? 'hidden' : ''  }} {{ $value['payment']['payment_status'] == 4 ? 'hidden' : ''  }}">
+                                    Bayar / Bayar Sisa
+                                </label>
 
+                            </div>
                         </div>
                     </div>
-                </div>
-                @endforeach
+                    @endforeach
                 @endif
             </div>
         </div>

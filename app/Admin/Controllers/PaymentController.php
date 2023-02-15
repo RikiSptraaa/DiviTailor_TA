@@ -8,6 +8,7 @@ use Encore\Admin\Form;
 use Encore\Admin\Grid;
 use Encore\Admin\Show;
 use App\Models\Payment;
+use Illuminate\Support\Facades\File;
 use Encore\Admin\Controllers\AdminController;
 use App\Admin\AdminExtensions\PaymentExporter;
 
@@ -104,7 +105,31 @@ class PaymentController extends AdminController
         $form->select('payment_status', __('Status Pembayaran'))->options($payment_option)->rules('required');
         $form->date('paid_date', __('Tanggal Pembayaran'));
         $form->file('paid_file', __('Bukti Pembayaran'))->move('Payments')->uniqueName()->rules('mimes:pdf,png,jpeg,jpg');
-        // dd();
+        $form->submitted(function (Form $form) {
+            $form->ignore('paid_file');
+
+            if(empty($form->model()->get()->toArray())){
+                $filename = md5(request()->file('paid_file')->getClientOriginalName() . time()) . '.' . request()->file('paid_file')->getClientOriginalExtension();
+                request()->file('paid_file')->move(public_path('uploads/payments'), $filename);
+
+                $form->model()->paid_file = 'payments'.'/' . $filename;
+            
+                // $form->paid_file = 'payments'.'/' . $filename;
+            }else{
+                $old_file = $form->model()->paid_file;
+                
+                if (File::exists(public_path('uploads').$old_file)) {
+                    File::delete(public_path('uploads').$old_file);
+                }
+
+                $filename = md5(request()->file('paid_file')->getClientOriginalName() . time()) . '.' . request()->file('paid_file')->getClientOriginalExtension();
+                request()->file('paid_file')->move(public_path('uploads/payments'), $filename);
+
+                $form->model()->paid_file = 'payments'.'/' . $filename;
+                
+                $form->model()->save();
+            }
+        });
 
         return $form;
     }

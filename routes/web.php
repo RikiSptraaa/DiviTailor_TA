@@ -4,6 +4,7 @@ use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\GroupController;
 use App\Http\Controllers\PaymentController;
 use App\Http\Controllers\ProfileController;
+use App\Http\Controllers\GroupOrderController;
 use App\Http\Controllers\OrderController as OrderController_1;
 use App\Admin\Controllers\OrderController as OrderController_2;
 
@@ -43,6 +44,8 @@ Route::middleware('auth')->group(function () {
 
     Route::get('/group', [GroupController::class, 'index'])->name('group.index');
     Route::post('/group', [GroupController::class, 'store'])->name('group.store');
+
+    Route::get('/group/orders', [GroupOrderController::class, 'index'])->name('borongan.index');
 
 });
 
