@@ -294,6 +294,7 @@ class GroupOrderController extends Controller
         $form->currency('price_per_item', __('Harga Per Unit'))->symbol('Rp.')->rules('required|numeric|');
         $form->switch('is_acc', __('Is acc'))->disable()->value(true);
 
+
         return $form;
     }
 }

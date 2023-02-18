@@ -9,6 +9,7 @@ class GroupOrderPayment extends Model
 {
     use HasFactory;
     protected $table = "group_order_payment";
+    protected $guarded = ['id'];
 
     public function groupOrder()
     {

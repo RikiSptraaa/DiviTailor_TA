@@ -71,8 +71,8 @@ $task_status = [
                 Pesanan Diterima
             </label>
             <div class="collapse-content ">
-                @if(!isset($order[1]) && is_null($order[1]))
-                Tidak Ada Pesanan
+                @if(!isset($order[1]))
+                    Tidak Ada Pesanan
                 @else
                     @foreach($order[1] as $key => $value)
                     <div class="card w-full mt-2">

@@ -112,7 +112,8 @@ $no =1;
             "lengthChange": false,
             "ordering": false,
             "language": {
-                "search": 'Cari'
+                "search": 'Cari',
+                "emptyTable": "Tidak Ada Grup Yang Dimiliki"
             }
         });
 

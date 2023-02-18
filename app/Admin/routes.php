@@ -34,5 +34,5 @@ Route::group([
     $router->resource('payments', PaymentController::class);
 });
 
-Route::get('/orders/cetak/{order}', [OrderController::class, 'print']);
-Route::get('/borongan/cetak/{borongan}', [GroupOrderController::class, 'print']);
+Route::get('/orders/cetak/{order}', [OrderController::class, 'print'])->name('orders.print');
+Route::get('/borongan/cetak/{borongan}', [GroupOrderController::class, 'print'])->name('borongan.print');

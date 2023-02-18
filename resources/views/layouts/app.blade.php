@@ -69,7 +69,7 @@
                             </ul>
                         </div>
                         <div class="mt-4">
-                            @if( !auth()->user()->baju()->exists() && !auth()->user()->celana()->exists())
+                            @if( !auth()->user()->baju()->exists() OR !auth()->user()->celana()->exists())
                             <p class="text-xs text-red-600">
                                 Catatan: Halo {{ auth()->user()->name }}, Anda belum memiliki data ukuran di database
                                 kami.
@@ -323,6 +323,108 @@
 
 
         $(document).ready(function () {
+            
+            $('#form-decline').submit(function(e) {
+                e.preventDefault();
+
+                Swal.fire({
+                    title: 'Apakah Yakin Menolak Pesanan Grup?',
+                    icon: 'warning',
+                    showCancelButton: true,
+                    confirmButtonColor: 'black',
+                    cancelButtonColor: '#d33',
+                    confirmButtonText: 'Tolak',
+                    cancelButtonText: 'Batal',
+                }).then((result) => {
+                    if (result.isConfirmed) {
+                        $.ajax({
+                            type: "POST",
+                            url: "{{ route('profile.update', isset(auth()->user()->username) ? auth()->user()->username : '') }}",
+                            cache: false,
+                            processData: false,
+                            contentType: false,
+                            data: form_data,
+                            success: function (response) {
+                                Swal.fire({
+                                    icon: 'success',
+                                    showCloseButton: true,
+                                    showCancelButton: false,
+                                    showConfirmButton: true,
+                                    confirmButtonText: 'Ok',
+                                    confirmButtonColor: 'black',
+                                    title: 'Berhasil!',
+                                    text: response.message,
+                                }).then((result) => {
+
+                                });
+
+                            },
+                            error: function (error) {
+                                Swal.fire({
+                                    confirmButtonColor: 'black',
+                                    title: 'Kesalahan!',
+                                    text: 'Profile Gagal Diubah!',
+                                    icon: 'error',
+                                })
+                            },
+                        });
+
+                    }
+                })
+
+
+            });
+
+            $('#form-acc').submit(function(e) {
+                e.preventDefault();
+
+                Swal.fire({
+                    title: 'Apakah Yakin Menerima Pesanan Grup?',
+                    icon: 'warning',
+                    showCancelButton: true,
+                    confirmButtonColor: 'black',
+                    cancelButtonColor: '#d33',
+                    confirmButtonText: 'Terima',
+                    cancelButtonText: 'Batal',
+                }).then((result) => {
+                    if (result.isConfirmed) {
+                        $.ajax({
+                            type: "POST",
+                            url: "{{ route('profile.update', isset(auth()->user()->username) ? auth()->user()->username : '') }}",
+                            cache: false,
+                            processData: false,
+                            contentType: false,
+                            data: form_data,
+                            success: function (response) {
+                                Swal.fire({
+                                    icon: 'success',
+                                    showCloseButton: true,
+                                    showCancelButton: false,
+                                    showConfirmButton: true,
+                                    confirmButtonText: 'Ok',
+                                    confirmButtonColor: 'black',
+                                    title: 'Berhasil!',
+                                    text: response.message,
+                                }).then((result) => {
+
+                                });
+
+                            },
+                            error: function (error) {
+                                Swal.fire({
+                                    confirmButtonColor: 'black',
+                                    title: 'Kesalahan!',
+                                    text: 'Profile Gagal Diubah!',
+                                    icon: 'error',
+                                })
+                            },
+                        });
+
+                    }
+                })
+
+
+            });
 
             // Update Profile Script
             $('#update-profile-form').submit(function (e) {

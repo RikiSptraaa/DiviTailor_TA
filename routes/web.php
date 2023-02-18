@@ -46,6 +46,9 @@ Route::middleware('auth')->group(function () {
     Route::post('/group', [GroupController::class, 'store'])->name('group.store');
 
     Route::get('/group/orders', [GroupOrderController::class, 'index'])->name('borongan.index');
+    Route::delete('/group/orders/delete/{borongan}', [GroupOrderController::class, 'destroy'])->name('borongan.delete');
+    Route::delete('/group/orders/invitation/{borongan_id}', [GroupOrderController::class, 'destroy-invitation'])->name('borongan.delete-invitation');
+    Route::post('/group/orders/invitation/{borongan_id}', [GroupOrderController::class, 'acc-invitation'])->name('borongan.acc-invitation');
 
 });
 
