@@ -47,9 +47,9 @@ Route::middleware('auth')->group(function () {
 
     Route::get('/group/orders', [GroupOrderController::class, 'index'])->name('borongan.index');
     Route::delete('/group/orders/delete/{borongan}', [GroupOrderController::class, 'destroy'])->name('borongan.delete');
-    Route::delete('/group/orders/invitation/{borongan_id}', [GroupOrderController::class, 'destroy-invitation'])->name('borongan.delete-invitation');
+    Route::delete('/group/orders/invitation/{borongan_id}', [GroupOrderController::class, 'destroyInvitation'])->name('borongan.delete-invitation');
     Route::post('/group/orders/invitation/{borongan_id}', [GroupOrderController::class, 'acc-invitation'])->name('borongan.acc-invitation');
-
+    Route::post('/group/orders', [GroupOrderController::class, 'store'])->name('borongan.store');
 });
 
 require __DIR__ . '/auth.php';

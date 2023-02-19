@@ -11,6 +11,8 @@
     <!-- Fonts -->
     <link rel="stylesheet" href="https://fonts.bunny.net/css2?family=Nunito:wght@400;600;700&display=swap">
 
+    <link href="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/css/select2.min.css" rel="stylesheet" />
+
 
     <!-- Scripts -->
     @vite(['resources/css/app.css', 'resources/js/app.js'])
@@ -310,6 +312,7 @@
     <script src="{{ asset('js/jquery.min.js') }}"></script>
     <script src="//cdn.jsdelivr.net/npm/sweetalert2@11"></script>
     <script src="https://unpkg.com/aos@2.3.1/dist/aos.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/js/select2.min.js"></script>
     <script type="text/javascript" src="https://cdn.datatables.net/v/dt/dt-1.13.2/datatables.min.js"></script>
     <script>
         AOS.init();
@@ -324,8 +327,12 @@
 
         $(document).ready(function () {
             
-            $('#form-decline').submit(function(e) {
+            $('.form-decline').submit(function(e) {
                 e.preventDefault();
+                var url = $(this).attr('action');
+                var form_data = new FormData(this);
+
+
 
                 Swal.fire({
                     title: 'Apakah Yakin Menolak Pesanan Grup?',
@@ -339,11 +346,11 @@
                     if (result.isConfirmed) {
                         $.ajax({
                             type: "POST",
-                            url: "{{ route('profile.update', isset(auth()->user()->username) ? auth()->user()->username : '') }}",
+                            url: url,
+                            data: form_data,
                             cache: false,
                             processData: false,
                             contentType: false,
-                            data: form_data,
                             success: function (response) {
                                 Swal.fire({
                                     icon: 'success',
@@ -355,6 +362,7 @@
                                     title: 'Berhasil!',
                                     text: response.message,
                                 }).then((result) => {
+                                    location.reload()
 
                                 });
 
@@ -363,7 +371,7 @@
                                 Swal.fire({
                                     confirmButtonColor: 'black',
                                     title: 'Kesalahan!',
-                                    text: 'Profile Gagal Diubah!',
+                                    text: error.responseJSON.message,
                                     icon: 'error',
                                 })
                             },

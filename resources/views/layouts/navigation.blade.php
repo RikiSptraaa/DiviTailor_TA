@@ -7,7 +7,11 @@
         $notification_group = $notification->pluck('group_order_id');
         $notification = $notification->get();
 
-        $group_order = GroupOrder::with('group')->whereIn('id', $notification_group)->get();
+        // $group_order = GroupOrder::with('group')->whereIn('id', $notification_group)->whereNull('is_acc')->orWhere('is_acc', '!=', 0)->get();
+        $group_order = GroupOrder::with('payment', 'task')->whereHas('user', function($q){
+            $q->where('user_id' , auth()->user()->id)->whereNull('acc_status');
+        })->where('is_acc', true)->get();
+
     }
 @endphp
 <nav x-data="{ open: false }">
@@ -66,7 +70,7 @@
                     <label tabindex="0" class="btn btn-ghost btn-circle">
                         <div class="indicator">
                             <i class="fa fa-bell fa-lg"></i>
-                            <span class="badge badge-sm indicator-item">8</span>
+                            <span class="badge badge-sm indicator-item">{{ $group_order->count() ?? 0 }}</span>
                         </div>
                     </label>
                     <div tabindex="0" class="mt-3 card card-compact dropdown-content w-72 md:w-96 bg-base-100 shadow">
@@ -83,7 +87,7 @@
                                         </div>
                                         <div class="flex align-items-center">
                                             <div>
-                                                <form id="form-decline" action="{{ route('borongan.delete-invitation', $item->id) }}" method="POST">
+                                                <form id="form-decline" class="form-decline" action="{{ route('borongan.delete-invitation', $item->id) }}" method="POST">
                                                     @csrf
                                                     @method('delete')
                                                     <button type="submit" class="btn btn-xs btn-ghost">Tolak</button>  

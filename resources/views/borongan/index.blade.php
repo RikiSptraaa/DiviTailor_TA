@@ -32,8 +32,85 @@ endif
                 <p>Apakah anda ingin membuat pesanan baru? Kami menawarkan jasa jahit dengan kualitas yang dijamin
                     sangat baik!</p>
                 <div class="card-actions justify-end">
-                    <label for="modal-create-order" class="btn">Buat Pesanan Grup</a>
+                    <label for="modal-create-group-order" class="btn">Buat Pesanan Grup</a>
                 </div>
+            </div>
+        </div>
+        {{-- Modal Buat Pesanan Grup --}}
+        <input type="checkbox" class="modal-toggle" id="modal-create-group-order" />
+        <div class="modal">
+            <div class="modal-box">
+                <label for="modal-create-group-order" class="btn btn-xs absolute left-2 top-2">✕</label>
+                <h3 class="font-bold text-lg my-4">Buat Pesanan</h3>
+                <form id="create-group-order-form" action="{{ route('borongan.store') }}" method="post">
+                    @csrf
+                    <div class="mt-4">
+                        <x-input-label for="group" :value="__('Grup Pesanan')" />
+
+                        <select name="grup"
+                            class="select select-bordered focus:ring-black focus:border-none h-[35px] w-full min-h-[35px] text-xs">
+                            <option disabled selected>Pilih Grup</option>
+                            @foreach($group as $key => $value)
+                            <option value="{{ $value->id }}">{{ $value->group_name.'-'.$value->institute }}
+                            </option>
+                            @endforeach
+                        </select>
+                        <ul class='text-sm text-red-600 space-y-1' id="error-group-select">
+                        </ul>
+                    </div>
+                  
+                    <div class="mt-4">
+                        <x-input-label for="order_date" :value="__('Tanggal Pesanan')" />
+                        <input type="date" name="tanggal_pesanan" id="order_date" value="{{ old('tanggal_pesanan') }}"
+                            class="input input-sm input-bordered w-full focus:ring-black focus:border-none text-xs" />
+                        <ul class='text-sm text-red-600 space-y-1' id="error-group-order-date">
+                        </ul>
+                    </div>
+
+                    <div class="mt-4">
+                        <x-input-label for="order_kind" :value="__('Jenis Pakaian')" />
+                        <input type="text" name="jenis_pakaian" id="order_kind" value="{{ old('jenis_pakaian')}}"
+                            class="input h-[35px] input-bordered w-full focus:ring-black focus:border-none text-xs" />
+                        <ul class='text-sm text-red-600 space-y-1' id="error-group-order-kind">
+                        </ul>
+                    </div>
+
+                    <div class="mt-4">
+                        <x-input-label for="group-order-user" :value="__('Aggota Pesanan')" />
+
+                        <select name="anggota_pelanggan[]" multiple="multiple" id="group-order-user-select" 
+                            class="text-sm" style="width: 100%;">
+                            @foreach($user as $key => $value)
+                            <option value="{{ $value->id }}">{{ $value->name }}
+                            </option>
+                            @endforeach
+                        </select>
+                        <ul class='text-sm text-red-600 space-y-1' id="error-group-order-user">
+                        </ul>
+                    </div>
+
+                    <div class="mt-4">
+                        @if( !auth()->user()->baju()->exists() OR !auth()->user()->celana()->exists())
+                        <p class="text-xs text-red-600">
+                            Catatan: Halo {{ auth()->user()->name }}, Anda belum memiliki data ukuran di database
+                            kami.
+                            Lakukanlah pengukuran dengan cara datang ke toko kami atau jika memiliki data ukuruan
+                            celana & baju silahkan hubungi kami
+                            melalui <a href="https://wa.me/+6281999066449" class="btn-link text-green-400">whatsapp.</a>
+                        </p>
+                        @endif
+                        <p class="text-xs text-gray-700 mb-2">Catatan: Pesanan pakaian yang baru dibuat harus
+                            menunggu
+                            diterima oleh
+                            pihak Divi Tailor terlebih dahulu.</p>
+                        <p class="text-xs text-gray-700 mb-2">Pesanan Borongan hanya bisa dibayar oleh koordinator Grup</p>
+                    </div>
+                    <div class="modal-action">
+                        <button for="modal-create-order" class="btn btn-sm"
+                            {{  !auth()->user()->baju()->exists() && !auth()->user()->celana()->exists() ? 'disabled' : '' }}
+                            id="btn-save">Buat Pesanan</button>
+                    </div>
+                </form>
             </div>
         </div>
         {{-- Pesanan Baru --}}
@@ -52,7 +129,8 @@ endif
                 @foreach($group_order[''] as $key => $value)
                 <div class="card w-full mt-2">
                     <div class="card-body border ">
-                        <p class="font-semibold">{{ $value['group']['group_name'] }}-{{ $value['group']['institute'] }}</p>
+                        <p class="font-semibold">{{ $value['group']['group_name'] }}-{{ $value['group']['institute'] }}
+                        </p>
 
                         <p class="font-semibold text-lg">Koordinator Pesanan</p>
                         <p>{{  User::find($value['group']['coordinator'])->first()->name }}</p>
@@ -70,12 +148,12 @@ endif
                                 Daftar Aggota
                             </label>
                             <div class="collapse-content ">
-                                
+
                                 @foreach ($value['user'] as $user)
-                                    <ul>
-                                        <li>{{ $user['name'] }}</li>
-                                    </ul>
-                                    
+                                <ul>
+                                    <li>{{ $user['name'] }}</li>
+                                </ul>
+
                                 @endforeach
                             </div>
                         </div>
@@ -118,7 +196,8 @@ endif
                             {{ $value['invoice_number'] }}
                         </h2>
 
-                        <p class="font-semibold">{{ $value['group']['group_name'] }}-{{ $value['group']['institute'] }}</p>
+                        <p class="font-semibold">{{ $value['group']['group_name'] }}-{{ $value['group']['institute'] }}
+                        </p>
 
                         <p class="font-semibold text-lg">Koordinator Pesanan</p>
                         <p>{{  User::find($value['group']['coordinator'])->first()->name }}</p>
@@ -136,12 +215,12 @@ endif
                                 Daftar Aggota
                             </label>
                             <div class="collapse-content ">
-                                
+
                                 @foreach ($value['user'] as $user)
-                                    <ul>
-                                        <li>{{ $user['name'] }}</li>
-                                    </ul>
-                                    
+                                <ul>
+                                    <li>{{ $user['name'] }}</li>
+                                </ul>
+
                                 @endforeach
                             </div>
                         </div>
@@ -210,7 +289,8 @@ endif
                         <h2 class="card-title"><i class="fas fa-receipt fa-2x"></i>
                             {{ $value['invoice_number'] }}
                         </h2>
-                        <p class="font-semibold">{{ $value['group']['group_name'] }}-{{ $value['group']['institute'] }}</p>
+                        <p class="font-semibold">{{ $value['group']['group_name'] }}-{{ $value['group']['institute'] }}
+                        </p>
 
                         <p class="font-semibold text-lg">Koordinator Pesanan</p>
                         <p>{{  User::find($value['group']['coordinator'])->first()->name }}</p>
@@ -228,12 +308,12 @@ endif
                                 Daftar Aggota
                             </label>
                             <div class="collapse-content ">
-                                
+
                                 @foreach ($value['user'] as $user)
-                                    <ul>
-                                        <li>{{ $user['name'] }}</li>
-                                    </ul>
-                                    
+                                <ul>
+                                    <li>{{ $user['name'] }}</li>
+                                </ul>
+
                                 @endforeach
                             </div>
                         </div>
@@ -259,9 +339,81 @@ endif
     @section('script')
     <script>
         $(document).ready(function () {
-            var url = $('#form-delete').data('url');
+            $('#group-order-user-select').select2({
+                placeholder: 'Pilih Anggota',
+                theme: 'default'
+            });
+
+            $('#create-group-order-form').submit(function(e){
+                e.preventDefault();
+                var form_data = new FormData(this);
+                var url = $(this).attr('url');
+
+                Swal.fire({
+                    title: 'Apakah Yakin Membuat Pesanan Borongan Ini?',
+                    icon: 'warning',
+                    showCancelButton: true,
+                    confirmButtonColor: 'black',
+                    cancelButtonColor: '#d33',
+                    confirmButtonText: 'Buat',
+                    cancelButtonText: 'Batal',
+                }).then((result) => {
+                    if (result.isConfirmed) {
+                        $.ajax({
+                            type: "POST",
+                            url: url,
+                            cache: false,
+                            processData: false,
+                            contentType: false,
+                            data: form_data,
+                            success: function (response) {
+                                Swal.fire({
+                                    icon: 'success',
+                                    showCloseButton: true,
+                                    showCancelButton: false,
+                                    showConfirmButton: true,
+                                    confirmButtonText: 'Ok',
+                                    confirmButtonColor: 'black',
+                                    title: 'Berhasil!',
+                                    text: response.message,
+                                }).then((result) => {
+                                    location.reload();
+
+                                });
+
+                            },
+                            error: function (error) {
+                                Swal.fire({
+                                    confirmButtonColor: 'black',
+                                    title: 'Kesalahan!',
+                                    icon: 'error',
+                                    text: error.responseJSON.message
+                                })
+                                $('#error-group-order-date').html('<li>' + error
+                                        .responseJSON.tanggal_pesanan ?? '' + '</li>')
+                                    .css(
+                                        'display', '');
+                                $('#error-group-order-kind').html('<li>' + error
+                                    .responseJSON.jenis_pakaian ?? '' + '</li>').css(
+                                    'display', '');
+                                $('#error-group-select').html('<li>' + error
+                                    .responseJSON.grup ?? '' + '</li>').css(
+                                    'display', '');
+                                $('#error-group-order-user').html('<li>' + error
+                                    .responseJSON.anggota_pelanggan ?? '' + '</li>').css(
+                                    'display', '');
+                            },
+                        });
+
+                    }
+                })
+
+            })
+
             $('#form-delete').submit(function (e) {
                 var form_data = new FormData(this);
+                var url = $(this).data('url');
+
                 e.preventDefault();
 
                 Swal.fire({
@@ -292,7 +444,7 @@ endif
                                     title: 'Berhasil!',
                                     text: response.message,
                                 }).then((result) => {
-                                    location.reload();
+                                    // location.reload();
 
                                 });
 
