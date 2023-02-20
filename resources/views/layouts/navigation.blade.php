@@ -94,7 +94,7 @@
                                                 </form>
                                             </div>
                                             <div>
-                                                <form id="form-acc" action="{{ route('borongan.acc-invitation', $item->id) }}" method="POST">
+                                                <form id="form-acc" class="form-acc" action="{{ route('borongan.acc-invitation', $item->id) }}" method="POST">
                                                     @csrf
                                                     <button type="submit" class="btn btn-xs btn-ghost">Terima</button>  
                                                 </form>

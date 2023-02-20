@@ -332,8 +332,6 @@
                 var url = $(this).attr('action');
                 var form_data = new FormData(this);
 
-
-
                 Swal.fire({
                     title: 'Apakah Yakin Menolak Pesanan Grup?',
                     icon: 'warning',
@@ -383,8 +381,10 @@
 
             });
 
-            $('#form-acc').submit(function(e) {
+            $('.form-acc').submit(function(e) {
                 e.preventDefault();
+                var url = $(this).attr('action');
+                var form_data = new FormData(this);
 
                 Swal.fire({
                     title: 'Apakah Yakin Menerima Pesanan Grup?',
@@ -398,11 +398,11 @@
                     if (result.isConfirmed) {
                         $.ajax({
                             type: "POST",
-                            url: "{{ route('profile.update', isset(auth()->user()->username) ? auth()->user()->username : '') }}",
+                            url: url,
+                            data: form_data,
                             cache: false,
                             processData: false,
                             contentType: false,
-                            data: form_data,
                             success: function (response) {
                                 Swal.fire({
                                     icon: 'success',
@@ -414,6 +414,7 @@
                                     title: 'Berhasil!',
                                     text: response.message,
                                 }).then((result) => {
+                                    location.reload()
 
                                 });
 
@@ -422,7 +423,7 @@
                                 Swal.fire({
                                     confirmButtonColor: 'black',
                                     title: 'Kesalahan!',
-                                    text: 'Profile Gagal Diubah!',
+                                    text: error.responseJSON.message,
                                     icon: 'error',
                                 })
                             },
@@ -430,8 +431,6 @@
 
                     }
                 })
-
-
             });
 
             // Update Profile Script

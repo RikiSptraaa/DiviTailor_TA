@@ -85,9 +85,8 @@ class GroupOrderController extends Controller
 
             $query->user()->sync($request->anggota_pelanggan);
 
-
-
             DB::table('group_order_users')->where('user_id', auth()->user()->id)->where('group_order_id' , $query->id )->update(['acc_status'=>1]);
+
             return response()->json([
                 'status' => true,
                 'message' => 'Berhasil menambah borongan'
@@ -123,6 +122,34 @@ class GroupOrderController extends Controller
                 'message' => $th->message
             ]);
         }
+    }
 
+    public function accInvitation(GroupOrder $borongan_id)
+    {
+        $borongan_id = $borongan_id->id;
+
+        DB::beginTransaction();
+
+        try {
+            DB::commit();
+            DB::table('group_order_users')->where('user_id', auth()->user()->id)->where('group_order_id', $borongan_id)->update(['acc_status'=>1]);
+
+            return response()->json([
+                'status' => true,
+                'message' => 'Berhasil Menerima Undangan Pesanan Grup'
+            ]);
+        } catch (\Throwable $th) {
+            DB::rollBack();
+            return response()->json([
+                'status' => true,
+                'message' => $th->message
+            ]);
+        }
+    }
+
+    public function show(GroupOrder $borongan)
+    {
+        $borongan = $borongan->toArray();
+        return response()->json($borongan);
     }
 }
