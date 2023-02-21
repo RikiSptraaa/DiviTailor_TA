@@ -3,7 +3,10 @@
 namespace App\Http\Controllers;
 
 use App\Models\Payment;
+use App\Models\GroupOrder;
 use Illuminate\Http\Request;
+use App\Models\GroupOrderPayment;
+use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\File;
 use Illuminate\Support\Facades\Validator;
 
@@ -14,7 +17,13 @@ class PaymentController extends Controller
             $q->where('user_id', '>=', auth()->user()->id);
         })->get()->toArray();
 
-        return view('payment.index', compact('payment'));
+       $group_order_id = DB::table('group_order_users')->where('user_id', auth()->user()->id)->pluck('group_order_id');
+
+        $groupPayment = GroupOrderPayment::with('groupOrder')->whereIn('group_order_id', $group_order_id)->whereIn('paid_status', [0,1,2])->whereHas('groupOrder', function($q){
+            $q->with('user');
+        })->get()->toArray();
+
+        return view('payment.index', compact('payment', 'groupPayment'));
     }
     public function update(Request $request, $order_id){
         $old_file = Payment::where('order_id', $order_id)->first()->toArray();
@@ -40,6 +49,41 @@ class PaymentController extends Controller
         Payment::where('order_id', $order_id)->update([
             'paid_date' => date('Y-m-d'),
             'payment_status' => 4,
+            'paid_file' => 'payments'.'/' . $filename,
+        ]);
+
+        return response()->json([
+            'status' => true,
+            'message' => 'Unggah File Pembayaran Berhasil!'
+        ]);
+
+    }
+
+    public function updateBorongan(Request $request,GroupOrder $borongan)
+    {
+        $old_file = GroupOrderPayment::where('group_order_id', $borongan->id)->first()->toArray();
+        $validator = Validator::make($request->all(), [
+            'bukti_pembayaran_borongan' => "required|file|mimes:jpg,bmp,png,jpeg,pdf"
+        ]);
+
+        if($validator->fails()){
+            return response()->json([
+                'status' => false,
+                'message' => "Gagal Unggah Bukti Pembayaran!",
+                'bukti_pembayaran_borongan'=> $validator->errors()->get('bukti_pembayaran_borongan'),
+            ], 422);
+        }
+
+        if (File::exists(public_path('uploads').$old_file['paid_file'])) {
+            File::delete(public_path('uploads').$old_file['paid_file']);
+        }
+
+        $filename = md5($request->file('bukti_pembayaran_borongan')->getClientOriginalName() . time()) . '.' . $request->file('bukti_pembayaran_borongan')->getClientOriginalExtension();
+        $request->file('bukti_pembayaran_borongan')->move(public_path('uploads/payments'), $filename);
+
+        GroupOrderPayment::where('group_order_id', $borongan->id)->update([
+            'paid_date' => date('Y-m-d'),
+            'paid_status' => 4,
             'paid_file' => 'payments'.'/' . $filename,
         ]);
 

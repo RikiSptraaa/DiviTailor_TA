@@ -289,10 +289,10 @@
                     </g>
                 </svg>
                 <div class="grid grid-flow-col gap-4">
-                    <a class="link link-hover">Home</a>
-                    <a class="link link-hover">Pesanan</a>
-                    <a class="link link-hover">Borongan</a>
-                    <a class="link link-hover">Pembayaran</a>
+                    <a class="link link-hover" href="{{ route('orders.index') }}">Home</a>
+                    <a class="link link-hover" href="{{ route('orders.index') }}" >Pesanan</a>
+                    <a class="link link-hover" href="{{ route('borongan.index') }}">Borongan</a>
+                    <a class="link link-hover" href="{{ route('payments.index') }}">Pembayaran</a>
                 </div>
             </div>
 

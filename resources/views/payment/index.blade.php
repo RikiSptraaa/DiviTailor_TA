@@ -61,5 +61,55 @@ $task_status = [
 
             </div>
         </div>
+
+        <div class="collapse collapse-arrow border border-base-300 bg-base-100 mt-2" data-aos="fade-up"
+            data-aos-duration="1000" data-aos-once="true">
+            <input type="checkbox" class="peer" id="collapse-payment-borongan" />
+            <label for="collapse-payment-borongan" class="collapse-title text-lg font-semibold">
+                Pesanan Borongan
+            </label>
+            <div class="collapse-content">
+                <div class="card w-full">
+                    @foreach($groupPayment as $key => $value)
+                    <div class="card-body border ">
+                            
+                        <h2 class="card-title"><i class="fas fa-receipt fa-2x"></i>
+                            {{ $value['group_order']['invoice_number'] }}
+                        </h2>
+                    
+                        <p>
+                            {{ Carbon::parse($value['paid_date'])->dayName . ', ' . Carbon::parse($value['paid_date'])->format('d F Y'); }}
+                        </p>
+                        {{-- <p>
+                            {{ $payment_status[$value['payment_status']] }}
+                        </p> --}}
+                        <div class="badge 
+                        {{ $value['paid_status'] == 0 ? 'badge-info' : ''  }}
+                        {{ $value['paid_status'] == 1 ? 'badge-info' : ''  }}
+                        {{ $value['paid_status'] == 2 ? 'badge-success' : ''  }}
+                        {{ $value['paid_status'] == 3 ? 'badge-warning' : ''  }}
+                        ">
+                            <p>Status Pembayaran : {{ $payment_status[$value['paid_status']] }} </p>
+                        </div>
+                        <div class="divider"></div> 
+                        <h2 class="">
+                            <x-money amount="{{ $value['group_order']['price'] }}" currency="IDR" convert />
+                        </h2>
+                    
+                        <div class="card-actions justify-end">
+                            <form id="form-delete">
+                                @method('delete')
+                                @csrf
+                                <a class="btn btn-sm" target="_blank" download href="{{ asset('uploads/'.$value['paid_file']) }}">Download File Bukti Bayar</a>
+                                <a class="btn btn-sm" target="_blank" href="{{ route('borongan.print', $value['id']) }}">Cetak
+                                    Nota</a>
+                            </form>
+                        </div>
+                    </div>
+                    @endforeach
+                </div>
+
+            </div>
+        </div>
     </div>
 </x-app-layout>

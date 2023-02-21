@@ -26,6 +26,12 @@ class ProfileController extends Controller
         ]);
     }
 
+    public function show($user)
+    {
+        $profile = User::find($user);
+        return view('profile.show', compact('profile'));
+    }
+
     /**
      * Update the user's profile information.
      *

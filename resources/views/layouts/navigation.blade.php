@@ -61,7 +61,7 @@
             </div>
             <div class="flex-none">
                 <ul class="menu menu-horizontal px-1  lg:flex md:flex  sm:hidden hidden">
-                    <li><a>Home</a></li>
+                    <li><a href="/dashboard">Home</a></li>
                     <li><a>About</a></li>
                     <li><a>Galery</a></li>
                 </ul>
@@ -134,8 +134,9 @@
                         <li><label class="hover:bg-black hover:text-white" for="modal-profile">Profile</label>
                         </li>
                         <li><a class="hover:bg-black hover:text-white" href="{{ route('orders.index') }}">Pesanan</a></li>
-                        <li><a class="hover:bg-black hover:text-white">Borongan</a></li>
-                        <li><a class="hover:bg-black hover:text-white">Settings</a></li>
+                        <li><a class="hover:bg-black hover:text-white" href="{{ route('group.index') }}">Group</a></li>
+                        <li><a class="hover:bg-black hover:text-white" href="{{ route('borongan.index') }}">Borongan</a></li>
+                        <li><a class="hover:bg-black hover:text-white" href="{{ route('payments.index') }}">Pembayaran</a></li>
                         <hr>
                         <form action="{{ route('logout') }}" method="POST">
                             @csrf

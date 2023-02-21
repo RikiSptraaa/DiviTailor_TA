@@ -169,13 +169,13 @@ endif
                             Jika sudah melakukan transfer ke rekening diatas silahkan upload bukti transfer anda di
                             bawah ini.
                         </p>
-                        <form id="payment-form" enctype="multipart/form-data">
+                        <form id="payment-group-order-form" enctype="multipart/form-data">
                             @csrf
                             @method('put')
-                            <input type="hidden" name="order_id" id="order_id" value="">
-                            <input type="file" class="file-input file-input-sm w-full max-w-xs" name="bukti_pembayaran"
-                                id="paid_file" />
-                            <ul class='text-sm text-red-600 space-y-1' id="error-payment-file">
+                            <input type="hidden" name="group_order_id" id="group_order_id" value="">
+                            <input type="file" class="file-input file-input-sm w-full max-w-xs" name="bukti_pembayaran_borongan"
+                                id="group_paid_file" />
+                            <ul class='text-sm text-red-600 space-y-1' id="error-payment-group-file">
                             </ul>
                     </div>
                     <div class="modal-action">
@@ -292,7 +292,7 @@ endif
 
                                 @foreach ($value['user'] as $user)
                                 <ul>
-                                    <li>{{ $user['name'] }}</li>
+                                    <a href="{{ route('profile.show', $user['id']) }}"><li>{{ $user['name'] }}</li></a>
                                 </ul>
 
                                 @endforeach
@@ -441,7 +441,7 @@ endif
                             "<li> Harga Per Unit: " + harga_per_item + "</li>" +
                             "<li> Total Harga: " + harga + "</li>"
                         );
-                        $('#order_id').val(response.id);
+                        $('#group_order_id').val(response.id);
 
 
                     }
@@ -565,6 +565,63 @@ endif
                                     icon: 'error',
                                     footer: error.responseJSON.message
                                 })
+                            },
+                        });
+
+                    }
+                })
+
+            });
+
+            $('#payment-group-order-form').submit(function (e) {
+                e.preventDefault();
+                var form_data = new FormData(this);
+                var order_id = $('#group_order_id').val();
+
+                Swal.fire({
+                    title: 'Unggah Bukti Bayar?',
+                    icon: 'warning',
+                    showCancelButton: true,
+                    confirmButtonColor: 'black',
+                    cancelButtonColor: '#d33',
+                    confirmButtonText: 'Unggah',
+                    cancelButtonText: 'Batal',
+                }).then((result) => {
+                    if (result.isConfirmed) {
+                        $.ajax({
+                            type: "POST",
+                            url: "orders/payment/" + order_id,
+                            cache: false,
+                            processData: false,
+                            contentType: false,
+                            data: form_data,
+                            success: function (response) {
+                                Swal.fire({
+                                    icon: 'success',
+                                    showCloseButton: true,
+                                    showCancelButton: false,
+                                    showConfirmButton: true,
+                                    confirmButtonText: 'Ok',
+                                    confirmButtonColor: 'black',
+                                    title: 'Berhasil!',
+                                    text: response.message,
+                                }).then((result) => {
+                                    location.reload();
+                                });
+
+                            },
+                            error: function (error) {
+                                Swal.fire({
+                                    confirmButtonColor: 'black',
+                                    title: 'Kesalahan!',
+                                    text: error.responseJSON.message,
+                                    icon: 'error',
+                                })
+                                console.log(error);
+                                $('#error-payment-group-file').html('<li>' + error
+                                        .responseJSON.bukti_pembayaran_borongan + '</li>')
+                                    .css(
+                                        'display', '');
                             },
                         });
 
