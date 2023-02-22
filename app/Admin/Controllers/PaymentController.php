@@ -108,26 +108,28 @@ class PaymentController extends AdminController
         $form->submitted(function (Form $form) {
             $form->ignore('paid_file');
 
-            if(empty($form->model()->get()->toArray())){
-                $filename = md5(request()->file('paid_file')->getClientOriginalName() . time()) . '.' . request()->file('paid_file')->getClientOriginalExtension();
-                request()->file('paid_file')->move(public_path('uploads/payments'), $filename);
+            if(!is_null(request()->file('paid_file'))){
+                if(empty($form->model()->get()->toArray())){
+                    $filename = md5(request()->file('paid_file')->getClientOriginalName() . time()) . '.' . request()->file('paid_file')->getClientOriginalExtension();
+                    request()->file('paid_file')->move(public_path('uploads/payments'), $filename);
 
-                $form->model()->paid_file = 'payments'.'/' . $filename;
-            
-                // $form->paid_file = 'payments'.'/' . $filename;
-            }else{
-                $old_file = $form->model()->paid_file;
+                    $form->model()->paid_file = 'payments'.'/' . $filename;
                 
-                if (File::exists(public_path('uploads').$old_file)) {
-                    File::delete(public_path('uploads').$old_file);
+                    // $form->paid_file = 'payments'.'/' . $filename;
+                }else{
+                    $old_file = $form->model()->paid_file;
+                    
+                    if (File::exists(public_path('uploads').$old_file)) {
+                        File::delete(public_path('uploads').$old_file);
+                    }
+
+                    $filename = md5(request()->file('paid_file')->getClientOriginalName() . time()) . '.' . request()->file('paid_file')->getClientOriginalExtension();
+                    request()->file('paid_file')->move(public_path('uploads/payments'), $filename);
+
+                    $form->model()->paid_file = 'payments'.'/' . $filename;
+                    
+                    $form->model()->save();
                 }
-
-                $filename = md5(request()->file('paid_file')->getClientOriginalName() . time()) . '.' . request()->file('paid_file')->getClientOriginalExtension();
-                request()->file('paid_file')->move(public_path('uploads/payments'), $filename);
-
-                $form->model()->paid_file = 'payments'.'/' . $filename;
-                
-                $form->model()->save();
             }
         });
 
