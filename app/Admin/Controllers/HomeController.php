@@ -88,10 +88,10 @@ class HomeController extends Controller
             $incomeThisMonth = $incomeOrderThisMonth + $incomeGroupOrderThisMonth ?? 0;
 
             $row->column(6, function (Column $column) use ($incomeToday, $incomeThisMonth) {
-                $column->append(new InfoBox('Pendapatan Bulan Ini', 'money', 'purple', '/admin/payments', Money::IDR($incomeThisMonth, true)));
+                $column->append(new InfoBox('Pendapatan Bulan Ini', 'money', 'red', '' ,Money::IDR($incomeThisMonth, true)));
             });
             $row->column(6, function (Column $column) use ($incomeToday, $incomeThisMonth) {
-                $column->append(new InfoBox('Pendapatan Hari Ini', 'money', 'purple', '/admin/payments', Money::IDR($incomeToday, true)));
+                $column->append(new InfoBox('Pendapatan Hari Ini', 'money', 'blue', '', Money::IDR($incomeToday, true)));
             });
         });
     }
