@@ -70,7 +70,7 @@
                     <label tabindex="0" class="btn btn-ghost btn-circle">
                         <div class="indicator">
                             <i class="fa fa-bell fa-lg"></i>
-                            <span class="badge badge-sm indicator-item">{{ $group_order->count() ?? 0 }}</span>
+                            <span class="badge badge-sm indicator-item">@auth{{ $group_order->count() ?? 0 }}@endauth</span>
                         </div>
                     </label>
                     <div tabindex="0" class="mt-3 card card-compact dropdown-content w-72 md:w-96 bg-base-100 shadow">

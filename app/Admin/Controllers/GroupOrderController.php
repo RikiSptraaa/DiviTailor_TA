@@ -275,10 +275,17 @@ class GroupOrderController extends Controller
     {
         $form = new Form(new GroupOrder());
         $group = Group::all();
+        $user_select =[];
         $option = [];
 
         foreach ($group as $key => $value) {
             $option[$value->id] = $value->group_code . "(" . $value->group_name . "-" . $value->institute . ")";
+        }
+
+        $user = User::all();
+
+        foreach($user as $users){
+            $user_select[$users->id] = $users->name.'-'.$users->institute;
         }
 
         // dd($option);
@@ -287,7 +294,7 @@ class GroupOrderController extends Controller
         $form->hidden('invoice_number', __('Nomor Nota Borongan'))->default('BRG-' . Str::random(5));
         $form->select('group_id', __('Nama Grup'))->options($option)->rules(['required']);
         $form->date('group_order_date', __('Tanggal Borongan'))->default(date('Y-m-d'))->rules(['required', 'date']);
-        $form->multipleSelect('user', 'Pelanggan')->options(User::all()->pluck('name', 'id'))->rules(['required']);
+        $form->multipleSelect('user', 'Pelanggan')->options($user_select)->rules(['required']);
         $form->text('order_kind', __('Jenis Baju'))->rules(['required']);
         $form->number('users_total', __('Jumlah Pelanggan'))->rules(['required', 'numeric']);
         $form->currency('price', __('Total Harga'))->symbol('Rp.')->rules('required|numeric');

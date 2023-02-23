@@ -150,6 +150,10 @@ class GroupOrderController extends Controller
     public function show(GroupOrder $borongan)
     {
         $borongan = $borongan->toArray();
-        return response()->json($borongan);
+        if(request()->ajax()){
+            return response()->json($borongan);
+        }
+
+        return view('borongan.show', compact('borongan'));
     }
 }
