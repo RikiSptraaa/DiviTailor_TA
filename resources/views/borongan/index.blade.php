@@ -292,7 +292,7 @@ endif
 
                                 @foreach ($value['user'] as $user)
                                 <ul>
-                                    <a href="{{ route('profile.show', $user['id']) }}"><li>{{ $user['name'] }}</li></a>
+                                    <a class="link" href="{{ route('profile.show', $user['id']) }}"><li>{{ $user['name'] }}</li></a>
                                 </ul>
 
                                 @endforeach

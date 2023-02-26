@@ -29,9 +29,7 @@
                         </svg>
                     </label>
                     <ul tabindex="0" class="dropdown-content menu p-2 shadow bg-base-100 w-52">
-                      <li><a>Home</a></li>
-                      <li><a>Galery</a></li>
-                      <li><a>About</a></li>
+                      <li><a href="/">Home</a></li>
                     </ul>
                 </div>
                
@@ -62,10 +60,9 @@
             <div class="flex-none">
                 <ul class="menu menu-horizontal px-1  lg:flex md:flex  sm:hidden hidden">
                     <li><a href="/dashboard">Home</a></li>
-                    <li><a>About</a></li>
-                    <li><a>Galery</a></li>
+                    <li><a href="/tutorial">Bantuan</a></li>
                 </ul>
-
+                @auth                    
                 <div class="dropdown dropdown-end">
                     <label tabindex="0" class="btn btn-ghost btn-circle">
                         <div class="indicator">
@@ -82,7 +79,7 @@
                                     @foreach ($group_order as $item)
                                     <div class="border w-full p-2 flex justify-between align-middle align-items-center ">
                                         <div>
-                                            <p class="text-md">{{ $item->invoice_number }}</p>
+                                            <p class="text-md link"> <a href="{{ url('/group/orders').'/'.$item->id }}">{{ $item->invoice_number }}</a></p>
                                             <p class="text-xs">{{ $item->group->group_name.'-'.$item->group->institute }}</p>
                                         </div>
                                         <div class="flex align-items-center">
@@ -110,6 +107,8 @@
                         </div>
                     </div>
                 </div>
+                @endauth
+
                 <div class="dropdown dropdown-end">
                     <label tabindex="0" class="btn btn-ghost btn-circle avatar">
                         <div class="w-10 rounded-full">

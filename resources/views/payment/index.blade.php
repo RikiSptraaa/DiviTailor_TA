@@ -20,6 +20,9 @@ $task_status = [
             </label>
             <div class="collapse-content">
                 <div class="card w-full">
+                    @if ( collect($payment)->count() <= 0)
+                        <p>Tidak Ada Riwayat Pembayaran Pesanan Individu</p>
+                    @endif
                     @foreach($payment as $key => $value)
                     <div class="card-body border ">
                             
@@ -69,6 +72,9 @@ $task_status = [
                 Pesanan Borongan
             </label>
             <div class="collapse-content">
+                @if (collect($groupPayment)->count() <= 0)
+                    <p>Tidak Ada Riwayat Pembayaran Borongan</p>
+                @endif
                 <div class="card w-full">
                     @foreach($groupPayment as $key => $value)
                     <div class="card-body border ">

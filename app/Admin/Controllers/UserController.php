@@ -58,8 +58,6 @@ class UserController extends Controller
         $content->title($this->title())
             ->description($this->description['index'] ?? trans('admin.list'))
             ->body($this->grid());
-        $content->body(new Box('Hello'));
-
         return $content;
     }
 

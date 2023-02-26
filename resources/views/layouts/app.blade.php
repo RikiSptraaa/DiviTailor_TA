@@ -299,8 +299,8 @@
             <div>
                 <p class="font-bold text-base">Hubungi Kami</p>
                 <div class="grid grid-flow-col gap-4">
-                    <a href="https://wa.me/+6281999066449"><i class="fab fa-instagram fa-2x"></i></a>
-                    <a><i class="fab fa-whatsapp fa-2x"></i></a>
+                    <a href="https://www.instagram.com/divitailor/"><i class="fab fa-instagram fa-2x"></i></a>
+                    <a href="https://wa.me/+6281999066449"><i class="fab fa-whatsapp fa-2x"></i></a>
                 </div>
             </div>
             <div>
