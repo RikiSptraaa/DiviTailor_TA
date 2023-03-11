@@ -32,6 +32,8 @@ Route::group([
     $router->resource('employees', EmployeeController::class);
     $router->resource('tasks', TaskController::class);
     $router->resource('payments', PaymentController::class);
+    Route::get('/ukuran/show/all', [SizeBajuController::class, 'showAll'])->name('size.all');
+    Route::post('uk/baju/multiple-store', [SizeBajuController::class, 'multipleStore'])->name('size.multiple-store');
 });
 
 Route::get('/orders/cetak/{order}', [OrderController::class, 'print'])->name('orders.print');

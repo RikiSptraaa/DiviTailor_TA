@@ -2,14 +2,17 @@
 
 namespace App\Admin\Controllers;
 
+use App\Models\User;
 use Encore\Admin\Form;
 use Encore\Admin\Grid;
 use Encore\Admin\Show;
 use App\Models\SizeBaju;
-use App\Models\User;
+use App\Models\GroupOrder;
+use Illuminate\Http\Request;
 use Encore\Admin\Widgets\Box;
 use Encore\Admin\Layout\Content;
 use Illuminate\Routing\Controller;
+use Illuminate\Support\MessageBag;
 use Encore\Admin\Controllers\HasResourceActions;
 
 
@@ -217,21 +220,91 @@ class SizeBajuController extends Controller
         $form = new Form(new SizeBaju());
         if ($edit) {
             $form->display('user.name', __('Nama Pelanggan'));
+            $form->number('panjang_baju', __('Panjang baju'))->rules('required|numeric');
+            $form->number('lingkar_kerah', __('Lingkar kerah'))->rules('required|numeric');
+            $form->number('lingkar_dada', __('Lingkar dada'))->rules('required|numeric');
+            $form->number('lingkar_perut', __('Lingkar perut'))->rules('required|numeric');
+            $form->number('lingkar_pinggul', __('Lingkar pinggul'))->rules('required|numeric');
+            $form->number('lebar_bahu', __('Lebar bahu'))->rules('required|numeric');
+            $form->number('panjang_lengan_pendek', __('Panjang lengan pendek'))->rules('required|numeric');
+            $form->number('panjang_lengan_panjang', __('Panjang lengan panjang'))->rules('required|numeric');
+            $form->number('lingkar_lengan_bawah', __('Lingkar lengan bawah'))->rules('required|numeric');
+            $form->number('lingkar_lengan_atas', __('Lingkar lengan atas'))->rules('required|numeric');
+    
+            return $form;
         } else {
-
-            $form->select('user_id', __('Nama Pelanggan'))->options(User::all()->pluck('name', 'id'))->rules('unique:size_bajus,user_id|required');
+            return $form->setView('show-size');
         }
-        $form->number('panjang_baju', __('Panjang baju'))->rules('required|numeric');
-        $form->number('lingkar_kerah', __('Lingkar kerah'))->rules('required|numeric');
-        $form->number('lingkar_dada', __('Lingkar dada'))->rules('required|numeric');
-        $form->number('lingkar_perut', __('Lingkar perut'))->rules('required|numeric');
-        $form->number('lingkar_pinggul', __('Lingkar pinggul'))->rules('required|numeric');
-        $form->number('lebar_bahu', __('Lebar bahu'))->rules('required|numeric');
-        $form->number('panjang_lengan_pendek', __('Panjang lengan pendek'))->rules('required|numeric');
-        $form->number('panjang_lengan_panjang', __('Panjang lengan panjang'))->rules('required|numeric');
-        $form->number('lingkar_lengan_bawah', __('Lingkar lengan bawah'))->rules('required|numeric');
-        $form->number('lingkar_lengan_atas', __('Lingkar lengan atas'))->rules('required|numeric');
+ 
+    }
 
-        return $form;
+    public function showAll (Request $request){
+        $groupOrder = GroupOrder::with('user')->find($request->borongan);
+        $groupOrderUserId = $groupOrder->user->pluck('id', 'name')->toArray();
+        $customer = User::with('baju')->whereIn('id',$groupOrderUserId)->get()->toArray();
+        $mappingSize =[];
+
+        foreach($customer as $key => $value){
+            if (!is_null($value['baju'])) {
+                    $mappingSize[$value['id']] = $value['baju'];
+                    $mappingSize[$value['id']]['name'] = $value['name'];
+            }else{
+                $mappingSize[$value['id']] = [
+                    'name' => $value['name'],
+                    'user_id' => $value['id'],
+                    "panjang_baju" => 0,
+                    "lingkar_kerah" => 0,
+                    "lingkar_dada" => 0,
+                    "lingkar_perut" => 0,
+                    "lingkar_pinggul" => 0,
+                    "lebar_bahu" => 0,
+                    "panjang_lengan_pendek" => 0,
+                    "panjang_lengan_panjang" => 0,
+                    "lingkar_lengan_bawah" => 0,
+                    "lingkar_lengan_atas" => 0,
+                ];
+            }
+        }
+
+
+        return response()->json([
+            'status' => true,
+            'data' => $mappingSize,
+            'user' => $groupOrderUserId,
+        ]);
+    }
+
+    public function multipleStore(Request $request)
+    {
+        $userId = [];
+        foreach ($request->user_name as $key => $value) {
+            $userId[$key] = explode('-',$value)[1];
+        }
+
+        foreach($userId as $key => $value){
+            SizeBaju::updateOrCreate([
+                'user_id' => $value,
+            ],[
+                'user_id' => $value,
+                'panjang_baju' => $request->panjang_baju[$key],
+                'lingkar_kerah' => $request->lingkar_kerah[$key],
+                'lingkar_dada' => $request->lingkar_dada[$key],
+                'lingkar_perut' => $request->lingkar_perut[$key],
+                'lingkar_pinggul' => $request->lingkar_pinggul[$key],
+                'lebar_bahu' => $request->lebar_bahu[$key],
+                'panjang_lengan_pendek' => $request->panjang_lengan_pendek[$key],
+                'panjang_lengan_panjang' => $request->panjang_lengan_panjang[$key],
+                'lingkar_lengan_bawah' => $request->lingkar_lengan_bawah[$key],
+                'lingkar_lengan_atas' => $request->lingkar_lengan_atas[$key],
+            ]);
+        }
+        
+        $success = new MessageBag([
+            'title'   => 'Berhasil',
+            'message' => 'Data Berhasil Disimpan',
+        ]);
+
+        return redirect(admin_url('uk/baju'))->with(compact('success'));
+      
     }
 }
