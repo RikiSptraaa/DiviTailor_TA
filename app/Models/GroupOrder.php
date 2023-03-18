@@ -23,7 +23,7 @@ class GroupOrder extends Model
 
     public function payment()
     {
-        return $this->hasOne(GroupOrderPayment::class);
+        return $this->hasMany(GroupOrderPayment::class);
     }
 
     public function task()

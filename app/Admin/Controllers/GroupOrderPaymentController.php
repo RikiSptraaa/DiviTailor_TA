@@ -104,7 +104,7 @@ class GroupOrderPaymentController extends AdminController
             $form->ignore('paid_file');
 
             if(!is_null(request()->file('paid_file')) ){
-                if(empty($form->model()->get()->toArray())){
+                if(!$form->isEditing()){
                     $filename = md5(request()->file('paid_file')->getClientOriginalName() . time()) . '.' . request()->file('paid_file')->getClientOriginalExtension();
                     request()->file('paid_file')->move(public_path('uploads/payments'), $filename);
 

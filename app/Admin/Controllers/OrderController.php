@@ -198,7 +198,7 @@ class OrderController extends Controller
             // Add a column filter
             $filter->like('invoice_number', 'Nomor Nota');
             $filter->like('user.name', 'Nama Pelanggan');
-            $filter->like('jenis_baju', 'Jenis Pakaian');
+            $filter->like('jenis_pembuatan', 'Jenis Pesanan');
             $filter->date('order_date', 'Tanggal');
         });
 
@@ -209,9 +209,12 @@ class OrderController extends Controller
         $grid->column('user.name', __('Nama Pelanggan'));
         // $grid->column('is_acc', __('Status Pesanan'))->using([0 => 'Ditolak', 1 => 'Diterima'])->default('Belum Ada Status');
         $grid->column('order_date', __('Tanggal'))->display(function () {
-            return Carbon::parse($this->order_date)->dayName . ', ' . Carbon::parse($this->order_date)->format('d F Y');
+            return Carbon::parse($this->order_date)->dayName . ', ' . Carbon::parse($this->order_date)->translatedFormat('d F Y');
         });
-        $grid->column('jenis_baju', __('Jenis baju'));
+        $grid->column('jenis_pembuatan', 'Jenis Pesanan');
+        $grid->column('tanggal_estimasi', 'Tanggal Estimasi Selesai')->display(function () {
+            return Carbon::parse($this->order_date)->dayName . ', ' . Carbon::parse($this->order_date)->translatedFormat('d F Y');
+        });
         // $grid->column('payment.payment_status', 'Status Pembayaran');
         // $grid->column('task.task_status', 'Status Pengerjaan')->using([0 => 'Dalam Pengerjaan', 1 => 'Sudah Siap'])->default("Belum Dikerjakan");
         //Pakage akaunting untuk currency 
@@ -243,13 +246,20 @@ class OrderController extends Controller
         $show->field('user.name', __('Nama Pelanggan'));
         $show->field('is_acc', __('Status Pesanan'))->using([0 => 'Ditolak', 1 => 'Diterima']);
         $show->field('order_date', __('Tanggal'))->as(function () {
-            return Carbon::parse($this->order_date)->dayName . ', ' . Carbon::parse($this->order_date)->format('d F Y');
+            return Carbon::parse($this->order_date)->dayName . ', ' . Carbon::parse($this->order_date)->translatedFormat('d F Y');
         });
-        $show->field('jenis_baju', __('Jenis baju'));
+        $show->field('jenis_pakaian', 'Jenis Pakaian')->using(config("const.jenis_pakaian"));
+        $show->field('jenis_pembuatan', 'Jenis Pesanan');
+        $show->field('jenis_kain', 'Jenis Kain')->using(config('const.jenis_kain'));
+        $show->field('jenis_panjang', 'Panjang')->using(config('const.jenis_panjang'));
+        $show->field('deskripsi_pakaian', 'Deskripsi Pakaian');
+        $show->field('tanggal_estimasi', __('Tanggal Estimasi Selesai'))->as(function () {
+            return Carbon::parse($this->order_date)->dayName . ', ' . Carbon::parse($this->order_date)->translatedFormat('d F Y');
+        });
         $show->field('total_harga', __('Total harga'))->as(function () {
             return Money::IDR($this->total_harga, true);
         });
-        $show->field('payment.payment_status', 'Status Pembayaran');
+        $show->field('payment.payment_status', 'Status Pembayaran')->using(config('const.status_pembayaran'));
         // $show->field('created_at', __('Created at'));
         // $show->field('updated_at', __('Updated at'));
 
@@ -283,8 +293,13 @@ class OrderController extends Controller
         $form->select('user_id', __('Nama Pelanggan'))->options(User::all()->pluck('name', 'id'))->rules('required');
         $form->switch('is_acc', __('Status Pesanan'))->states($states)->rules('required')->default(1)->disable();
         $form->date('order_date', __('Tanggal'))->default(date('Y-m-d'))->rules('required|date');
+        $form->date('tanggal_estimasi', __('Estimasi Tanggal Jadi'))->rules('required|date');
         $form->date('payment.paid_date', __('Tanggal Bayar'))->default(null);
-        $form->text('jenis_baju', __('Jenis baju'))->rules('required|max:30');
+        $form->radio('jenis_pakaian', 'Jenis Pakaian')->options(config("const.jenis_pakaian"))->default(0)->rules('required|int');
+        $form->text('jenis_pembuatan', 'Jenis Pembuatan')->placeholder('Contoh:Seragam')->rules('required|max:50');
+        $form->select('jenis_kain', __('Jenis Kain'))->options(config('const.jenis_kain'))->rules('required|int');
+        $form->select('jenis_panjang', __('Panjang'))->options(config('const.jenis_panjang'))->rules('required|int');
+        $form->textarea('deskripsi_pakaian', __('Deskripsi Pakaian'))->rules('required');
         $form->select('payment.payment_status', 'Status Pembayaran')->options($payment_option)->rules('required');
         $form->currency('total_harga', __('Total harga'))->symbol('Rp.')->rules('required|numeric');
 

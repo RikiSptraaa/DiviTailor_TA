@@ -12,7 +12,9 @@ use Illuminate\Http\Request;
 use Encore\Admin\Widgets\Box;
 use Encore\Admin\Layout\Content;
 use Illuminate\Routing\Controller;
+use Illuminate\Support\Facades\DB;
 use Illuminate\Support\MessageBag;
+use Illuminate\Support\Facades\Validator;
 use Encore\Admin\Controllers\HasResourceActions;
 
 
@@ -233,7 +235,21 @@ class SizeBajuController extends Controller
     
             return $form;
         } else {
-            return $form->setView('show-size');
+                // $form->select('user.name', __('Nama Pelanggan'))->options(User::all()->pluck('id', 'name'));
+                // $form->number('panjang_baju', __('Panjang baju'))->rules('required|numeric');
+                // $form->number('lingkar_kerah', __('Lingkar kerah'))->rules('required|numeric');
+                // $form->number('lingkar_dada', __('Lingkar dada'))->rules('required|numeric');
+                // $form->number('lingkar_perut', __('Lingkar perut'))->rules('required|numeric');
+                // $form->number('lingkar_pinggul', __('Lingkar pinggul'))->rules('required|numeric');
+                // $form->number('lebar_bahu', __('Lebar bahu'))->rules('required|numeric');
+                // $form->number('panjang_lengan_pendek', __('Panjang lengan pendek'))->rules('required|numeric');
+                // $form->number('panjang_lengan_panjang', __('Panjang lengan panjang'))->rules('required|numeric');
+                // $form->number('lingkar_lengan_bawah', __('Lingkar lengan bawah'))->rules('required|numeric');
+                // $form->number('lingkar_lengan_atas', __('Lingkar lengan atas'))->rules('required|numeric');
+
+                $form->setView('show-size');
+
+            return $form;
         }
  
     }
@@ -267,10 +283,14 @@ class SizeBajuController extends Controller
         }
 
 
+
+
         return response()->json([
             'status' => true,
             'data' => $mappingSize,
             'user' => $groupOrderUserId,
+            'jenisUk' => config('const.jenis_ukuran'),
+            'kodeUk' => config('const.kode_ukuran'),
         ]);
     }
 
@@ -296,6 +316,8 @@ class SizeBajuController extends Controller
                 'panjang_lengan_panjang' => $request->panjang_lengan_panjang[$key],
                 'lingkar_lengan_bawah' => $request->lingkar_lengan_bawah[$key],
                 'lingkar_lengan_atas' => $request->lingkar_lengan_atas[$key],
+                'jenis_ukuran' => $request->jenis_ukuran[$key],
+                'kode_ukuran' => $request->kode_ukuran[$key],
             ]);
         }
         
@@ -306,5 +328,54 @@ class SizeBajuController extends Controller
 
         return redirect(admin_url('uk/baju'))->with(compact('success'));
       
+    }
+
+    public function alterStore(Request $request){
+        $validator = Validator::make($request->all(), [
+            'pelanggan' => ['required', 'numeric'],
+            'jenis_ukuran' => ['required', 'numeric'],
+            'kode_ukuran' => ['required', 'string', 'max:5'],
+            "panjang_baju" => ['required', 'numeric'],
+            "lingkar_kerah" => ['required', 'numeric'],
+            "lingkar_dada" => ['required', 'numeric'],
+            "lingkar_perut" => ['required', 'numeric'],
+            "lingkar_pinggul" => ['required', 'numeric'],
+            "lebar_bahu" => ['required', 'numeric'],
+            "panjang_lengan_pendek" => ['required', 'numeric'],
+            "panjang_lengan_panjang" => ['required', 'numeric'],
+            "lingkar_lengan_bawah" => ['required', 'numeric'],
+            "lingkar_lengan_atas" => ['required', 'numeric']
+        ]);
+
+        if ($validator->fails()) {
+            return response()->json([
+                'status' => false,
+                'message' => " Ukuran Gagal Dibuat!",
+                'validators'=> $validator->errors(),
+            ], 422);
+        }
+
+        DB::beginTransaction();
+        try {
+            $user = $request->pelanggan;
+            $request = $request->merge(['user_id' => $user]);
+            SizeBaju::create(
+                $request->except(['_token', '_previous_', 'pelanggan']));
+            
+            DB::commit();
+    
+            return response()->json([
+                'status' => true,
+                'message' => "Data Berhasil Ditambah!",
+            ]);
+        } catch (\Throwable $th) {
+            //throw $th;
+            DB::rollBack();
+            return response()->json([
+                'status' => false,
+                'message' => $th->message,
+            ], 422);
+
+        }
     }
 }

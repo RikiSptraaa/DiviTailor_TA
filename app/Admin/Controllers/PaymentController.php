@@ -77,7 +77,15 @@ class PaymentController extends AdminController
         $show->field('paid_date', __('Tanggal Pembayaran'))->as(function () {
             return Carbon::parse($this->paid_date)->dayName . ', ' . Carbon::parse($this->paid_date)->format('d F Y');
         });
-        $show->paid_file()->file();
+
+        if(is_null($show->getModel()->paid_file)){
+            $show->paid_file('Bukti Pembayaran')->as(function() {
+                return 'Belum Ada Upload File Pembayaran';
+            });
+        }else{
+            $show->paid_file()->file();
+
+        }
 
         // $show->field('created_at', __('Created at'));
         // $show->field('updated_at', __('Updated at'));

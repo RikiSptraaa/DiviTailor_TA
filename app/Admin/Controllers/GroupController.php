@@ -190,7 +190,7 @@ class GroupController extends Controller
     {
         $form = new Form(new Group());
 
-        $user = User::whereHas('baju')->pluck('name', 'id') ?? null;
+        $user = User::pluck('name', 'id') ?? null;
 
         $form->hidden('group_code', __('Kode Grup'))->default('GRP-' . Str::random(5))->creationRules('required|unique:groups,group_code')->updateRules('required|unique:groups,group_code,{{id}}');
         $form->text('group_name', __('Nama Grup'))->rules('required|max:30');

@@ -45,7 +45,7 @@ $task_status = [
                             </h2>
                             <p>{{ Carbon::parse($value['order_date'])->dayName . ', ' . Carbon::parse($value['order_date'])->format('d F Y'); }}
                             </p>
-                            <p>{{ $value['jenis_baju'] }}</p>
+                            <p>{{ $value['jenis_pembuatan'] }}</p>
                             <div class="badge badge-info">Menunggu Diterima</div>
                             <p></p>
                             <div class="card-actions justify-end">
@@ -82,7 +82,7 @@ $task_status = [
                                 </h2>
                                 <p>{{ Carbon::parse($value['order_date'])->dayName . ', ' . Carbon::parse($value['order_date'])->format('d F Y'); }}
                                 </p>
-                                <p>{{ $value['jenis_baju'] }}</p>
+                                <p>{{ $value['jenis_pembuatan'] }}</p>
 
                                 <div class="badge 
                                 {{ $value['payment']['payment_status'] == 0 ? 'badge-info' : ''  }}
@@ -151,7 +151,7 @@ $task_status = [
                             </h2>
                             <p>{{ Carbon::parse($value['order_date'])->dayName . ', ' . Carbon::parse($value['order_date'])->format('d F Y'); }}
                             </p>
-                            <p>{{ $value['jenis_baju'] }}</p>
+                            <p>{{ $value['jenis_pembuatan'] }}</p>
                             <p></p>
                             <div class="card-actions justify-end">
                                 <form id="form-delete" data-url="{{ url('order/delete/'.$value['id']) }}" >

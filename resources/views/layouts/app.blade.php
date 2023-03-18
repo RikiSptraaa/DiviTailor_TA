@@ -62,14 +62,72 @@
                             <ul class='text-sm text-red-600 space-y-1' id="error-date">
                             </ul>
                         </div>
-
                         <div class="mt-4">
-                            <x-input-label for="order_kind" :value="__('Jenis Pakaian')" />
-                            <input type="text" name="jenis_pakaian" id="order_kind" value="{{ old('jenis_pakaian')}}"
+                            <x-input-label for="tanggal_estimasi" :value="__('Tanggal Estimasi Penyelesaian')" />
+                            <input type="date" name="tanggal_estimasi" id="tanggal_estimasi"
+                                value="{{ old('tanggal_estimasi') }}"
+                                class="input input-sm input-bordered w-full focus:ring-black focus:border-none text-xs" />
+                            <ul class='text-sm text-red-600 space-y-1' id="error-estimated-date">
+                            </ul>
+                        </div>
+                        <div class="mt-4">
+                            <x-input-label for="pakaian" :value="__('Jenis Pakaian')" />
+                            <select name="jenis_pakaian"
+                                class="select select-bordered focus:ring-black focus:border-none h-[35px] w-full min-h-[35px] text-sm">
+                                <option disabled selected>Pilih Jenis Pakaian</option>
+                                @foreach(config('const.jenis_pakaian') as $key => $value)
+                                <option value="{{ $key }}">{{ $value }}</option>
+                                @endforeach
+
+                            </select>
+                            <ul class='text-sm text-red-600 space-y-1' id="error-clothes-kind">
+                            </ul>
+                        </div>
+                        <div class="mt-4">
+                            <x-input-label for="order_kind" :value="__('Jenis Pesanan')" />
+                            <input type="text" name="jenis_pembuatan" id="order_kind" value="{{ old('jenis_pembuatan')}}" placeholder="Masukan Jenis Pesanan"
                                 class="input h-[35px] input-bordered w-full focus:ring-black focus:border-none text-xs" />
                             <ul class='text-sm text-red-600 space-y-1' id="error-order-kind">
                             </ul>
                         </div>
+                        <div class="mt-4">
+                            <x-input-label for="jenis_kain" :value="__('Jenis Kain')" />
+                            <select name="jenis_kain"
+                                class="select select-bordered focus:ring-black focus:border-none h-[35px] w-full min-h-[35px] text-sm">
+                                <option disabled selected>Pilih Jenis Kain</option>
+                                @foreach(config('const.jenis_kain') as $key => $value)
+                                <option value="{{ $key }}" >{{ $value }}</option>
+                                @endforeach
+
+                            </select>
+                            <ul class='text-sm text-red-600 space-y-1' id="error-cloth-kind">
+                            </ul>
+                        </div>
+                        <div class="mt-4">
+                            <x-input-label for="kepanjangan" :value="__('Kepanjangan')" />
+                            <select name="jenis_panjang"
+                                class="select select-bordered focus:ring-black focus:border-none h-[35px] w-full min-h-[35px] text-sm">
+                                <option disabled selected>Pilih Jenis Panjang</option>
+                                @foreach(config('const.jenis_panjang') as $key => $value)
+                                <option value="{{ $key }}">{{ $value }}</option>
+                                @endforeach
+
+                            </select>
+                            <ul class='text-sm text-red-600 space-y-1' id="error-long-kind">
+                            </ul>
+                        </div>
+
+                        <div class="mt-4">
+                            <x-input-label for="deskripsi_pakaian" :value="__('Deskripsi Pakaian')" />
+                
+                            <textarea class="textarea textarea-bordered w-full focus:ring-gray-600 focus:border-none" 
+                            name="deskripsi_pakaian"
+                                id="deskripsi_pakaian">{{ old('deskripsi_pakaian') }}</textarea>
+                
+                            <ul class='text-sm text-red-600 space-y-1' id="error-description-order">
+                            </ul>
+                        </div>
+
                         <div class="mt-4">
                             @if( !auth()->user()->baju()->exists() OR !auth()->user()->celana()->exists())
                             <p class="text-xs text-red-600">
@@ -592,8 +650,24 @@
                                         .responseJSON.tanggal_pesanan ?? '' + '</li>')
                                     .css(
                                         'display', '');
-                                $('#error-order-kind').html('<li>' + error
+                                $('#error-estimated-date').html('<li>' + error
+                                        .responseJSON.tanggal_estimasi ?? '' + '</li>')
+                                    .css(
+                                        'display', '');
+                                $('#error-clothes-kind').html('<li>' + error
                                     .responseJSON.jenis_pakaian ?? '' + '</li>').css(
+                                    'display', '');
+                                $('#error-order-kind').html('<li>' + error
+                                    .responseJSON.jenis_pembuatan ?? '' + '</li>').css(
+                                    'display', '');
+                                $('#error-cloth-kind').html('<li>' + error
+                                    .responseJSON.jenis_kain ?? '' + '</li>').css(
+                                    'display', '');
+                                $('#error-long-kind').html('<li>' + error
+                                    .responseJSON.jenis_panjang?? '' + '</li>').css(
+                                    'display', '');
+                                $('#error-description-order').html('<li>' + error
+                                    .responseJSON.deskripsi_pakaian?? '' + '</li>').css(
                                     'display', '');
                             },
                         });

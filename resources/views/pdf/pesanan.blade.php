@@ -100,11 +100,22 @@ Pembayaran'
         <div class="line"></div>
         <label>Tanggal</label>
         <p class="text-base">{{$carbon->createFromFormat('Y-m-d',$order->order_date )->translatedFormat('l')}},
-            {{ $order->order_date}}</p>
+            {{ $carbon->parse($order->order_date)->translatedFormat('d M Y') }}</p>
+        <label>Tanggal Estimasi Selesai</label>
+        <p class="text-base">{{$carbon->createFromFormat('Y-m-d',$order->tanggal_estimasi )->translatedFormat('l')}},
+            {{ $carbon->parse($order->tanggal_estimasi)->translatedFormat('d M Y') }}</p>
         <label>Status Pembayaran</label>
         <p class="text-base">{{ $payment_status[$order->payment->payment_status] }}</p>
-        <label>Jenis Baju</label>
-        <p class="text-base">{{ $order->jenis_baju }}</p>
+        <label>Jenis Pakaian</label>
+        <p class="text-base">{{ config('const.jenis_pakaian')[$order->jenis_pakaian] }}</p>
+        <label>Jenis Pesanan</label>
+        <p class="text-base">{{ $order->jenis_pembuatan }}</p>
+        <label>Jenis Kain</label>
+        <p class="text-base">{{ config('const.jenis_kain')[$order->jenis_kain] }}</p>
+        <label>Jenis Panjang</label>
+        <p class="text-base">{{ config('const.jenis_panjang')[$order->jenis_panjang] }}</p>
+        <label>Deskripsi Pakaian</label>
+        <p class="text-base">{{ $order->deskripsi_pakaian }}</p>
         <div class="line-dot"></div>
         <label>Total</label>
         <p class="text-base">

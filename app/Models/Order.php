@@ -7,7 +7,18 @@ use Illuminate\Database\Eloquent\Model;
 
 class Order extends Model
 {
-    protected $fillable = ['is_acc', 'order_date', 'jenis_baju', 'total_harga', 'invoice_number', 'user_id'];
+    protected $fillable = [
+        'is_acc', 
+        'order_date', 
+        'tanggal_estimasi', 
+        'jenis_pakaian', 
+        'jenis_pembuatan',
+        'jenis_kain',
+        'jenis_panjang',
+        'deskripsi_pakaian',
+        'total_harga', 
+        'invoice_number', 
+        'user_id'];
     use HasFactory;
 
     public function user()

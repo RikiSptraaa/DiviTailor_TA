@@ -2,14 +2,20 @@
 
 namespace App\Admin\Controllers;
 
+use Throwable;
 use App\Models\User;
 use Encore\Admin\Form;
 use Encore\Admin\Grid;
 use Encore\Admin\Show;
+use App\Models\GroupOrder;
 use App\Models\SizeCelana;
+use Illuminate\Http\Request;
 use Encore\Admin\Widgets\Box;
 use Encore\Admin\Layout\Content;
 use Illuminate\Routing\Controller;
+use Illuminate\Support\Facades\DB;
+use Illuminate\Support\MessageBag;
+use Illuminate\Support\Facades\Validator;
 use Encore\Admin\Controllers\HasResourceActions;
 
 class SizeCelanaController extends Controller
@@ -213,17 +219,128 @@ class SizeCelanaController extends Controller
         $form = new Form(new SizeCelana());
         if ($edit) {
             $form->display('user.name', __('Nama Pelanggan'));
+
+            $form->number('lingkar_pinggang', __('Lingkar pinggang'))->rules('required|numeric');
+            $form->number('lingkar_pinggul', __('Lingkar pinggul'))->rules('required|numeric');
+            $form->number('panjang_celana', __('Panjang celana'))->rules('required|numeric');
+            $form->number('panjang_pesak', __('Panjang pesak'))->rules('required|numeric');
+            $form->number('lingkar_bawah', __('Lingkar bawah'))->rules('required|numeric');
+            $form->number('lingkar_paha', __('Lingkar paha'))->rules('required|numeric');
+            $form->number('lingkar_lutut', __('Lingkar lutut'))->rules('required|numeric');
         } else {
-            $form->select('user_id', __('Nama Pelanggan'))->options(User::all()->pluck('name', 'id'))->rules('unique:size_celanas,user_id|required');
+            // $form->select('user_id', __('Nama Pelanggan'))->options(User::all()->pluck('name', 'id'))->rules('unique:size_celanas,user_id|required');
+            $form->setView('size.form-bottom-size');
         }
-        $form->number('lingkar_pinggang', __('Lingkar pinggang'))->rules('required|numeric');
-        $form->number('lingkar_pinggul', __('Lingkar pinggul'))->rules('required|numeric');
-        $form->number('panjang_celana', __('Panjang celana'))->rules('required|numeric');
-        $form->number('panjang_pesak', __('Panjang pesak'))->rules('required|numeric');
-        $form->number('lingkar_bawah', __('Lingkar bawah'))->rules('required|numeric');
-        $form->number('lingkar_paha', __('Lingkar paha'))->rules('required|numeric');
-        $form->number('lingkar_lutut', __('Lingkar lutut'))->rules('required|numeric');
+      
 
         return $form;
+    }
+
+    public function showAll (Request $request){
+        $groupOrder = GroupOrder::with('user')->find($request->borongan);
+        $groupOrderUserId = $groupOrder->user->pluck('id', 'name')->toArray();
+        $customer = User::with('celana')->whereIn('id',$groupOrderUserId)->get()->toArray();
+        $mappingSize =[];
+
+        foreach($customer as $key => $value){
+            if (!is_null($value['celana'])) {
+                    $mappingSize[$value['id']] = $value['celana'];
+                    $mappingSize[$value['id']]['name'] = $value['name'];
+            }else{
+                $mappingSize[$value['id']] = [
+                    'name' => $value['name'],
+                    'user_id' => $value['id'],
+                    "lingkar_pinggang" => 0,
+                    "lingkar_pinggul" => 0,
+                    "panjang_celana" => 0,
+                    "panjang_pesak" => 0,
+                    "lingkar_bawah" => 0,
+                    "lingkar_paha" => 0,
+                    "lingkar_lutut" => 0
+                ];
+            }
+        }
+
+
+        return response()->json([
+            'status' => true,
+            'data' => $mappingSize,
+            'user' => $groupOrderUserId,
+        ]);
+    }
+
+    public function multipleStore(Request $request)
+    {
+        $userId = [];
+        foreach ($request->user_name as $key => $value) {
+            $userId[$key] = explode('-',$value)[1];
+        }
+
+        foreach($userId as $key => $value){
+            SizeCelana::updateOrCreate([
+                'user_id' => $value,
+            ],[
+                'user_id' => $value,
+                'lingkar_pinggang' => $request->lingkar_pinggang[$key],
+                'lingkar_pinggul' => $request->lingkar_pinggul[$key],
+                'panjang_celana' => $request->panjang_celana[$key],
+                'panjang_pesak' => $request->panjang_pesak[$key],
+                'lingkar_bawah' => $request->lingkar_bawah[$key],
+                'lingkar_paha' => $request->lingkar_paha[$key],
+                'lingkar_lutut' => $request->lingkar_lutut[$key],
+            ]);
+        }
+        
+        $success = new MessageBag([
+            'title'   => 'Berhasil',
+            'message' => 'Data Berhasil Disimpan',
+        ]);
+
+        return redirect(admin_url('uk/celana'))->with(compact('success'));
+      
+    }
+
+    public function alterStore(Request $request){
+        $validator = Validator::make($request->all(), [
+            'pelanggan' => ['required', 'numeric'],
+            'lingkar_pinggang' => ['required', 'numeric'],
+            'lingkar_pinggul' => ['required', 'numeric'],
+            'panjang_celana' => ['required', 'numeric'],
+            'panjang_pesak' => ['required', 'numeric'],
+            'lingkar_bawah' => ['required', 'numeric'],
+            'lingkar_paha' => ['required', 'numeric'],
+            'lingkar_lutut' => ['required', 'numeric'],
+        ]);
+
+        if ($validator->fails()) {
+            return response()->json([
+                'status' => false,
+                'message' => " Ukuran Gagal Dibuat!",
+                'validators'=> $validator->errors(),
+            ], 422);
+        }
+
+        DB::beginTransaction();
+        try {
+            $user = $request->pelanggan;
+            $request = $request->merge(['user_id' => $user]);
+            SizeCelana::create(
+                $request->except(['_token', '_previous_', 'pelanggan']));
+            
+            DB::commit();
+    
+            return response()->json([
+                'status' => true,
+                'message' => "Data Berhasil Ditambah!",
+            ]);
+        } catch (Throwable $th) {
+            //throw $th;
+            DB::rollBack();
+            return response()->json([
+                'status' => false,
+                'message' => $th->message,
+            ], 422);
+
+        }
     }
 }
