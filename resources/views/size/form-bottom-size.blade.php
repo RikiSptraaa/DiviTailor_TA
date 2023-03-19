@@ -42,7 +42,9 @@ $user = User::whereDoesntHave('celana')->get()->pluck('id', 'name');
                 <thead>
                     <tr class="text-center">
                         <td widh="5%">No</td>
-                        <td width="20%">Nama Pelanggan <br> (cm)</td>
+                        <td width="20%">Nama Pelanggan</td>
+                        <td width="15%">Jenis UK</td>
+                        <td width="5%">Kode UK</td>
                         <td width="5%">Lingkar Pinggang <br> (cm)</td>
                         <td width="5%">Lingkar Pinggul <br> (cm)</td>
                         <td width="5%">Panjang Celana <br> (cm)</td>
@@ -90,6 +92,27 @@ $user = User::whereDoesntHave('celana')->get()->pluck('id', 'name');
                                         @endforeach
                                     </select>
                                 
+                                </div>
+                            </div>
+                            <div class="form-group">
+                                <label class="col-sm-2  control-label">Jenis Ukuran</label>
+                                <div class="col-sm-10">
+                                    <select name="jenis_ukuran" id="" class="form-control select2" data-placeholder="Pilih Jenis Ukuran" style="width: 100%">
+                                        @foreach(config('const.jenis_ukuran') as $key => $value)
+                                        <option value="{{ $key }}">{{ $value }}</option>
+                                        @endforeach
+                                    </select>
+                                
+                                </div>
+                            </div>
+                            <div class="form-group">
+                                <label class="col-sm-2  control-label">Kode Ukuran</label>
+                                <div class="col-sm-10">
+                                    <select name="kode_ukuran" id="" class="form-control select2" data-placeholder="Pilih Ukuran" style="width: 100%">
+                                        @foreach(config('const.kode_ukuran') as $key => $value)
+                                        <option value="{{ $key }}">{{ $value }}</option>
+                                        @endforeach
+                                    </select>
                                 </div>
                             </div>
                             <div class="form-group">
@@ -209,6 +232,12 @@ $user = User::whereDoesntHave('celana')->get()->pluck('id', 'name');
             allowClear: true,
         });
 
+        $('.select2').val(null).trigger('change');
+        $('.select2-selection__clear').click(function (e){
+            e.preventDefault();
+            $('.select2').val(null).trigger('change');
+        });
+
         $('#form-show-size').submit(function (e) {
             e.preventDefault();
 
@@ -238,6 +267,10 @@ $user = User::whereDoesntHave('celana')->get()->pluck('id', 'name');
                             data.data[value].name + `-` + data.data[value]
                             .user_id +
                             `"></td>
+                            <td width="5%"><select name="jenis_ukuran[]" id="jenisUk" class="form-control jenis-uk `+ data.data[value].user_id +`" style="width: 100%;">
+                            </select></td>
+                            <td width="5%"><select name="kode_ukuran[]" id="kodeUk" class="form-control kode-uk `+ data.data[value].user_id +`" style="width: 100%;">
+                            </select></td>
                             <td width="5%"><input name="lingkar_pinggang[]" class="form-control" style="width: 100%;" type="number" value="` +
                             data.data[value].lingkar_pinggang +
                             `"></td>
@@ -261,6 +294,28 @@ $user = User::whereDoesntHave('celana')->get()->pluck('id', 'name');
                             `"></td>
                         </tr>
                         `);
+
+                        $('.jenis-uk.'+data.data[value].user_id).append(`<option value="null" id='disabled_uk_kind' disabled> Pilih Jenis Ukuran </option>`); 
+                        $.each(data.jenisUk, function (key, value_kind_uk){ 
+                            $('.jenis-uk.'+data.data[value].user_id).append(`<option value="`+ key +`">`+value_kind_uk+`</option>`);       
+                        });        
+
+                        if (data.data[value].jenis_ukuran != undefined) {
+                            $('.jenis-uk.'+data.data[value].user_id).val(data.data[value].jenis_ukuran);
+                        }else{
+                            $('.jenis-uk.'+data.data[value].user_id).val("null");
+                        }
+                            
+                        $('.kode-uk.'+data.data[value].user_id).append(`<option disabled selected> Pilih Kode Ukuran </option>`); 
+                        $.each(data.kodeUk, function (key, value_code_uk){ 
+                            $('.kode-uk.'+data.data[value].user_id).append(`<option value="`+ key +`">`+value_code_uk+`</option>`); 
+                        });
+
+                        if (data.data[value].kode_ukuran != undefined) {
+                            $('.kode-uk.'+data.data[value].user_id).val(data.data[value].kode_ukuran);
+                        }
+                        
+
 
                     });
                     $('#btn-submit').append(
@@ -312,6 +367,16 @@ $user = User::whereDoesntHave('celana')->get()->pluck('id', 'name');
                     });
                 } 
             });
+
+        });
+
+        $('#btnGroup').click(function(){
+            $('#collapsePersonal').hide();
+            $('#collapseGroup').toggle();
+        });
+        $('#btnPersonal').click(function(){
+            $('#collapseGroup').hide();
+            $('#collapsePersonal').toggle();
 
         });
     });

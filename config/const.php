@@ -15,7 +15,7 @@ return [
         0 => 'Uang Muka 25%', 1 => 'Uang Muka 50%', 2 => 'Lunas', 3 => 'Menunggu Pembayaran',  4 => 'Menunggu Konfirmasi Pembayaran'
     ],
     'jenis_ukuran' => ['Ukuran Standard Anak-Anak', 'Ukuran Perempuan', 'Ukuran Laki-Laki'],
-    'kode_ukuran' => ['XS', 'S', 'M', 'L', 'XL', 'XXL']
+    'kode_ukuran' => ['XS' => 'XS', 'S' => 'S', 'M' => 'M', 'L' => 'L', 'XL' => 'XL', 'XXL' => 'XXL']
 ]
 
 

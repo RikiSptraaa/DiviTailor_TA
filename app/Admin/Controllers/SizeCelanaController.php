@@ -182,6 +182,8 @@ class SizeCelanaController extends Controller
 
         $show->field('id', __('Id'));
         $show->field('user_id', __('User id'));
+        $show->field('jenis_ukuran', __('Jenis Ukuran'))->using(config('const.jenis_ukuran'));
+        $show->field('kode_ukuran', __('Kode Ukuran'))->using(config('const.kode_ukuran'));
         $show->field('lingkar_pinggang', __('Lingkar pinggang'))->as(function () {
             return "{$this->lingkar_pinggang} cm";
         });
@@ -219,14 +221,15 @@ class SizeCelanaController extends Controller
         $form = new Form(new SizeCelana());
         if ($edit) {
             $form->display('user.name', __('Nama Pelanggan'));
-
-            $form->number('lingkar_pinggang', __('Lingkar pinggang'))->rules('required|numeric');
-            $form->number('lingkar_pinggul', __('Lingkar pinggul'))->rules('required|numeric');
-            $form->number('panjang_celana', __('Panjang celana'))->rules('required|numeric');
-            $form->number('panjang_pesak', __('Panjang pesak'))->rules('required|numeric');
-            $form->number('lingkar_bawah', __('Lingkar bawah'))->rules('required|numeric');
-            $form->number('lingkar_paha', __('Lingkar paha'))->rules('required|numeric');
-            $form->number('lingkar_lutut', __('Lingkar lutut'))->rules('required|numeric');
+            $form->select('jenis_ukuran', __('Jenis Ukuran'))->options(config('const.jenis_ukuran'))->rules('numeric');
+            $form->select('kode_ukuran', __('Kode Ukuran'))->options(config('const.kode_ukuran'))->rules('numeric');
+            $form->number('lingkar_pinggang', __('Lingkar pinggang'))->rules('numeric');
+            $form->number('lingkar_pinggul', __('Lingkar pinggul'))->rules('numeric');
+            $form->number('panjang_celana', __('Panjang celana'))->rules('numeric');
+            $form->number('panjang_pesak', __('Panjang pesak'))->rules('numeric');
+            $form->number('lingkar_bawah', __('Lingkar bawah'))->rules('numeric');
+            $form->number('lingkar_paha', __('Lingkar paha'))->rules('numeric');
+            $form->number('lingkar_lutut', __('Lingkar lutut'))->rules('numeric');
         } else {
             // $form->select('user_id', __('Nama Pelanggan'))->options(User::all()->pluck('name', 'id'))->rules('unique:size_celanas,user_id|required');
             $form->setView('size.form-bottom-size');
@@ -256,7 +259,9 @@ class SizeCelanaController extends Controller
                     "panjang_pesak" => 0,
                     "lingkar_bawah" => 0,
                     "lingkar_paha" => 0,
-                    "lingkar_lutut" => 0
+                    "lingkar_lutut" => 0,
+                    "jenis_ukuran" => null,
+                    "kode_ukuran" => null,
                 ];
             }
         }
@@ -266,6 +271,8 @@ class SizeCelanaController extends Controller
             'status' => true,
             'data' => $mappingSize,
             'user' => $groupOrderUserId,
+            'jenisUk' => config('const.jenis_ukuran'),
+            'kodeUk' => config('const.kode_ukuran'),
         ]);
     }
 
@@ -277,9 +284,7 @@ class SizeCelanaController extends Controller
         }
 
         foreach($userId as $key => $value){
-            SizeCelana::updateOrCreate([
-                'user_id' => $value,
-            ],[
+              $data = [ 
                 'user_id' => $value,
                 'lingkar_pinggang' => $request->lingkar_pinggang[$key],
                 'lingkar_pinggul' => $request->lingkar_pinggul[$key],
@@ -288,7 +293,16 @@ class SizeCelanaController extends Controller
                 'lingkar_bawah' => $request->lingkar_bawah[$key],
                 'lingkar_paha' => $request->lingkar_paha[$key],
                 'lingkar_lutut' => $request->lingkar_lutut[$key],
-            ]);
+            ];
+            if(isset($request->jenis_ukuran[$key]) && !is_null($request->jenis_ukuran[$key])){
+                $data['jenis_ukuran'] = $request->jenis_ukuran[$key];
+            }
+            if(isset($request->kode_ukuran[$key]) && !is_null($request->kode_ukuran[$key])){
+                $data['kode_ukuran'] = $request->kode_ukuran[$key];
+            }
+            SizeCelana::updateOrCreate([
+                'user_id' => $value,
+            ],$data);
         }
         
         $success = new MessageBag([
@@ -303,13 +317,15 @@ class SizeCelanaController extends Controller
     public function alterStore(Request $request){
         $validator = Validator::make($request->all(), [
             'pelanggan' => ['required', 'numeric'],
-            'lingkar_pinggang' => ['required', 'numeric'],
-            'lingkar_pinggul' => ['required', 'numeric'],
-            'panjang_celana' => ['required', 'numeric'],
-            'panjang_pesak' => ['required', 'numeric'],
-            'lingkar_bawah' => ['required', 'numeric'],
-            'lingkar_paha' => ['required', 'numeric'],
-            'lingkar_lutut' => ['required', 'numeric'],
+            'jenis_ukuran' => [ 'numeric', 'nullable'],
+            'kode_ukuran' => ['string', 'nullable' , 'max:5'],
+            'lingkar_pinggang' => ['numeric', 'nullable'],
+            'lingkar_pinggul' => ['numeric', 'nullable'],
+            'panjang_celana' => ['numeric', 'nullable'],
+            'panjang_pesak' => ['numeric', 'nullable'],
+            'lingkar_bawah' => ['numeric', 'nullable'],
+            'lingkar_paha' => ['numeric', 'nullable'],
+            'lingkar_lutut' => ['numeric', 'nullable'],
         ]);
 
         if ($validator->fails()) {

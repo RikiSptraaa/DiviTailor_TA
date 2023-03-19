@@ -42,7 +42,7 @@ $user = User::whereDoesntHave('baju')->get()->pluck('id', 'name')
                 <thead>
                     <tr class="text-center">
                         <td widh="3%">No</td>
-                        <td width="13%">Nama Pelanggan <br> (cm)</td>
+                        <td width="13%">Nama Pelanggan</td>
                         <td width="15%">Jenis UK</td>
                         <td width="5%">Kode UK</td>
                         <td width="5%">Panjang Baju <br> (cm)</td>
@@ -308,9 +308,9 @@ $user = User::whereDoesntHave('baju')->get()->pluck('id', 'name')
                             data.data[value].name + `-` + data.data[value]
                             .user_id +
                             `"></td>
-                            <td width="5%"><select name="jenis_ukuran[]" id="jenisUk" class="form-control jenis-uk" style="width: 100%;">
+                            <td width="5%"><select name="jenis_ukuran[]" id="jenisUk" class="form-control jenis-uk `+ data.data[value].user_id +`" style="width: 100%;">
                             </select></td>
-                            <td width="5%"><select name="kode_ukuran[]" id="kodeUk" class="form-control kode-uk" style="width: 100%;">
+                            <td width="5%"><select name="kode_ukuran[]" id="kodeUk" class="form-control kode-uk `+ data.data[value].user_id +`" style="width: 100%;">
                             </select></td>
                             <td width="5%"><input name="panjang_baju[]" class="form-control" style="width: 100%;" type="number" value="` +
                             data.data[value].panjang_baju +
@@ -343,17 +343,26 @@ $user = User::whereDoesntHave('baju')->get()->pluck('id', 'name')
                             .data[value].lingkar_lengan_atas + `"></td>
                         </tr>
                         `);
-                        $('.jenis-uk').empty();
-                        $('.kode-uk').empty();
-                        $.each(data.jenisUk, function (key, value){ 
-                            $('.jenis-uk').append(`<option value="`+ key +`">`+value+`</option>`); 
-                        });
-                        $.each(data.kodeUk, function (key, value){ 
-                            $('.kode-uk').append(`<option value="`+ key +`">`+value+`</option>`); 
+                        $('.jenis-uk.'+data.data[value].user_id).append(`<option value="null" id='disabled_uk_kind' disabled> Pilih Jenis Ukuran </option>`); 
+                        $.each(data.jenisUk, function (key, value_kind_uk){ 
+                            $('.jenis-uk.'+data.data[value].user_id).append(`<option value="`+ key +`">`+value_kind_uk+`</option>`);       
+                        });        
+
+                        if (data.data[value].jenis_ukuran != undefined) {
+                            $('.jenis-uk.'+data.data[value].user_id).val(data.data[value].jenis_ukuran);
+                        }else{
+                            $('.jenis-uk.'+data.data[value].user_id).val("null");
+                        }
+                            
+                        $('.kode-uk.'+data.data[value].user_id).append(`<option disabled selected> Pilih Kode Ukuran </option>`); 
+                        $.each(data.kodeUk, function (key, value_code_uk){ 
+                            $('.kode-uk.'+data.data[value].user_id).append(`<option value="`+ key +`">`+value_code_uk+`</option>`); 
                         });
 
+                        if (data.data[value].kode_ukuran != undefined) {
+                            $('.kode-uk.'+data.data[value].user_id).val(data.data[value].kode_ukuran);
+                        }
                         
-
 
                     });
                     $('#btn-submit').append(
