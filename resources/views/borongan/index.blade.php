@@ -68,10 +68,68 @@ endif
                     </div>
 
                     <div class="mt-4">
-                        <x-input-label for="order_kind" :value="__('Jenis Pakaian')" />
-                        <input type="text" name="jenis_pakaian" id="order_kind" value="{{ old('jenis_pakaian')}}"
+                        <x-input-label for="tanggal_estimasi" :value="__('Tanggal Estimasi Penyelesaian')" />
+                        <input type="date" name="tanggal_estimasi" id="tanggal_estimasi"
+                            value="{{ old('tanggal_estimasi') }}"
+                            class="input input-sm input-bordered w-full focus:ring-black focus:border-none text-xs" />
+                        <ul class='text-sm text-red-600 space-y-1' id="error-group-estimated-date">
+                        </ul>
+                    </div>
+                    <div class="mt-4">
+                        <x-input-label for="pakaian" :value="__('Jenis Pakaian')" />
+                        <select name="jenis_pakaian"
+                            class="select select-bordered focus:ring-black focus:border-none h-[35px] w-full min-h-[35px] text-sm">
+                            <option disabled selected>Pilih Jenis Pakaian</option>
+                            @foreach(config('const.jenis_pakaian') as $key => $value)
+                            <option value="{{ $key }}">{{ $value }}</option>
+                            @endforeach
+
+                        </select>
+                        <ul class='text-sm text-red-600 space-y-1' id="error-group-clothes-kind">
+                        </ul>
+                    </div>
+                    <div class="mt-4">
+                        <x-input-label for="order_kind" :value="__('Jenis Pesanan')" />
+                        <input type="text" name="jenis_pesanan" id="order_kind" value="{{ old('jenis_pesanan')}}" placeholder="Masukan Jenis Pesanan"
                             class="input h-[35px] input-bordered w-full focus:ring-black focus:border-none text-xs" />
                         <ul class='text-sm text-red-600 space-y-1' id="error-group-order-kind">
+                        </ul>
+                    </div>
+                    <div class="mt-4">
+                        <x-input-label for="jenis_kain" :value="__('Jenis Kain')" />
+                        <select name="jenis_kain"
+                            class="select select-bordered focus:ring-black focus:border-none h-[35px] w-full min-h-[35px] text-sm">
+                            <option disabled selected>Pilih Jenis Kain</option>
+                            @foreach(config('const.jenis_kain') as $key => $value)
+                            <option value="{{ $key }}" >{{ $value }}</option>
+                            @endforeach
+
+                        </select>
+                        <ul class='text-sm text-red-600 space-y-1' id="error-group-cloth-kind">
+                        </ul>
+                    </div>
+                    <div class="mt-4">
+                        <x-input-label for="kepanjangan" :value="__('Kepanjangan')" />
+                        <select name="jenis_panjang"
+                            class="select select-bordered focus:ring-black focus:border-none h-[35px] w-full min-h-[35px] text-sm">
+                            <option disabled selected>Pilih Jenis Panjang</option>
+                            @foreach(config('const.jenis_panjang') as $key => $value)
+                            <option value="{{ $key }}">{{ $value }}</option>
+                            @endforeach
+
+                        </select>
+                        <ul class='text-sm text-red-600 space-y-1' id="error-group-long-kind">
+                        </ul>
+                    </div>
+
+                    <div class="mt-4">
+                        <x-input-label for="deskripsi_pakaian" :value="__('Deskripsi Pakaian')" />
+            
+                        <textarea class="textarea textarea-bordered w-full focus:ring-gray-600 focus:border-none" 
+                        name="deskripsi_pakaian"
+                            id="deskripsi_pakaian">{{ old('deskripsi_pakaian') }}</textarea>
+            
+                        <ul class='text-sm text-red-600 space-y-1' id="error-group-description-order">
                         </ul>
                     </div>
 
@@ -171,7 +229,6 @@ endif
                         </p>
                         <form id="payment-group-order-form" enctype="multipart/form-data">
                             @csrf
-                            @method('put')
                             <input type="hidden" name="group_order_id" id="group_order_id" value="">
                             <input type="file" class="file-input file-input-sm w-full max-w-xs" name="bukti_pembayaran_borongan"
                                 id="group_paid_file" />
@@ -264,6 +321,9 @@ endif
                 Tidak Ada Pesanan Grup
                 @else
                 @foreach($group_order[1] as $key => $value)
+                @php
+                    $lastPaymentKey = array_key_last($value['payment']) ?? 0;
+                @endphp
                 <div class="card w-full mt-2">
                     <div class="card-body border ">
                         <h2 class="card-title"><i class="fas fa-receipt fa-2x"></i>
@@ -299,13 +359,13 @@ endif
                             </div>
                         </div>
 
-                        @if(!is_null($value['payment']))
+                        @if(isset($value['payment'][$lastPaymentKey]))
                         <div class="badge md:badge-md badge-sm
-                            {{ $value['payment']['paid_status'] == 0 ? 'badge-info' : ''  }}
-                            {{ $value['payment']['paid_status'] == 1 ? 'badge-info' : ''  }}
-                            {{ $value['payment']['paid_status'] == 2 ? 'badge-success' : ''  }}
-                            {{ $value['payment']['paid_status'] == 3 ? 'badge-warning' : ''  }}">
-                            <p>Status Pembayaran : {{ $payment_status[$value['payment']['paid_status']] }} </p>
+                            {{ $value['payment'][$lastPaymentKey]['paid_status'] == 0 ? 'badge-info' : ''  }}
+                            {{ $value['payment'][$lastPaymentKey]['paid_status'] == 1 ? 'badge-info' : ''  }}
+                            {{ $value['payment'][$lastPaymentKey]['paid_status'] == 2 ? 'badge-success' : ''  }}
+                            {{ $value['payment'][$lastPaymentKey]['paid_status'] == 3 ? 'badge-warning' : ''  }}">
+                            <p>Status Pembayaran : {{ $payment_status[$value['payment'][$lastPaymentKey]['paid_status']] }} </p>
                         </div>
                         @endif
 
@@ -336,7 +396,7 @@ endif
                             @if($value['group']['coordinator'] == auth()->user()->id)
                             <label for="modal-pembayaran-borongan" data-id="{{ $value['id'] }}"
                                 data-url="{{ route('borongan.show', $value['id']) }}"
-                                class="btn btn-sm show-payment {{ $value['payment']['paid_status'] == 2 ? 'hidden' : ''  }} {{ $value['payment']['paid_status'] == 4 ? 'hidden' : ''  }}">
+                                class="btn btn-sm show-payment {{ isset($value['payment'][$lastPaymentKey]) && $value['payment'][$lastPaymentKey]['paid_status'] == 2 ? 'hidden' : ''  }} {{isset($value['payment'][$lastPaymentKey]) &&  $value['payment'][$lastPaymentKey]['paid_status'] == 4 ? 'hidden' : ''  }}">
                                 Bayar
                             </label>
                             @endif
@@ -430,7 +490,6 @@ endif
                     cache: false,
                     contentType: false,
                     success: function (response) {
-                        console.log(response);
                         let harga = formatRupiah(response.price);
                         let harga_per_item = formatRupiah(response.price_per_item);
                         $('#detail-pesanan-borongan').html(
@@ -499,16 +558,31 @@ endif
                                         '</li>')
                                     .css(
                                         'display', '');
-                                $('#error-group-order-kind').html('<li>' + error
-                                    .responseJSON.jenis_pakaian ?? '' + '</li>'
-                                    ).css(
-                                    'display', '');
                                 $('#error-group-select').html('<li>' + error
                                     .responseJSON.grup ?? '' + '</li>').css(
                                     'display', '');
                                 $('#error-group-order-user').html('<li>' + error
                                     .responseJSON.anggota_pelanggan ?? '' +
                                     '</li>').css(
+                                    'display', '');
+                                  $('#error-group-estimated-date').html('<li>' + error
+                                        .responseJSON.tanggal_estimasi ?? '' + '</li>')
+                                    .css(
+                                        'display', '');
+                                $('#error-group-clothes-kind').html('<li>' + error
+                                    .responseJSON.jenis_pakaian ?? '' + '</li>').css(
+                                    'display', '');
+                                $('#error-group-order-kind').html('<li>' + error
+                                    .responseJSON.jenis_pesanan ?? '' + '</li>').css(
+                                    'display', '');
+                                $('#error-group-cloth-kind').html('<li>' + error
+                                    .responseJSON.jenis_kain ?? '' + '</li>').css(
+                                    'display', '');
+                                $('#error-group-long-kind').html('<li>' + error
+                                    .responseJSON.jenis_panjang?? '' + '</li>').css(
+                                    'display', '');
+                                $('#error-group-description-order').html('<li>' + error
+                                    .responseJSON.deskripsi_pakaian?? '' + '</li>').css(
                                     'display', '');
                             },
                         });
@@ -576,7 +650,7 @@ endif
             $('#payment-group-order-form').submit(function (e) {
                 e.preventDefault();
                 var form_data = new FormData(this);
-                var order_id = $('#group_order_id').val();
+                var borongan_id = $('#group_order_id').val();
 
                 Swal.fire({
                     title: 'Unggah Bukti Bayar?',
@@ -590,7 +664,7 @@ endif
                     if (result.isConfirmed) {
                         $.ajax({
                             type: "POST",
-                            url: "orders/payment/" + order_id,
+                            url: "group/orders/payment/" + borongan_id,
                             cache: false,
                             processData: false,
                             contentType: false,
@@ -617,7 +691,6 @@ endif
                                     text: error.responseJSON.message,
                                     icon: 'error',
                                 })
-                                console.log(error);
                                 $('#error-payment-group-file').html('<li>' + error
                                         .responseJSON.bukti_pembayaran_borongan + '</li>')
                                     .css(

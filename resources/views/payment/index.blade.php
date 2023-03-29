@@ -54,7 +54,7 @@ $task_status = [
                                 @method('delete')
                                 @csrf
                                 <a class="btn btn-sm" target="_blank" download href="{{ asset('uploads/'.$value['paid_file']) }}">Download File Bukti Bayar</a>
-                                <a class="btn btn-sm" target="_blank" href="{{ route('orders.print', $value['id']) }}">Cetak
+                                <a class="btn btn-sm" target="_blank" href="{{ route('orders.print', $value['order_id']) }}">Cetak
                                     Nota</a>
                             </form>
                         </div>
@@ -107,7 +107,7 @@ $task_status = [
                                 @method('delete')
                                 @csrf
                                 <a class="btn btn-sm" target="_blank" download href="{{ asset('uploads/'.$value['paid_file']) }}">Download File Bukti Bayar</a>
-                                <a class="btn btn-sm" target="_blank" href="{{ route('borongan.print', $value['id']) }}">Cetak
+                                <a class="btn btn-sm" target="_blank" href="{{ route('borongan.print', $value['group_order_id']) }}">Cetak
                                     Nota</a>
                             </form>
                         </div>

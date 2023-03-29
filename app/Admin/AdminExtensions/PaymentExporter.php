@@ -42,8 +42,10 @@ class PaymentExporter extends BasePdfExporter
         // dd(request('order')['invoice_number']);
         // dd($model->where('orders.invoice_number', 'LIKE', '%' . request('order')['invoice_number'] . '%')->get());
 
+        
+
         if (Request::input('order')) {
-            $model = $model->where('orders.invoice_number', 'LIKE', '%' . request('order')['invoice_number'] . '%');
+            $model = $model->where('order_id', '=', request('order')['id'] );
         }
         if (Request::input('paid_date')) {
             $model = $model->where('paid_date', '=',  request('paid_date'));

@@ -75,6 +75,9 @@ $task_status = [
                         Tidak Ada Pesanan
                     @else
                         @foreach($order[1] as $key => $value)
+                        @php
+                            $lastPayment = array_key_last($value['payment']);
+                        @endphp
                         <div class="card w-full mt-2">
                             <div class="card-body border ">
                                 <h2 class="card-title"><i class="fas fa-receipt fa-2x"></i>
@@ -84,14 +87,17 @@ $task_status = [
                                 </p>
                                 <p>{{ $value['jenis_pembuatan'] }}</p>
 
+                                @if(isset( $value['payment'][$lastPayment]))
+                                    
                                 <div class="badge 
-                                {{ $value['payment']['payment_status'] == 0 ? 'badge-info' : ''  }}
-                                {{ $value['payment']['payment_status'] == 1 ? 'badge-info' : ''  }}
-                                {{ $value['payment']['payment_status'] == 2 ? 'badge-success' : ''  }}
-                                {{ $value['payment']['payment_status'] == 3 ? 'badge-warning' : ''  }}
+                                {{ $value['payment'][$lastPayment]['payment_status'] == 0 ? 'badge-info' : ''  }}
+                                {{ $value['payment'][$lastPayment]['payment_status'] == 1 ? 'badge-info' : ''  }}
+                                {{ $value['payment'][$lastPayment]['payment_status'] == 2 ? 'badge-success' : ''  }}
+                                {{ $value['payment'][$lastPayment]['payment_status'] == 3 ? 'badge-warning' : ''  }}
                                 ">
-                                    <p>Status Pembayaran : {{ $payment_status[$value['payment']['payment_status']] }} </p>
+                                    <p>Status Pembayaran : {{ $payment_status[$value['payment'][$lastPayment]['payment_status']] }} </p>
                                 </div>
+                                @endif
 
                                 @if(isset($value['task']) && !is_null($value['task']) )
                                 <div class="badge {{ $value['task']['task_status'] == 0 ? 'badge-warning' : 'badge-success' }}">
@@ -100,18 +106,22 @@ $task_status = [
                                 @endif
 
                                 @php
-                                if ($value['payment']['payment_status'] == 0) {
-                                $sisa_harga = $value['total_harga'] - ($value['total_harga'] * 0.25);
-                                }
-                                elseif ($value['payment']['payment_status'] == 1) {
-                                $sisa_harga = $value['total_harga'] - ($value['total_harga'] * 0.5);
+                                if(isset($value['payment'][$lastPayment])){
+                                    if ($value['payment'][$lastPayment]['payment_status'] == 0) {
+                                    $sisa_harga = $value['total_harga'] - ($value['total_harga'] * 0.25);
+                                    }
+                                    elseif ($value['payment'][$lastPayment]['payment_status'] == 1) {
+                                    $sisa_harga = $value['total_harga'] - ($value['total_harga'] * 0.5);
+                                    }
                                 }
                                 @endphp
-                                @if(isset($sisa_harga) && $value['payment']['payment_status'] == 0 ||
-                                $value['payment']['payment_status'] == 1 )
-                                <div class="badge badge-info">Sisa Pembayaran:
-                                    <x-money amount="{{ $sisa_harga}}" currency="IDR" convert />
-                                </div>
+                                @if(isset($value['payment'][$lastPayment]))
+                                    @if(isset($sisa_harga) && $value['payment'][0]['payment_status'] == 0 ||
+                                    $value['payment'][$lastPayment]['payment_status'] == 1 )
+                                    <div class="badge badge-info">Sisa Pembayaran:
+                                        <x-money amount="{{ $sisa_harga}}" currency="IDR" convert />
+                                    </div>
+                                    @endif
                                 @endif
                                 <p>
                                     <x-money amount="{{ $value['total_harga'] }}" currency="IDR" convert />
@@ -122,7 +132,7 @@ $task_status = [
                                         Nota</a>
                                     <label for="modal-pembayaran" data-id="{{ $value['id'] }}" 
                                     data-url="{{ '/order'.'/'.$value['id'] }}"
-                                        class="btn btn-sm show-payment {{ $value['payment']['payment_status'] == 2 ? 'hidden' : ''  }} {{ $value['payment']['payment_status'] == 4 ? 'hidden' : ''  }}">
+                                        class="btn btn-sm show-payment {{ isset($value['payment'][$lastPayment]) && $value['payment'][$lastPayment]['payment_status'] == 2 ? 'hidden' : ''  }} {{ isset($value['payment'][$lastPayment]) && $value['payment'][$lastPayment]['payment_status'] == 4 ? 'hidden' : ''  }}">
                                         Bayar / Bayar Sisa
                                     </label>
 

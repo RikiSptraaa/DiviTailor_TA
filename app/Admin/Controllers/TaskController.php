@@ -28,6 +28,16 @@ class TaskController extends Controller
      */
     protected $title = 'Penugasan';
 
+    protected $selectOrder = [];
+
+    public function __construct(){
+        $order = Order::all();
+
+        foreach ($order as $key => $value) {
+            $this->selectOrder[$value->id] = $value->user->name.' ('.$value->invoice_number.') ('.$value->jenis_pembuatan.')'; 
+        }
+    }
+
     /**
      * Set description for following 4 action pages.
      *
@@ -122,7 +132,7 @@ class TaskController extends Controller
 
         $grid->filter(function ($filter) {
             $filter->disableIdFilter();
-            $filter->like('order.invoice_number', 'Nomor Nota');
+            $filter->equal('order_id', 'Nomor Nota')->select($this->selectOrder);
             $filter->like('employee.employee_name', 'Nama Karyawan');
             $filter->month('task_started', 'Bulan');
             // $filter->date('created_at', 'Tanggal');
@@ -162,7 +172,7 @@ class TaskController extends Controller
             return "<a href='/admin/orders/" . $this->order_id . "'>" .  $this->order->invoice_number . "</a>";
         });
         $show->field('task_started', __('Tanggal Pengerjaan'))->as(function () {
-            return Carbon::parse($this->task_started)->dayName . ', ' . Carbon::parse($this->task_started)->format('d F Y');
+            return Carbon::parse($this->task_started)->dayName . ', ' . Carbon::parse($this->task_started)->translatedFormat('d F Y');
         });
         $show->field('task_status', __('Status Penugasan'))->using([0 => 'Dalam Pengerjaan', 1 => 'Sudah Siap']);
         $show->field('employee_fee', __('Ongkos Karyawan'))->as(function () {
@@ -195,7 +205,7 @@ class TaskController extends Controller
         ];
 
         $form->select('handler_id', __('Karyawan'))->options(Employee::all()->pluck('employee_name', 'id'))->rules('required');
-        $form->select('order_id', __('Orderan'))->options(Order::all()->pluck('invoice_number', 'id'))->rules('required');
+        $form->select('order_id', __('Orderan'))->options($this->selectOrder)->rules('required');
         $form->switch('task_status', __('Status Penugasan'))->states($states)->rules('required');
         $form->date('task_started', __('Tanggal Pengerjaan'))->rules('required|date');
         $form->currency('employee_fee', __('Ongkos Karyawan'))->symbol('Rp.')->rules('required|numeric');

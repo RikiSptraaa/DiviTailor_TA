@@ -49,9 +49,9 @@ Route::middleware('auth')->group(function () {
     Route::delete('/order/delete/{order}', [OrderController_1::class, 'delete'])->name('orders.delete');
 
     Route::get('payment',[PaymentController::class, 'index'])->name('payments.index');
-    Route::put('payment/{order_id}', [PaymentController::class, 'update'])->name('payments.update');
+    Route::post('payment/{order_id}', [PaymentController::class, 'store'])->name('payments.update');
 
-    Route::put('group/orders/payment/{borongan}', [PaymentController::class, 'updateBorongan'])->name('payments.update-group-orders');
+    Route::post('group/orders/payment/{borongan_id}', [PaymentController::class, 'storeBorongan'])->name('payments.update-group-orders');
 
     Route::get('/group', [GroupController::class, 'index'])->name('group.index');
     Route::post('/group', [GroupController::class, 'store'])->name('group.store');

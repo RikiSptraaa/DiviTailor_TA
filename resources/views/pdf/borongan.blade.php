@@ -127,10 +127,10 @@
         <label>Deskripsi Pakaian</label>
         <p class="text-base">{{ $borongan->deskripsi_pakaian }}</p>
         <label>Harga Per Unit</label>
-        <p class="text-base">        <x-money amount="{{ $borongan->price_per_item }}" currency="IDR" convert />
+        <p class="text-base">        <x-money amount="{{ $borongan->price_per_item ?? $price_per_item  }}" currency="IDR" convert />
         </p>
         <label>Harga Total</label>
-        <p class="text-base">        <x-money amount="{{ $borongan->price }}" currency="IDR" convert />
+        <p class="text-base">        <x-money amount="{{ $borongan->price ?? $price  }}" currency="IDR" convert />
         </p>
         <label>Status Pembayaran</label>
         <ol>

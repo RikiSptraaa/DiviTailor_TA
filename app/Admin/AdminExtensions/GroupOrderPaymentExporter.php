@@ -43,8 +43,8 @@ class GroupOrderPaymentExporter extends BasePdfExporter
 
         // dd(request()->all());
 
-        if (Request::input('groupOrder')) {
-            $model = $model->where('group_orders.invoice_number', 'LIKE', '%' . request('groupOrder')['invoice_number'] . '%');
+        if (Request::input('group_order_id')) {
+            $model = $model->where('group_order_id', '=', request('group_order_id'));
         }
         if (Request::input('paid_date')) {
             $model = $model->where('paid_date', '=',  request('paid_date'));
@@ -52,9 +52,7 @@ class GroupOrderPaymentExporter extends BasePdfExporter
 
 
         $model = $model->get()->toArray();
-        $payment_status = [
-            0 => 'Uang Muka 25%', 1 => 'Uang Muka 50%', 2 => 'Lunas', 3 => 'Menunggu Pembayaran'
-        ];
+        $payment_status = config('const.status_pembayaran');
 
         foreach ($model as $key => $value) {
             $model[$key] = Arr::except($value, ['order']);

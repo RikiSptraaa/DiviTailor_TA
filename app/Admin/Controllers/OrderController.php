@@ -259,7 +259,7 @@ class OrderController extends Controller
         $show->field('total_harga', __('Total harga'))->as(function () {
             return Money::IDR($this->total_harga, true);
         });
-        $show->field('payment.payment_status', 'Status Pembayaran')->using(config('const.status_pembayaran'));
+        // $show->field('payment.payment_status', 'Status Pembayaran')->using(config('const.status_pembayaran'));
         // $show->field('created_at', __('Created at'));
         // $show->field('updated_at', __('Updated at'));
 
@@ -294,13 +294,11 @@ class OrderController extends Controller
         $form->switch('is_acc', __('Status Pesanan'))->states($states)->rules('required')->default(1)->disable();
         $form->date('order_date', __('Tanggal'))->default(date('Y-m-d'))->rules('required|date');
         $form->date('tanggal_estimasi', __('Estimasi Tanggal Jadi'))->rules('required|date');
-        $form->date('payment.paid_date', __('Tanggal Bayar'))->default(null);
         $form->radio('jenis_pakaian', 'Jenis Pakaian')->options(config("const.jenis_pakaian"))->default(0)->rules('required|int');
         $form->text('jenis_pembuatan', 'Jenis Pembuatan')->placeholder('Contoh:Seragam')->rules('required|max:50');
         $form->select('jenis_kain', __('Jenis Kain'))->options(config('const.jenis_kain'))->rules('required|int');
         $form->select('jenis_panjang', __('Panjang'))->options(config('const.jenis_panjang'))->rules('required|int');
         $form->textarea('deskripsi_pakaian', __('Deskripsi Pakaian'))->rules('required');
-        $form->select('payment.payment_status', 'Status Pembayaran')->options($payment_option)->rules('required');
         $form->currency('total_harga', __('Total harga'))->symbol('Rp.')->rules('required|numeric');
 
         return $form;

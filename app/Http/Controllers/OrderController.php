@@ -14,7 +14,6 @@ class OrderController extends Controller
     public function index(){
         $order = Order::with('payment', 'task')->where('user_id', auth()->user()->id)->get()->groupBy('is_acc')->toArray();
 
-
         return view('orders.index', compact('order'));
     }
 

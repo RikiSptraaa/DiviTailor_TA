@@ -304,7 +304,6 @@
                             </p>
                             <form id="payment-form" enctype="multipart/form-data">
                                 @csrf
-                                @method('put')
                                 <input type="hidden" name="order_id" id="order_id" value="">
                                 <input type="file" class="file-input file-input-sm w-full max-w-xs"
                                     name="bukti_pembayaran" id="paid_file" />
@@ -720,7 +719,7 @@
                     if (result.isConfirmed) {
                         $.ajax({
                             type: "POST",
-                            url: "payment/" + order_id,
+                            url: "/payment/"+ order_id,
                             cache: false,
                             processData: false,
                             contentType: false,

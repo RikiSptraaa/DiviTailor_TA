@@ -104,8 +104,6 @@ Pembayaran'
         <label>Tanggal Estimasi Selesai</label>
         <p class="text-base">{{$carbon->createFromFormat('Y-m-d',$order->tanggal_estimasi )->translatedFormat('l')}},
             {{ $carbon->parse($order->tanggal_estimasi)->translatedFormat('d M Y') }}</p>
-        <label>Status Pembayaran</label>
-        <p class="text-base">{{ $payment_status[$order->payment->payment_status] }}</p>
         <label>Jenis Pakaian</label>
         <p class="text-base">{{ config('const.jenis_pakaian')[$order->jenis_pakaian] }}</p>
         <label>Jenis Pesanan</label>
@@ -121,6 +119,23 @@ Pembayaran'
         <p class="text-base">
             <x-money amount="{{ $order->total_harga }}" currency="IDR" convert />
         </p>
+        <label>Status Pembayaran</label>
+        @php
+        if (isset($order->payment)) {
+        # code...
+        $payment = collect($order->payment)->sortBy(function ($item) {
+        return strtotime($item->paid_date); });
+        }
+        @endphp
+        <ol>
+        @foreach($payment as $key => $value)
+        <li>
+            <p>{{ config('const.status_pembayaran')[$value->payment_status] . ' ('.$carbon->parse($value->paid_date)->translatedFormat('d M Y').')' }}
+            </p>
+        </li>
+        @endforeach
+        </ol>
+
     </div>
     <p>
         Catatan:
