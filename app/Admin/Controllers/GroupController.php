@@ -190,12 +190,12 @@ class GroupController extends Controller
     {
         $form = new Form(new Group());
 
-        $user = User::all()->pluck('name', 'id');
+        $user = User::pluck('name', 'id') ?? null;
 
         $form->hidden('group_code', __('Kode Grup'))->default('GRP-' . Str::random(5))->creationRules('required|unique:groups,group_code')->updateRules('required|unique:groups,group_code,{{id}}');
         $form->text('group_name', __('Nama Grup'))->rules('required|max:30');
         $form->select('coordinator', __('Koordinator Grup'))->rules('required|max:30')->options($user);
-        $form->text('group_phone_number', __('Nomor Telepon Grup'))->rules('required|max:30|numeric');
+        $form->text('group_phone_number', __('Nomor Telepon Grup'))->rules('required|string|max:30');
         $form->text('institute', __('Instansi'))->rules('required|max:30');
         $form->email('email', __('E-Mail Grup'))->required()->rules('email|max:50');
         $form->textarea('group_address', __('Alamat'))->required();

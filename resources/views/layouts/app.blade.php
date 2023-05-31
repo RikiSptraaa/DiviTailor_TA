@@ -11,6 +11,8 @@
     <!-- Fonts -->
     <link rel="stylesheet" href="https://fonts.bunny.net/css2?family=Nunito:wght@400;600;700&display=swap">
 
+    <link href="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/css/select2.min.css" rel="stylesheet" />
+
 
     <!-- Scripts -->
     @vite(['resources/css/app.css', 'resources/js/app.js'])
@@ -60,16 +62,74 @@
                             <ul class='text-sm text-red-600 space-y-1' id="error-date">
                             </ul>
                         </div>
-
                         <div class="mt-4">
-                            <x-input-label for="order_kind" :value="__('Jenis Pakaian')" />
-                            <input type="text" name="jenis_pakaian" id="order_kind" value="{{ old('jenis_pakaian')}}"
+                            <x-input-label for="tanggal_estimasi" :value="__('Tanggal Estimasi Penyelesaian')" />
+                            <input type="date" name="tanggal_estimasi" id="tanggal_estimasi"
+                                value="{{ old('tanggal_estimasi') }}"
+                                class="input input-sm input-bordered w-full focus:ring-black focus:border-none text-xs" />
+                            <ul class='text-sm text-red-600 space-y-1' id="error-estimated-date">
+                            </ul>
+                        </div>
+                        <div class="mt-4">
+                            <x-input-label for="pakaian" :value="__('Jenis Pakaian')" />
+                            <select name="jenis_pakaian"
+                                class="select select-bordered focus:ring-black focus:border-none h-[35px] w-full min-h-[35px] text-sm">
+                                <option disabled selected>Pilih Jenis Pakaian</option>
+                                @foreach(config('const.jenis_pakaian') as $key => $value)
+                                <option value="{{ $key }}">{{ $value }}</option>
+                                @endforeach
+
+                            </select>
+                            <ul class='text-sm text-red-600 space-y-1' id="error-clothes-kind">
+                            </ul>
+                        </div>
+                        <div class="mt-4">
+                            <x-input-label for="order_kind" :value="__('Jenis Pesanan')" />
+                            <input type="text" name="jenis_pembuatan" id="order_kind" value="{{ old('jenis_pembuatan')}}" placeholder="Masukan Jenis Pesanan"
                                 class="input h-[35px] input-bordered w-full focus:ring-black focus:border-none text-xs" />
                             <ul class='text-sm text-red-600 space-y-1' id="error-order-kind">
                             </ul>
                         </div>
                         <div class="mt-4">
-                            @if( !auth()->user()->baju()->exists() && !auth()->user()->celana()->exists())
+                            <x-input-label for="jenis_kain" :value="__('Jenis Kain')" />
+                            <select name="jenis_kain"
+                                class="select select-bordered focus:ring-black focus:border-none h-[35px] w-full min-h-[35px] text-sm">
+                                <option disabled selected>Pilih Jenis Kain</option>
+                                @foreach(config('const.jenis_kain') as $key => $value)
+                                <option value="{{ $key }}" >{{ $value }}</option>
+                                @endforeach
+
+                            </select>
+                            <ul class='text-sm text-red-600 space-y-1' id="error-cloth-kind">
+                            </ul>
+                        </div>
+                        <div class="mt-4">
+                            <x-input-label for="kepanjangan" :value="__('Kepanjangan')" />
+                            <select name="jenis_panjang"
+                                class="select select-bordered focus:ring-black focus:border-none h-[35px] w-full min-h-[35px] text-sm">
+                                <option disabled selected>Pilih Jenis Panjang</option>
+                                @foreach(config('const.jenis_panjang') as $key => $value)
+                                <option value="{{ $key }}">{{ $value }}</option>
+                                @endforeach
+
+                            </select>
+                            <ul class='text-sm text-red-600 space-y-1' id="error-long-kind">
+                            </ul>
+                        </div>
+
+                        <div class="mt-4">
+                            <x-input-label for="deskripsi_pakaian" :value="__('Deskripsi Pakaian')" />
+                
+                            <textarea class="textarea textarea-bordered w-full focus:ring-gray-600 focus:border-none" 
+                            name="deskripsi_pakaian"
+                                id="deskripsi_pakaian">{{ old('deskripsi_pakaian') }}</textarea>
+                
+                            <ul class='text-sm text-red-600 space-y-1' id="error-description-order">
+                            </ul>
+                        </div>
+
+                        <div class="mt-4">
+                            @if( !auth()->user()->baju()->exists() OR !auth()->user()->celana()->exists())
                             <p class="text-xs text-red-600">
                                 Catatan: Halo {{ auth()->user()->name }}, Anda belum memiliki data ukuran di database
                                 kami.
@@ -244,7 +304,6 @@
                             </p>
                             <form id="payment-form" enctype="multipart/form-data">
                                 @csrf
-                                @method('put')
                                 <input type="hidden" name="order_id" id="order_id" value="">
                                 <input type="file" class="file-input file-input-sm w-full max-w-xs"
                                     name="bukti_pembayaran" id="paid_file" />
@@ -287,18 +346,18 @@
                     </g>
                 </svg>
                 <div class="grid grid-flow-col gap-4">
-                    <a class="link link-hover">Home</a>
-                    <a class="link link-hover">Pesanan</a>
-                    <a class="link link-hover">Borongan</a>
-                    <a class="link link-hover">Pembayaran</a>
+                    <a class="link link-hover" href="{{ route('orders.index') }}">Home</a>
+                    <a class="link link-hover" href="{{ route('orders.index') }}" >Pesanan</a>
+                    <a class="link link-hover" href="{{ route('borongan.index') }}">Borongan</a>
+                    <a class="link link-hover" href="{{ route('payments.index') }}">Pembayaran</a>
                 </div>
             </div>
 
             <div>
                 <p class="font-bold text-base">Hubungi Kami</p>
                 <div class="grid grid-flow-col gap-4">
-                    <a href="https://wa.me/+6281999066449"><i class="fab fa-instagram fa-2x"></i></a>
-                    <a><i class="fab fa-whatsapp fa-2x"></i></a>
+                    <a href="https://www.instagram.com/divitailor/"><i class="fab fa-instagram fa-2x"></i></a>
+                    <a href="https://wa.me/+6281999066449"><i class="fab fa-whatsapp fa-2x"></i></a>
                 </div>
             </div>
             <div>
@@ -310,6 +369,7 @@
     <script src="{{ asset('js/jquery.min.js') }}"></script>
     <script src="//cdn.jsdelivr.net/npm/sweetalert2@11"></script>
     <script src="https://unpkg.com/aos@2.3.1/dist/aos.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/js/select2.min.js"></script>
     <script type="text/javascript" src="https://cdn.datatables.net/v/dt/dt-1.13.2/datatables.min.js"></script>
     <script>
         AOS.init();
@@ -323,6 +383,112 @@
 
 
         $(document).ready(function () {
+            
+            $('.form-decline').submit(function(e) {
+                e.preventDefault();
+                var url = $(this).attr('action');
+                var form_data = new FormData(this);
+
+                Swal.fire({
+                    title: 'Apakah Yakin Menolak Pesanan Grup?',
+                    icon: 'warning',
+                    showCancelButton: true,
+                    confirmButtonColor: 'black',
+                    cancelButtonColor: '#d33',
+                    confirmButtonText: 'Tolak',
+                    cancelButtonText: 'Batal',
+                }).then((result) => {
+                    if (result.isConfirmed) {
+                        $.ajax({
+                            type: "POST",
+                            url: url,
+                            data: form_data,
+                            cache: false,
+                            processData: false,
+                            contentType: false,
+                            success: function (response) {
+                                Swal.fire({
+                                    icon: 'success',
+                                    showCloseButton: true,
+                                    showCancelButton: false,
+                                    showConfirmButton: true,
+                                    confirmButtonText: 'Ok',
+                                    confirmButtonColor: 'black',
+                                    title: 'Berhasil!',
+                                    text: response.message,
+                                }).then((result) => {
+                                    location.reload()
+
+                                });
+
+                            },
+                            error: function (error) {
+                                Swal.fire({
+                                    confirmButtonColor: 'black',
+                                    title: 'Kesalahan!',
+                                    text: error.responseJSON.message,
+                                    icon: 'error',
+                                })
+                            },
+                        });
+
+                    }
+                })
+
+
+            });
+
+            $('.form-acc').submit(function(e) {
+                e.preventDefault();
+                var url = $(this).attr('action');
+                var form_data = new FormData(this);
+
+                Swal.fire({
+                    title: 'Apakah Yakin Menerima Pesanan Grup?',
+                    icon: 'warning',
+                    showCancelButton: true,
+                    confirmButtonColor: 'black',
+                    cancelButtonColor: '#d33',
+                    confirmButtonText: 'Terima',
+                    cancelButtonText: 'Batal',
+                }).then((result) => {
+                    if (result.isConfirmed) {
+                        $.ajax({
+                            type: "POST",
+                            url: url,
+                            data: form_data,
+                            cache: false,
+                            processData: false,
+                            contentType: false,
+                            success: function (response) {
+                                Swal.fire({
+                                    icon: 'success',
+                                    showCloseButton: true,
+                                    showCancelButton: false,
+                                    showConfirmButton: true,
+                                    confirmButtonText: 'Ok',
+                                    confirmButtonColor: 'black',
+                                    title: 'Berhasil!',
+                                    text: response.message,
+                                }).then((result) => {
+                                    location.reload()
+
+                                });
+
+                            },
+                            error: function (error) {
+                                Swal.fire({
+                                    confirmButtonColor: 'black',
+                                    title: 'Kesalahan!',
+                                    text: error.responseJSON.message,
+                                    icon: 'error',
+                                })
+                            },
+                        });
+
+                    }
+                })
+            });
 
             // Update Profile Script
             $('#update-profile-form').submit(function (e) {
@@ -483,8 +649,24 @@
                                         .responseJSON.tanggal_pesanan ?? '' + '</li>')
                                     .css(
                                         'display', '');
-                                $('#error-order-kind').html('<li>' + error
+                                $('#error-estimated-date').html('<li>' + error
+                                        .responseJSON.tanggal_estimasi ?? '' + '</li>')
+                                    .css(
+                                        'display', '');
+                                $('#error-clothes-kind').html('<li>' + error
                                     .responseJSON.jenis_pakaian ?? '' + '</li>').css(
+                                    'display', '');
+                                $('#error-order-kind').html('<li>' + error
+                                    .responseJSON.jenis_pembuatan ?? '' + '</li>').css(
+                                    'display', '');
+                                $('#error-cloth-kind').html('<li>' + error
+                                    .responseJSON.jenis_kain ?? '' + '</li>').css(
+                                    'display', '');
+                                $('#error-long-kind').html('<li>' + error
+                                    .responseJSON.jenis_panjang?? '' + '</li>').css(
+                                    'display', '');
+                                $('#error-description-order').html('<li>' + error
+                                    .responseJSON.deskripsi_pakaian?? '' + '</li>').css(
                                     'display', '');
                             },
                         });
@@ -537,7 +719,7 @@
                     if (result.isConfirmed) {
                         $.ajax({
                             type: "POST",
-                            url: "payment/" + order_id,
+                            url: "/payment/"+ order_id,
                             cache: false,
                             processData: false,
                             contentType: false,

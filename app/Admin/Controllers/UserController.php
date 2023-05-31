@@ -58,8 +58,6 @@ class UserController extends Controller
         $content->title($this->title())
             ->description($this->description['index'] ?? trans('admin.list'))
             ->body($this->grid());
-        $content->body(new Box('Hello'));
-
         return $content;
     }
 
@@ -177,6 +175,8 @@ class UserController extends Controller
                     $tools->disableDelete();
                 });
 
+            $baju->jenis_ukuran()->using(config('const.jenis_ukuran'));
+            $baju->kode_ukuran()->using(config('const.kode_ukuran'));
             $baju->panjang_baju()->as(function () {
                 return "{$this->panjang_baju} cm";
             });
@@ -219,6 +219,9 @@ class UserController extends Controller
                     $tools->disableList();
                     $tools->disableDelete();
                 });
+
+            $celana->jenis_ukuran()->using(config('const.jenis_ukuran'));
+            $celana->kode_ukuran()->using(config('const.kode_ukuran'));
 
             $celana->lingkar_pinggang()->as(function () {
                 return "{$this->lingkar_pinggang} cm";

@@ -29,7 +29,7 @@ class OrderExporter extends BasePdfExporter
         'invoice_number',
         'users.name',
         'order_date',
-        'jenis_baju',
+        'jenis_pakaian',
         'total_harga',
     ];
 
@@ -49,9 +49,6 @@ class OrderExporter extends BasePdfExporter
         }
         if (Request::input('user')) {
             $model = $model->where('name', 'LIKE', '%' . request('user')['name'] . '%');
-        }
-        if (Request::input('jenis_baju')) {
-            $model = $model->where('jenis_baju', 'LIKE', '%' . request('jenis_baju') . '%');
         }
         if (Request::input('order_date')) {
             $model = $model->where('order_date', '=',  request('order_date'));

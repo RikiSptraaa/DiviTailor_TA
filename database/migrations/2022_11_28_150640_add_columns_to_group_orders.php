@@ -14,7 +14,7 @@ return new class extends Migration
     public function up()
     {
         Schema::table('group_orders', function (Blueprint $table) {
-            $table->bigInteger('price_per_item')->after('price');
+            $table->bigInteger('price_per_item')->after('price')->nullable();
             $table->integer('users_total')->after('order_kind');
         });
     }

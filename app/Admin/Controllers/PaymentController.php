@@ -8,6 +8,7 @@ use Encore\Admin\Form;
 use Encore\Admin\Grid;
 use Encore\Admin\Show;
 use App\Models\Payment;
+use Illuminate\Support\Facades\File;
 use Encore\Admin\Controllers\AdminController;
 use App\Admin\AdminExtensions\PaymentExporter;
 
@@ -20,6 +21,15 @@ class PaymentController extends AdminController
      * @var string
      */
     protected $title = 'Payment';
+    protected $selectOrder = [];
+
+    public function __construct(){
+        $order = Order::all();
+
+        foreach ($order as $key => $value) {
+            $this->selectOrder[$value->id] = $value->user->name.' ('.$value->invoice_number.') ('.$value->jenis_pembuatan.')'; 
+        }
+    }
 
     /**
      * Make a grid builder.
@@ -32,13 +42,17 @@ class PaymentController extends AdminController
         $grid = new Grid(new Payment());
         $grid->exporter(new PaymentExporter());
 
-        $grid->filter(function ($filter) {
+        $order = $this->selectOrder;
+
+    
+
+        $grid->filter(function ($filter) use ($order) {
 
             // Remove the default id filter
             $filter->disableIdFilter();
 
             // Add a column filter
-            $filter->like('order.invoice_number', 'Nomor Nota');
+            $filter->equal('order.id', 'Nomor Nota')->select($order);
             $filter->date('paid_date', 'Tanggal Pembayaran');
         });
         $grid->model()->with('order.user');
@@ -49,7 +63,7 @@ class PaymentController extends AdminController
         $grid->column('payment_status', __('Status Pembayaran'))->using([0 => 'Uang Muka 25%', 1 => 'Uang Muka 50%', 2 => 'Lunas', 3 => 'Menunggu Pembayaran', 4 => 'Menunggu Konfirmasi Pembayaran']);
         $grid->column('paid_date', __('Tanggal Pembayaran'))->default('Belum Melakukan Pembayaran')->display(function () {
             // if($this->paid_date == null){}
-            return $this->paid_date == null ? "Belum Melakukan Pembayaran" : Carbon::parse($this->paid_date)->dayName . ', ' . Carbon::parse($this->paid_date)->format('d F Y');
+            return $this->paid_date == null ? "Belum Melakukan Pembayaran" : Carbon::parse($this->paid_date)->dayName . ', ' . Carbon::parse($this->paid_date)->translatedFormat('d F Y');
         });
         $grid->column('paid_file', __('Bukti Pembayaran'))->downloadable();
         // $grid->column('created_at', __('Created at'));
@@ -74,9 +88,17 @@ class PaymentController extends AdminController
         })->unescape();
         $show->field('payment_status', __('Status Pembayaran'))->using([0 => 'Uang Muka 25%', 1 => 'Uang Muka 50%', 2 => 'Lunas', 3 => 'Menunggu Pembayaran', 4 => 'Menunggu Konfirmasi Pembayaran']);
         $show->field('paid_date', __('Tanggal Pembayaran'))->as(function () {
-            return Carbon::parse($this->paid_date)->dayName . ', ' . Carbon::parse($this->paid_date)->format('d F Y');
+            return Carbon::parse($this->paid_date)->dayName . ', ' . Carbon::parse($this->paid_date)->translatedFormat('d F Y');
         });
-        $show->paid_file()->file();
+
+        if(is_null($show->getModel()->paid_file)){
+            $show->paid_file('Bukti Pembayaran')->as(function() {
+                return 'Belum Ada Upload File Pembayaran';
+            });
+        }else{
+            $show->paid_file('Bukti Pembayaran')->file();
+
+        }
 
         // $show->field('created_at', __('Created at'));
         // $show->field('updated_at', __('Updated at'));
@@ -92,7 +114,7 @@ class PaymentController extends AdminController
     protected function form()
     {
         $form = new Form(new Payment());
-        $order = Order::with('user')->get();
+        // $order = Order::with('user')->get();
         // $option = [];
         // foreach ($order as $orders) {
         //     $option[$orders->id] = $orders->jenis_baju . '-' . $orders->user->name . '-' . $orders->id;
@@ -100,11 +122,37 @@ class PaymentController extends AdminController
         $payment_option = [
             0 => 'Uang Muka 25%', 1 => 'Uang Muka 50%', 2 => 'Lunas', 3 => 'Menunggu Pembayaran', 4 => 'Menunggu Konfirmasi Pembayaran'
         ];
-        $form->select('order_id', __('Nomor Nota'))->options($order->pluck('invoice_number', 'id'))->rules('required');
+        $form->select('order_id', __('Nomor Nota'))->options($this->selectOrder)->rules('required');
         $form->select('payment_status', __('Status Pembayaran'))->options($payment_option)->rules('required');
         $form->date('paid_date', __('Tanggal Pembayaran'));
         $form->file('paid_file', __('Bukti Pembayaran'))->move('Payments')->uniqueName()->rules('mimes:pdf,png,jpeg,jpg');
-        // dd();
+        $form->submitted(function (Form $form) {
+            $form->ignore('paid_file');
+
+            if(!is_null(request()->file('paid_file'))){
+                if(!$form->isEditing()){
+                    $filename = md5(request()->file('paid_file')->getClientOriginalName() . time()) . '.' . request()->file('paid_file')->getClientOriginalExtension();
+                    request()->file('paid_file')->move(public_path('uploads/payments'), $filename);
+
+                    $form->model()->paid_file = 'payments'.'/' . $filename;
+                
+                    // $form->paid_file = 'payments'.'/' . $filename;
+                }else{
+                    $old_file = $form->model()->paid_file;
+                    
+                    if (File::exists(public_path('uploads').$old_file)) {
+                        File::delete(public_path('uploads').$old_file);
+                    }
+
+                    $filename = md5(request()->file('paid_file')->getClientOriginalName() . time()) . '.' . request()->file('paid_file')->getClientOriginalExtension();
+                    request()->file('paid_file')->move(public_path('uploads/payments'), $filename);
+
+                    $form->model()->paid_file = 'payments'.'/' . $filename;
+                    
+                    $form->model()->save();
+                }
+            }
+        });
 
         return $form;
     }

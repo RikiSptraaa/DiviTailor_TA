@@ -23,16 +23,23 @@ Route::group([
     $router->get('/', 'HomeController@index')->name('home');
     $router->resource('users', UserController::class);
     $router->resource('uk/baju', SizeBajuController::class);
+    Route::get('/uk/celana/all', [SizeCelanaController::class, 'showAll'])->name('show-all');
     $router->resource('uk/celana', SizeCelanaController::class);
     $router->resource('group', GroupController::class);
     $router->resource('/borongan/payments', GroupOrderPaymentController::class);
+    Route::get('borongan/tasks/show-all', [GroupOrderTaskController::class, 'showAll']);
+    Route::post('borongan/tasks/multiple-store', [GroupOrderTaskController::class, 'multipleStore']);
     $router->resource('/borongan/tasks', GroupOrderTaskController::class);
     $router->resource('borongan', GroupOrderController::class);
     $router->resource('orders', OrderController::class);
     $router->resource('employees', EmployeeController::class);
     $router->resource('tasks', TaskController::class);
     $router->resource('payments', PaymentController::class);
+    Route::get('/ukuran/show/all', [SizeBajuController::class, 'showAll'])->name('size.all');
+    Route::post('uk/baju/multiple-store', [SizeBajuController::class, 'multipleStore'])->name('size.multiple-store');
+    Route::post('uk/celana/multiple-store', [SizeCelanaController::class, 'multipleStore'])->name('celana.multiple-store');
+    Route::post('uk/celana/alter-store', [SizeCelanaController::class, 'alterStore'])->name('celana.alter-store');
+    Route::post('uk/baju/alter-store', [SizeBajuController::class, 'alterStore'])->name('alter-store');
 });
 
-Route::get('/orders/cetak/{order}', [OrderController::class, 'print']);
-Route::get('/borongan/cetak/{borongan}', [GroupOrderController::class, 'print']);
+

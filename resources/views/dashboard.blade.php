@@ -39,7 +39,7 @@
 
 
     <div data-aos="fade-up" data-aos-duration="1000" data-aos-once="true" class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 mt-6">
-        <div class="hero min-h-screen" style="background-image: url(https://placeimg.com/1000/800/suite);">
+        <div class="hero min-h-screen" style="background-image: url({{ asset('img/homepage.webp') }});">
             <div class="hero-overlay bg-opacity-60"></div>
             <div class="hero-content text-center text-neutral-content">
                 <div class="max-w-md">
@@ -165,7 +165,8 @@
                 <h1 class="text-5xl font-bold">Temukan Divi Tailor!</h1>
                 <p class="py-6">Divi Tailor berlokasi pada Jl. Gunung Agung Gg.Carik, Padangsambian, Kec. Denpasar
                     Barat, Bali</p>
-                <button class="btn btn-primary">Temukan Kami</button>
+                <a href="https://www.google.com/maps/dir//DIVI+TAILOR+%26+DIVI+BRIDAL+SALON+85XR%2BXF9+Jl.+Gn.+Agung+Padangsambian,+Denpasar+Barat,+Denpasar+City,+Bali+80111/@-8.6500887,115.1912477,13z/data=!4m8!4m7!1m0!1m5!1m1!1s0x2dd23f55126886e7:0x51b31c7912b14e90!2m2!1d115.1912479!2d-8.6500877" 
+                    class="btn btn-primary">Temukan Kami</a>
             </div>
         </div>
 

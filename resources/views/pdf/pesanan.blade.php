@@ -6,7 +6,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
 
-    <title></title>
+    <title>{{ $order->invoice_number }}</title>
 
     <!-- Fonts -->
 
@@ -100,16 +100,42 @@ Pembayaran'
         <div class="line"></div>
         <label>Tanggal</label>
         <p class="text-base">{{$carbon->createFromFormat('Y-m-d',$order->order_date )->translatedFormat('l')}},
-            {{ $order->order_date}}</p>
-        <label>Status Pembayaran</label>
-        <p class="text-base">{{ $payment_status[$order->payment->payment_status] }}</p>
-        <label>Jenis Baju</label>
-        <p class="text-base">{{ $order->jenis_baju }}</p>
+            {{ $carbon->parse($order->order_date)->translatedFormat('d M Y') }}</p>
+        <label>Tanggal Estimasi Selesai</label>
+        <p class="text-base">{{$carbon->createFromFormat('Y-m-d',$order->tanggal_estimasi )->translatedFormat('l')}},
+            {{ $carbon->parse($order->tanggal_estimasi)->translatedFormat('d M Y') }}</p>
+        <label>Jenis Pakaian</label>
+        <p class="text-base">{{ config('const.jenis_pakaian')[$order->jenis_pakaian] }}</p>
+        <label>Jenis Pesanan</label>
+        <p class="text-base">{{ $order->jenis_pembuatan }}</p>
+        <label>Jenis Kain</label>
+        <p class="text-base">{{ config('const.jenis_kain')[$order->jenis_kain] }}</p>
+        <label>Jenis Panjang</label>
+        <p class="text-base">{{ config('const.jenis_panjang')[$order->jenis_panjang] }}</p>
+        <label>Deskripsi Pakaian</label>
+        <p class="text-base">{{ $order->deskripsi_pakaian }}</p>
         <div class="line-dot"></div>
         <label>Total</label>
         <p class="text-base">
             <x-money amount="{{ $order->total_harga }}" currency="IDR" convert />
         </p>
+        <label>Status Pembayaran</label>
+        @php
+        if (isset($order->payment)) {
+        # code...
+        $payment = collect($order->payment)->sortBy(function ($item) {
+        return strtotime($item->paid_date); });
+        }
+        @endphp
+        <ol>
+        @foreach($payment as $key => $value)
+        <li>
+            <p>{{ config('const.status_pembayaran')[$value->payment_status] . ' ('.$carbon->parse($value->paid_date)->translatedFormat('d M Y').')' }}
+            </p>
+        </li>
+        @endforeach
+        </ol>
+
     </div>
     <p>
         Catatan:

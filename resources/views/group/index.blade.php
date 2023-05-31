@@ -64,8 +64,8 @@ $no =1;
                         </div>
              
                         <div class="modal-action">
-                            <button for="modal-create-order" class="btn btn-sm"
-                                id="btn-save">Buat Pesanan</button>
+                            <button  class="btn btn-sm"
+                                id="btn-save">Buat Grup</button>
                         </div>
                     </form>
                 </div>
@@ -112,7 +112,8 @@ $no =1;
             "lengthChange": false,
             "ordering": false,
             "language": {
-                "search": 'Cari'
+                "search": 'Cari',
+                "emptyTable": "Tidak Ada Grup Yang Dimiliki"
             }
         });
 

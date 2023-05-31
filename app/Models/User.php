@@ -62,6 +62,6 @@ class User extends Authenticatable
     }
     public function groupOrder()
     {
-        return $this->belongsToMany(GroupOrder::class, 'group_order_users');
+        return $this->belongsToMany(GroupOrder::class, 'group_order_users')->withPivot('acc_status');
     }
 }

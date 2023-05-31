@@ -1,3 +1,19 @@
+@php
+    use App\Models\GroupOrder;
+    use Illuminate\Support\Facades\DB;
+    if (auth()->check()) {
+        # code...
+        $notification = DB::table('group_order_users')->where('user_id', auth()->user()->id)->whereNull('acc_status');
+        $notification_group = $notification->pluck('group_order_id');
+        $notification = $notification->get();
+
+        // $group_order = GroupOrder::with('group')->whereIn('id', $notification_group)->whereNull('is_acc')->orWhere('is_acc', '!=', 0)->get();
+        $group_order = GroupOrder::with('payment', 'task')->whereHas('user', function($q){
+            $q->where('user_id' , auth()->user()->id)->whereNull('acc_status');
+        })->where('is_acc', true)->get();
+
+    }
+@endphp
 <nav x-data="{ open: false }">
     <!-- Primary Navigation Menu -->
     <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
@@ -13,9 +29,7 @@
                         </svg>
                     </label>
                     <ul tabindex="0" class="dropdown-content menu p-2 shadow bg-base-100 w-52">
-                      <li><a>Home</a></li>
-                      <li><a>Galery</a></li>
-                      <li><a>About</a></li>
+                      <li><a href="/">Home</a></li>
                     </ul>
                 </div>
                
@@ -45,24 +59,56 @@
             </div>
             <div class="flex-none">
                 <ul class="menu menu-horizontal px-1  lg:flex md:flex  sm:hidden hidden">
-                    <li><a>Home</a></li>
-                    <li><a>About</a></li>
-                    <li><a>Galery</a></li>
+                    <li><a href="/dashboard">Home</a></li>
+                    <li><a href="/tutorial">Bantuan</a></li>
                 </ul>
-
+                @auth                    
                 <div class="dropdown dropdown-end">
                     <label tabindex="0" class="btn btn-ghost btn-circle">
                         <div class="indicator">
                             <i class="fa fa-bell fa-lg"></i>
-                            <span class="badge badge-sm indicator-item">8</span>
+                            <span class="badge badge-sm indicator-item">@auth{{ $group_order->count() ?? 0 }}@endauth</span>
                         </div>
                     </label>
-                    <div tabindex="0" class="mt-3 card card-compact dropdown-content w-52 bg-base-100 shadow">
-                        <div class="card-body bg-white text-black">
+                    <div tabindex="0" class="mt-3 card card-compact dropdown-content w-72 md:w-96 bg-base-100 shadow">
+
+                        <div class="card-body bg-white text-black font-semibold">
+                            Notifikasi Undangan Pesanan Grup
+                            @auth
+                                @if(isset($notification) && $notification->count() > 0)
+                                    @foreach ($group_order as $item)
+                                    <div class="border w-full p-2 flex justify-between align-middle align-items-center ">
+                                        <div>
+                                            <p class="text-md link"> <a href="{{ url('/group/orders').'/'.$item->id }}">{{ $item->invoice_number }}</a></p>
+                                            <p class="text-xs">{{ $item->group->group_name.'-'.$item->group->institute }}</p>
+                                        </div>
+                                        <div class="flex align-items-center">
+                                            <div>
+                                                <form id="form-decline" class="form-decline" action="{{ route('borongan.delete-invitation', $item->id) }}" method="POST">
+                                                    @csrf
+                                                    @method('delete')
+                                                    <button type="submit" class="btn btn-xs btn-ghost">Tolak</button>  
+                                                </form>
+                                            </div>
+                                            <div>
+                                                <form id="form-acc" class="form-acc" action="{{ route('borongan.acc-invitation', $item->id) }}" method="POST">
+                                                    @csrf
+                                                    <button type="submit" class="btn btn-xs btn-ghost">Terima</button>  
+                                                </form>
+                                            </div>
+                                        </div>
+
+                                    </div>     
+                                    @endforeach
+
+                                @endif   
+                            @endauth
 
                         </div>
                     </div>
                 </div>
+                @endauth
+
                 <div class="dropdown dropdown-end">
                     <label tabindex="0" class="btn btn-ghost btn-circle avatar">
                         <div class="w-10 rounded-full">
@@ -87,8 +133,9 @@
                         <li><label class="hover:bg-black hover:text-white" for="modal-profile">Profile</label>
                         </li>
                         <li><a class="hover:bg-black hover:text-white" href="{{ route('orders.index') }}">Pesanan</a></li>
-                        <li><a class="hover:bg-black hover:text-white">Borongan</a></li>
-                        <li><a class="hover:bg-black hover:text-white">Settings</a></li>
+                        <li><a class="hover:bg-black hover:text-white" href="{{ route('group.index') }}">Group</a></li>
+                        <li><a class="hover:bg-black hover:text-white" href="{{ route('borongan.index') }}">Borongan</a></li>
+                        <li><a class="hover:bg-black hover:text-white" href="{{ route('payments.index') }}">Pembayaran</a></li>
                         <hr>
                         <form action="{{ route('logout') }}" method="POST">
                             @csrf

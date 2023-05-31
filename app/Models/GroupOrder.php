@@ -18,12 +18,12 @@ class GroupOrder extends Model
 
     public function user()
     {
-        return $this->belongsToMany(User::class, 'group_order_users');
+        return $this->belongsToMany(User::class, 'group_order_users')->withPivot('acc_status');;
     }
 
     public function payment()
     {
-        return $this->hasOne(GroupOrderPayment::class);
+        return $this->hasMany(GroupOrderPayment::class);
     }
 
     public function task()

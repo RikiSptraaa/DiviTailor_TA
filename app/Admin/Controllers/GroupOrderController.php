@@ -160,6 +160,7 @@ class GroupOrderController extends Controller
             });
             $grid->disableCreateButton();
             $grid->disableFilter();
+            $grid->disableExport();
             $grid->disableTools();
             $grid->disableBatchActions();
             $grid->disablePagination();
@@ -186,7 +187,10 @@ class GroupOrderController extends Controller
         $grid->column('group_order_date', __('Tanggal Borongan'))->display(function () {
             return Carbon::parse($this->group_order_date)->dayName . ', ' . Carbon::parse($this->group_order_date)->format('d F Y');
         });
-        $grid->column('order_kind', __('Jenis Pakaian'));
+        $grid->column('order_kind', __('Jenis Pesanan'));
+        $grid->column('tanggal_estimasi', 'Tanggal Estimasi Selesai')->display(function () {
+            return Carbon::parse($this->order_date)->dayName . ', ' . Carbon::parse($this->order_date)->translatedFormat('d F Y');
+        });
         $grid->column('users_total', __('Jumlah Pelanggan'));
         // $grid->column('Print')->display(function () {
         //     return "<a href='/borongan/cetak/{$this->id}'> Cetak </a>  ";
@@ -226,9 +230,17 @@ class GroupOrderController extends Controller
         });
         $show->field('invoice_number', __('No Nota'));
         $show->field('group_order_date', __('Tanggal Borongan'))->as(function () {
-            return Carbon::parse($this->group_order_date)->dayName . ', ' . Carbon::parse($this->group_order_date)->format('d F Y');
+            return Carbon::parse($this->group_order_date)->dayName . ', ' . Carbon::parse($this->group_order_date)->translatedFormat('d F Y');
         });
         $show->field('order_kind', __('Jenis Pakaian'));
+        $show->field('jenis_pakaian', 'Jenis Pakaian')->using(config("const.jenis_pakaian"));
+        $show->field('order_kind', 'Jenis Pesanan');
+        $show->field('jenis_kain', 'Jenis Kain')->using(config('const.jenis_kain'));
+        $show->field('jenis_panjang', 'Panjang')->using(config('const.jenis_panjang'));
+        $show->field('deskripsi_pakaian', 'Deskripsi Pakaian');
+        $show->field('tanggal_estimasi', __('Tanggal Estimasi Selesai'))->as(function () {
+            return Carbon::parse($this->order_date)->dayName . ', ' . Carbon::parse($this->order_date)->translatedFormat('d F Y');
+        });
         $show->field('users_total', __('Jumlah Pelanggan'))->as(function () {
             return $this->users_total . " Orang";
         });
@@ -275,24 +287,35 @@ class GroupOrderController extends Controller
     {
         $form = new Form(new GroupOrder());
         $group = Group::all();
+        $user_select =[];
         $option = [];
 
         foreach ($group as $key => $value) {
             $option[$value->id] = $value->group_code . "(" . $value->group_name . "-" . $value->institute . ")";
         }
 
-        // dd($option);
+        $user = User::all();
+
+        foreach($user as $users){
+            $user_select[$users->id] = $users->name.'-'.$users->institute;
+        }
 
 
         $form->hidden('invoice_number', __('Nomor Nota Borongan'))->default('BRG-' . Str::random(5));
         $form->select('group_id', __('Nama Grup'))->options($option)->rules(['required']);
         $form->date('group_order_date', __('Tanggal Borongan'))->default(date('Y-m-d'))->rules(['required', 'date']);
-        $form->multipleSelect('user', 'Pelanggan')->options(User::all()->pluck('name', 'id'))->rules(['required']);
-        $form->text('order_kind', __('Jenis Baju'))->rules(['required']);
+        $form->date('tanggal_estimasi', __('Estimasi Tanggal Jadi'))->rules('required|date');
+        $form->multipleSelect('user', 'Pelanggan')->options($user_select)->rules(['required']);
+        $form->radio('jenis_pakaian', 'Jenis Pakaian')->options(config("const.jenis_pakaian"))->default(0)->rules('required|int');
+        $form->text('order_kind', __('Jenis Pesanan'))->placeholder('Contoh:Seragam')->rules(['required']);
+        $form->select('jenis_kain', __('Jenis Kain'))->options(config('const.jenis_kain'))->rules('required|int');
+        $form->select('jenis_panjang', __('Panjang'))->options(config('const.jenis_panjang'))->rules('required|int');
+        $form->textarea('deskripsi_pakaian', __('Deskripsi Pakaian'))->rules('required');
         $form->number('users_total', __('Jumlah Pelanggan'))->rules(['required', 'numeric']);
         $form->currency('price', __('Total Harga'))->symbol('Rp.')->rules('required|numeric');
         $form->currency('price_per_item', __('Harga Per Unit'))->symbol('Rp.')->rules('required|numeric|');
         $form->switch('is_acc', __('Is acc'))->disable()->value(true);
+
 
         return $form;
     }
