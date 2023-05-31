@@ -160,6 +160,7 @@ class GroupOrderController extends Controller
             });
             $grid->disableCreateButton();
             $grid->disableFilter();
+            $grid->disableExport();
             $grid->disableTools();
             $grid->disableBatchActions();
             $grid->disablePagination();

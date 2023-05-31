@@ -170,7 +170,7 @@ class TaskController extends Controller
         $show->field('employee.employee_name', __('Karyawan'));
         $show->field('order_id', __('Nomor Nota'))->as(function () {
             return "<a href='/admin/orders/" . $this->order_id . "'>" .  $this->order->invoice_number . "</a>";
-        });
+        })->unescape();
         $show->field('task_started', __('Tanggal Pengerjaan'))->as(function () {
             return Carbon::parse($this->task_started)->dayName . ', ' . Carbon::parse($this->task_started)->translatedFormat('d F Y');
         });

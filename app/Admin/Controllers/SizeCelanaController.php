@@ -181,7 +181,7 @@ class SizeCelanaController extends Controller
         $show = new Show(SizeCelana::findOrFail($id));
 
         $show->field('id', __('Id'));
-        $show->field('user_id', __('User id'));
+        $show->field('user.name', __('Nama Pelanggan'));
         $show->field('jenis_ukuran', __('Jenis Ukuran'))->using(config('const.jenis_ukuran'));
         $show->field('kode_ukuran', __('Kode Ukuran'))->using(config('const.kode_ukuran'));
         $show->field('lingkar_pinggang', __('Lingkar pinggang'))->as(function () {

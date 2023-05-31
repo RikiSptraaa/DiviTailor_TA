@@ -96,7 +96,7 @@ class PaymentController extends AdminController
                 return 'Belum Ada Upload File Pembayaran';
             });
         }else{
-            $show->paid_file()->file();
+            $show->paid_file('Bukti Pembayaran')->file();
 
         }
 
