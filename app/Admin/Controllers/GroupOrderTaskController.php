@@ -169,7 +169,7 @@ class GroupOrderTaskController extends Controller
                 return Money::IDR($this->employee_fee, true);
             });
             $grid->column('employee_fee_total', __('Total Ongkos Karyawan'))->display(function () {
-                return Money::IDR($this->employee_fee, true);
+                return Money::IDR($this->employee_fee_total, true);
             });
 
         return $grid;
@@ -202,7 +202,7 @@ class GroupOrderTaskController extends Controller
         $show->field('employee_fee', __('Ongkos Karyawan Per Unit'))->as(function () {
             return Money::IDR($this->employee_fee, true);
         });
-        $show->field('employee_fee_total', __('Ttoal Ongkos Karyawan'))->as(function () {
+        $show->field('employee_fee_total', __('Total Ongkos Karyawan'))->as(function () {
             return Money::IDR($this->employee_fee, true);
         });
         $show->field('note', __('keterangan'));

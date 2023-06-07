@@ -16,7 +16,6 @@ class GroupOrderController extends Controller
         $group_order = GroupOrder::with('payment', 'task')->whereHas('user', function($q){
             $q->where('user_id' , auth()->user()->id)->where('acc_status', 1);
         })->get();
-
         // foreach ($group_order as $key => $value) {
         //     # code...
         //     foreach ($value->user as $item) {
@@ -27,7 +26,6 @@ class GroupOrderController extends Controller
         // dd($group_order_users);
 
         $group_order = $group_order->groupBy('is_acc')->toArray();
-
 
         $user = User::all();
         $group = Group::where('coordinator', auth()->user()->id)->get();

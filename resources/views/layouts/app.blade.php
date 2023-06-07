@@ -689,7 +689,7 @@
                         let harga = formatRupiah(response.total_harga);
                         $('#detail-pesanan').html(
                             "<li> Nomor Nota: " + response.invoice_number + "</li>" +
-                            "<li> Jenis Pakaian: " + response.jenis_baju + "</li>" +
+                            "<li> Jenis Pakaian: " + response.jenis_pembuatan + "</li>" +
                             "<li> Tanggal: " + response.order_date + "</li>" +
                             "<li> Harga: " + harga + "</li>"
                         );

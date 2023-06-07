@@ -164,7 +164,7 @@ $task_status = [
                             <p>{{ $value['jenis_pembuatan'] }}</p>
                             <p></p>
                             <div class="card-actions justify-end">
-                                <form id="form-delete" data-url="{{ url('order/delete/'.$value['id']) }}" >
+                                <form id="form-delete" class="form-del" data-url="{{ url('order/delete/'.$value['id']) }}" >
                                     @method('delete')
                                     @csrf
                                     <button class="btn btn-sm btn-warning btn-delete" type="submit">Hapus</button>
@@ -186,8 +186,8 @@ $task_status = [
     @section('script')
     <script>
         $(document).ready(function () {
-            var url = $('#form-delete').data('url');
-            $('#form-delete').submit(function (e) {
+            var url = $('.form-del').data('url');
+            $('.form-del').submit(function (e) {
                 var form_data = new FormData(this);
                 e.preventDefault();
 

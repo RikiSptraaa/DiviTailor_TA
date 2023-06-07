@@ -259,6 +259,9 @@ endif
                 @foreach($group_order[''] as $key => $value)
                 <div class="card w-full mt-2">
                     <div class="card-body border ">
+                        <h2 class="card-title"><i class="fas fa-receipt fa-2x"></i>
+                            {{ $value['invoice_number'] }}
+                        </h2>
                         <p class="font-semibold">{{ $value['group']['group_name'] }}-{{ $value['group']['institute'] }}
                         </p>
 
@@ -275,15 +278,25 @@ endif
                         <div class="collapse collapse-arrow bg-base-100 mt-2">
                             <input type="checkbox" class="peer" id="collapse-user-new" />
                             <label for="collapse-user-new" class="collapse-title font-semibold">
-                                Daftar Aggota
+                                Daftar Anggota
                             </label>
                             <div class="collapse-content ">
 
                                 @foreach ($value['user'] as $user)
                                 <ul>
-                                    <li>{{ $user['name'] }}</li>
+                                    <a class="link" href="{{ route('profile.show', $user['id']) }}">
+                                        <li>
+                                            {{ $user['name'] }} 
+                                        @if(!is_null($user['pivot']['acc_status']))
+                                            <div class="ml-2 badge md:badge-md badge-sm {{$user['pivot']['acc_status'] == 1 ? 'badge-success' : 'badge-warning' }}">
+                                                {{ $user['pivot']['acc_status'] == 1 ? 'Diterima' : 'Ditolak'}}</div> 
+                                            </li></a>
+                                        @else
+                                            <div class="ml-2 badge md:badge-md badge-sm">
+                                                Belum Melakukan Penerimaan/Penolakan</div> 
+                                            </li></a>
+                                        @endif
                                 </ul>
-
                                 @endforeach
                             </div>
                         </div>
@@ -346,13 +359,24 @@ endif
                         <div class="collapse collapse-arrow bg-base-100 mt-2">
                             <input type="checkbox" class="peer" id="collapse-user-acc" />
                             <label for="collapse-user-acc" class="collapse-title font-semibold">
-                                Daftar Aggota
+                                Daftar Anggota
                             </label>
                             <div class="collapse-content ">
 
                                 @foreach ($value['user'] as $user)
                                 <ul>
-                                    <a class="link" href="{{ route('profile.show', $user['id']) }}"><li>{{ $user['name'] }}</li></a>
+                                    <a class="link" href="{{ route('profile.show', $user['id']) }}">
+                                        <li>
+                                            {{ $user['name'] }} 
+                                        @if(!is_null($user['pivot']['acc_status']))
+                                            <div class="ml-2 badge md:badge-md badge-sm {{$user['pivot']['acc_status'] == 1 ? 'badge-success' : 'badge-warning' }}">
+                                                {{ $user['pivot']['acc_status'] == 1 ? 'Diterima' : 'Ditolak'}}</div> 
+                                            </li></a>
+                                        @else
+                                            <div class="ml-2 badge md:badge-md badge-sm">
+                                                Belum Melakukan Penerimaan/Penolakan</div> 
+                                            </li></a>
+                                        @endif
                                 </ul>
 
                                 @endforeach
@@ -369,7 +393,7 @@ endif
                         </div>
                         @endif
 
-                        @if(!is_null($value['task']) )
+                        @if(!empty($value['task']) )
                         <div
                             class="badge  md:badge-md badge-sm {{ $task_status_order == 0 ? 'badge-warning' : 'badge-success' }}">
                             Status Pesanan : {{ $task_status_order == 0 ? $task_status[0] : $task_status[1] }}
@@ -442,7 +466,7 @@ endif
                         <div class="collapse collapse-arrow bg-base-100 mt-2">
                             <input type="checkbox" class="peer" id="collapse-user-decline" />
                             <label for="collapse-user-decline" class="collapse-title font-semibold">
-                                Daftar Aggota
+                                Daftar Anggota
                             </label>
                             <div class="collapse-content ">
 
@@ -664,7 +688,7 @@ endif
                     if (result.isConfirmed) {
                         $.ajax({
                             type: "POST",
-                            url: "group/orders/payment/" + borongan_id,
+                            url: "orders/payment/" + borongan_id,
                             cache: false,
                             processData: false,
                             contentType: false,

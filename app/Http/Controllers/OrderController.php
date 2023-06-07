@@ -73,8 +73,8 @@ class OrderController extends Controller
     }
 
     public function delete(Order $order){
-        DB::beginTransaction();
         try {
+        DB::beginTransaction();
         $order->delete();
         DB::commit();
             return response()->json([
