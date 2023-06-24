@@ -69,34 +69,34 @@
                                     <div class="w-1/2 p-1 md:p-2">
                                         <img alt="gallery"
                                             class="block object-cover object-center w-full h-full rounded-lg"
-                                            src="https://mdbcdn.b-cdn.net/img/Photos/Horizontal/Nature/4-col/img%20(70).webp">
+                                            src="{{ asset('img/landing-img/benang.webp') }}">
                                     </div>
                                     <div class="w-1/2 p-1 md:p-2">
                                         <img alt="gallery"
                                             class="block object-cover object-center w-full h-full rounded-lg"
-                                            src="https://mdbcdn.b-cdn.net/img/Photos/Horizontal/Nature/4-col/img%20(72).webp">
+                                            src="{{ asset('img/landing-img/mesin.webp') }}">
                                     </div>
                                     <div class="w-full p-1 md:p-2">
                                         <img alt="gallery"
                                             class="block object-cover object-center w-full h-full rounded-lg"
-                                            src="https://mdbcdn.b-cdn.net/img/Photos/Horizontal/Nature/4-col/img%20(73).webp">
+                                            src="{{ asset('img/landing-img/jas1.webp') }}">
                                     </div>
                                 </div>
                                 <div class="flex flex-wrap w-1/2">
                                     <div class="w-full p-1 md:p-2">
                                         <img alt="gallery"
                                             class="block object-cover object-center w-full h-full rounded-lg"
-                                            src="https://mdbcdn.b-cdn.net/img/Photos/Horizontal/Nature/4-col/img%20(74).webp">
+                                            src="{{ asset('img/landing-img/jas2.webp') }}">
                                     </div>
                                     <div class="w-1/2 p-1 md:p-2">
                                         <img alt="gallery"
                                             class="block object-cover object-center w-full h-full rounded-lg"
-                                            src="https://mdbcdn.b-cdn.net/img/Photos/Horizontal/Nature/4-col/img%20(75).webp">
+                                            src="{{ asset('img/landing-img/motong.webp') }}">
                                     </div>
                                     <div class="w-1/2 p-1 md:p-2">
                                         <img alt="gallery"
                                             class="block object-cover object-center w-full h-full rounded-lg"
-                                            src="https://mdbcdn.b-cdn.net/img/Photos/Horizontal/Nature/4-col/img%20(77).webp">
+                                            src="{{ asset('img/landing-img/meteran.webp') }}">
                                     </div>
                                 </div>
                             </div>
@@ -118,7 +118,7 @@
         <div class="md:grid md:grid-cols-4 sm:grid-cols-1 justify-center gap-40">
             <div class="text-center sm:mb-6" data-aos="fade-up" data-aos-duration="1000" data-aos-once="true">
                 <i class="fas fa-user-friends fa-5x mb-3"></i>
-                <h1 class="text-xl font-bold">Diskusi</h1>
+                <h1 class="text-xl font-bold">Konsultasi</h1>
             </div>
             <div class="text-center sm:mb-6" data-aos="fade-up" data-aos-duration="1000" data-aos-once="true">
                 <i class="fas fa-ruler-horizontal fa-5x mb-3"></i><br>
@@ -140,7 +140,7 @@
             <div>
                 <div class="mapouter w-full">
                     <div class="gmap_canvas"><iframe width="100%" height="300" id="gmap_canvas"
-                            src="https://maps.google.com/maps?q=divi%20tailor&t=&z=13&ie=UTF8&iwloc=&output=embed"
+                            src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d3944.4352443531957!2d115.18867277415968!3d-8.65008869139689!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x2dd23f55126886e7%3A0x51b31c7912b14e90!2sDIVI%20TAILOR%20%26%20DIVI%20BRIDAL%20SALON!5e0!3m2!1sen!2sid!4v1687593308427!5m2!1sen!2sid"
                             frameborder="0" scrolling="no" marginheight="0" marginwidth="0"></iframe><a
                             href="https://123movies-to.org"></a><br>
                         <style>

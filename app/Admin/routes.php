@@ -40,6 +40,10 @@ Route::group([
     Route::post('uk/celana/multiple-store', [SizeCelanaController::class, 'multipleStore'])->name('celana.multiple-store');
     Route::post('uk/celana/alter-store', [SizeCelanaController::class, 'alterStore'])->name('celana.alter-store');
     Route::post('uk/baju/alter-store', [SizeBajuController::class, 'alterStore'])->name('alter-store');
+
+    Route::get('/orders/cetak/{order}', [OrderController::class, 'print'])->name('orders.print');
+    Route::get('/borongan/cetak/{borongan}', [GroupOrderController::class, 'print'])->name('borongan.print');
+
 });
 
 

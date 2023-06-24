@@ -135,7 +135,7 @@ class OrderController extends Controller
 
         $carbon = new Carbon();
         $pdf = Pdf::loadView('pdf.pesanan', compact('order', 'carbon'));
-        return $pdf->stream('Pesanan-' . $order->id);
+        return $pdf->stream('Pesanan-' . $order->id.'.pdf');
     }
 
     protected function grid($is_acc = false)

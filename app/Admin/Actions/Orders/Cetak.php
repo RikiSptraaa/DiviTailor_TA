@@ -22,6 +22,6 @@ class Cetak extends RowAction
     }
     public function render()
     {
-        return "<a href='/orders/cetak/{$this->getKey()}'  target='_blank' >{$this->name()}</a>";
+        return "<a href='orders/cetak/{$this->getKey()}'  target='_blank' >{$this->name()}</a>";
     }
 }
