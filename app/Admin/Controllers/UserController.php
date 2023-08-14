@@ -265,7 +265,14 @@ class UserController extends Controller
         $form->text('city', __('Kota'))->icon('fa-building')->rules('required|min:4|max:30');
         $form->text('institute', __('Instansi'))->icon('fa-institution')->rules('required|min:3|max:30');
         $form->select('gender', __('Jenis Kelamin'))->options([0 => 'Perempuan', 1 => 'Laki-Laki'])->rules('required');
-        $form->hidden('password')->default(Hash::make('password'));
+        $form->hidden('password');
+        $form->saving(function (Form $form) {
+            $len = strlen($form->phone_number);
+            $num = substr($form->phone_number, $len-3);
+            $pass = Hash::make('password'.$num);
+            $form->password = $pass;
+
+        });
         // $form->display('created_at', __('Created At'));
         // $form->display('updated_at', __('Updated At'));
 
