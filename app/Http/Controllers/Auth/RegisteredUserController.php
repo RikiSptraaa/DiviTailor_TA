@@ -36,7 +36,7 @@ class RegisteredUserController extends Controller
     {
         // dd($request->all());
         $request->validate([
-            'nama_pengguna' => ['required', 'string', 'max:20', 'regex:/^\S*$/u'],
+            'nama_pengguna' => ['required', 'string', 'max:10', 'regex:/^\S*$/u'],
             'nama_lengkap' => ['required', 'string', 'max:50'],
             'nomor_telepon' => ['required', 'max:20'],
             'alamat' => ['required'],
