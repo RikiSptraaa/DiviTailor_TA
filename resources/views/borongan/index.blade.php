@@ -161,6 +161,7 @@ endif
                             menunggu
                             diterima oleh
                             pihak Divi Tailor terlebih dahulu.</p>
+                        <p class="text-xs text-gray-700 mb-2">Pesanan Borongan Akan Mendapat Potongan Harga Sebesar Rp.25.000 Per Satu Pasang Pakaian</p>
                         <p class="text-xs text-gray-700 mb-2">Pesanan Borongan hanya bisa dibayar oleh koordinator Grup
                         </p>
                     </div>
@@ -577,37 +578,39 @@ endif
                                     icon: 'error',
                                     text: error.responseJSON.message
                                 })
-                                $('#error-group-order-date').html('<li>' + error
-                                        .responseJSON.tanggal_pesanan ?? '' +
-                                        '</li>')
-                                    .css(
+                                if(error.responseJSON.validator ==  true){
+                                    $('#error-group-order-date').html('<li>' + error
+                                            .responseJSON.tanggal_pesanan ?? '' +
+                                            '</li>')
+                                        .css(
+                                            'display', '');
+                                    $('#error-group-select').html('<li>' + error
+                                        .responseJSON.grup ?? '' + '</li>').css(
                                         'display', '');
-                                $('#error-group-select').html('<li>' + error
-                                    .responseJSON.grup ?? '' + '</li>').css(
-                                    'display', '');
-                                $('#error-group-order-user').html('<li>' + error
-                                    .responseJSON.anggota_pelanggan ?? '' +
-                                    '</li>').css(
-                                    'display', '');
-                                  $('#error-group-estimated-date').html('<li>' + error
-                                        .responseJSON.tanggal_estimasi ?? '' + '</li>')
-                                    .css(
+                                    $('#error-group-order-user').html('<li>' + error
+                                        .responseJSON.anggota_pelanggan ?? '' +
+                                        '</li>').css(
                                         'display', '');
-                                $('#error-group-clothes-kind').html('<li>' + error
-                                    .responseJSON.jenis_pakaian ?? '' + '</li>').css(
-                                    'display', '');
-                                $('#error-group-order-kind').html('<li>' + error
-                                    .responseJSON.jenis_pesanan ?? '' + '</li>').css(
-                                    'display', '');
-                                $('#error-group-cloth-kind').html('<li>' + error
-                                    .responseJSON.jenis_kain ?? '' + '</li>').css(
-                                    'display', '');
-                                $('#error-group-long-kind').html('<li>' + error
-                                    .responseJSON.jenis_panjang?? '' + '</li>').css(
-                                    'display', '');
-                                $('#error-group-description-order').html('<li>' + error
+                                    $('#error-group-estimated-date').html('<li>' + error
+                                            .responseJSON.tanggal_estimasi ?? '' + '</li>')
+                                        .css(
+                                            'display', '');
+                                    $('#error-group-clothes-kind').html('<li>' + error
+                                        .responseJSON.jenis_pakaian ?? '' + '</li>').css(
+                                        'display', '');
+                                    $('#error-group-order-kind').html('<li>' + error
+                                        .responseJSON.jenis_pesanan ?? '' + '</li>').css(
+                                        'display', '');
+                                    $('#error-group-cloth-kind').html('<li>' + error
+                                        .responseJSON.jenis_kain ?? '' + '</li>').css(
+                                        'display', '');
+                                    $('#error-group-long-kind').html('<li>' + error
+                                        .responseJSON.jenis_panjang?? '' + '</li>').css(
+                                        'display', '');
+                                    $('#error-group-description-order').html('<li>' + error
                                     .responseJSON.deskripsi_pakaian?? '' + '</li>').css(
                                     'display', '');
+                                }
                             },
                         });
 

@@ -213,7 +213,7 @@ class OrderController extends Controller
         });
         $grid->column('jenis_pembuatan', 'Jenis Pesanan');
         $grid->column('tanggal_estimasi', 'Tanggal Estimasi Selesai')->display(function () {
-            return Carbon::parse($this->order_date)->dayName . ', ' . Carbon::parse($this->order_date)->translatedFormat('d F Y');
+            return Carbon::parse($this->tanggal_estimasi)->dayName . ', ' . Carbon::parse($this->tanggal_estimasi)->translatedFormat('d F Y');
         });
         // $grid->column('payment.payment_status', 'Status Pembayaran');
         // $grid->column('task.task_status', 'Status Pengerjaan')->using([0 => 'Dalam Pengerjaan', 1 => 'Sudah Siap'])->default("Belum Dikerjakan");

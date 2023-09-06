@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use App\Models\User;
 use App\Models\Group;
 use App\Models\GroupOrder;
+use Exception;
 use Illuminate\Support\Str;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
@@ -63,6 +64,7 @@ class GroupOrderController extends Controller
             return response()->json([
                 'status' => false,
                 'message' => 'Kesalahan dalam masukkan!',
+                'validator' => true,
                 'tanggal_pesanan'=> $validator->errors()->get('tanggal_pesanan'),
                 'tanggal_estimasi'=> $validator->errors()->get('tanggal_estimasi'),
                 'jenis_pakaian'=> $validator->errors()->get('jenis_pakaian'),
@@ -81,6 +83,9 @@ class GroupOrderController extends Controller
         DB::beginTransaction();
         try {
             $count_user = collect($request->anggota_pelanggan)->count();
+            if($count_user < 10){
+                throw new Exception("Pesanan Grup / Borongan Setidaknya Harus Berjumlah 10 Orang");
+            }
             $generate_invoice = 'BRG-' . Str::random(5);
           
 

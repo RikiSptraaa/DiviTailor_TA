@@ -48,7 +48,9 @@
                         Divi Tailor merupakan toko jasa jahit pakaian seragam di wilayah Denpasar yang sudah menerima
                         jasa jahit mulai dari individu sampai kelompok. Divi Tailor sudah berdiri sejak 1997.
                     </p>
-                    <button class="btn btn-primary" data-aos="fade-left">Buat Pesanan</button>
+                    <a href="{{url('/order')}}">
+                        <button class="btn btn-primary" data-aos="fade-left">Buat Pesanan</button>
+                    </a>
                 </div>
             </div>
         </div>
@@ -138,6 +140,20 @@
     <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 my-20" data-aos="fade-up" data-aos-duration="1000" data-aos-once="true">
         <div class="grid md:grid-cols-2 gap-8 sm:grid-cols-1">
             <div>
+                <h1 class="text-5xl font-bold">Kami menerima pesanan seragam!</h1>
+                <p class="py-6 text-justify">Halo pelanggan Divi Tailor , saat ini kami menerima segala jenis pesanan seragam seperti PDU(Pakaian Dinas Upacara), PDH(Pakaian Dinas Harian), PDL(Pakaian Dinas Lapangan), Seragam Sekolah, Blazer, Kemeja, Celana, Rok dan lainnya. Untuk saat ini kami tidak dapat menerima pesanan untuk jahit kaos/t-shirt. Terima kasih. </p>
+                <a href="{{url('/order')}}" 
+                    class="btn btn-primary">Jahit Sekarang</a>
+            </div>
+            <div>
+                <img class="block object-cover object-center w-full h-1/2" src="{{asset('img/landing-img/32528.jpg')}}" alt="">
+            </div>
+        </div>
+    </div>
+
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 my-20" data-aos="fade-up" data-aos-duration="1000" data-aos-once="true">
+        <div class="grid md:grid-cols-2 gap-8 sm:grid-cols-1">
+            <div>
                 <div class="mapouter w-full">
                     <div class="gmap_canvas"><iframe width="100%" height="300" id="gmap_canvas"
                             src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d3944.4352443531957!2d115.18867277415968!3d-8.65008869139689!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x2dd23f55126886e7%3A0x51b31c7912b14e90!2sDIVI%20TAILOR%20%26%20DIVI%20BRIDAL%20SALON!5e0!3m2!1sen!2sid!4v1687593308427!5m2!1sen!2sid"
@@ -169,7 +185,8 @@
                     class="btn btn-primary">Temukan Kami</a>
             </div>
         </div>
-
     </div>
+  
+
 
 </x-app-layout>

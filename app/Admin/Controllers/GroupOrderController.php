@@ -239,7 +239,7 @@ class GroupOrderController extends Controller
         $show->field('jenis_panjang', 'Panjang')->using(config('const.jenis_panjang'));
         $show->field('deskripsi_pakaian', 'Deskripsi Pakaian');
         $show->field('tanggal_estimasi', __('Tanggal Estimasi Selesai'))->as(function () {
-            return Carbon::parse($this->order_date)->dayName . ', ' . Carbon::parse($this->order_date)->translatedFormat('d F Y');
+            return Carbon::parse($this->tanggal_estimasi)->dayName . ', ' . Carbon::parse($this->tanggal_estimasi)->translatedFormat('d F Y');
         });
         $show->field('users_total', __('Jumlah Pelanggan'))->as(function () {
             return $this->users_total . " Orang";
@@ -305,7 +305,7 @@ class GroupOrderController extends Controller
         $form->select('group_id', __('Nama Grup'))->options($option)->rules(['required']);
         $form->date('group_order_date', __('Tanggal Borongan'))->default(date('Y-m-d'))->rules(['required', 'date']);
         $form->date('tanggal_estimasi', __('Estimasi Tanggal Jadi'))->rules('required|date');
-        $form->multipleSelect('user', 'Pelanggan')->options($user_select)->rules(['required']);
+        $form->multipleSelect('user', 'Pelanggan')->options($user_select)->rules(['required', 'array' ,'min:10']);
         $form->radio('jenis_pakaian', 'Jenis Pakaian')->options(config("const.jenis_pakaian"))->default(0)->rules('required|int');
         $form->text('order_kind', __('Jenis Pesanan'))->placeholder('Contoh:Seragam')->rules(['required']);
         $form->select('jenis_kain', __('Jenis Kain'))->options(config('const.jenis_kain'))->rules('required|int');

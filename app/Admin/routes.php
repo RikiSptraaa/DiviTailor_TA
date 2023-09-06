@@ -10,6 +10,7 @@ use App\Admin\Controllers\GroupOrderController;
 use App\Admin\Controllers\SizeCelanaController;
 use App\Admin\Controllers\GroupOrderTaskController;
 use App\Admin\Controllers\GroupOrderPaymentController;
+use App\Admin\Controllers\HomeController;
 
 Admin::routes();
 
@@ -43,6 +44,9 @@ Route::group([
 
     Route::get('/orders/cetak/{order}', [OrderController::class, 'print'])->name('orders.print');
     Route::get('/borongan/cetak/{borongan}', [GroupOrderController::class, 'print'])->name('borongan.print');
+
+    $router->get('/report', [HomeController::class, 'report']);
+    $router->post('/report/generate', [HomeController::class, 'generate']);
 
 });
 
